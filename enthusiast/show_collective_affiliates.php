@@ -35,4 +35,3 @@ echo get_setting( 'affiliates_template_header' );
 foreach( $affiliates as $aff )
    echo parse_affiliates_template( $aff['affiliateid'] );
 echo get_setting( 'affiliates_template_footer' );
-?>

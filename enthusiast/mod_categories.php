@@ -280,5 +280,3 @@ function category_array_compare( $one, $two ) {
       return 0;
    return( $one['text'] < $two['text'] ) ? -1 : 1;
 }
-
-?>

@@ -110,4 +110,3 @@ function flush_logs() {
    }
    return $result;
 }
-?>

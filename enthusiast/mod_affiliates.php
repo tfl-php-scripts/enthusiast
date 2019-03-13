@@ -710,4 +710,3 @@ function parse_affiliates_template( $id, $listing = '' ) {
 
    return $formatted;
 }
-?>

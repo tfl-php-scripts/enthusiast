@@ -2149,4 +2149,3 @@ function get_listing_stats( $id, $extended = false ) {
    $db_link_list = null;
    return $stats;
 }
-?>

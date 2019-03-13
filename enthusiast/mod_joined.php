@@ -437,5 +437,3 @@ function delete_joined( $id ) {
 
    return $result;
 }
-
-?>

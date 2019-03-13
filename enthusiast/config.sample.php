@@ -45,4 +45,3 @@ if( !defined( 'DATABASE_CONNECT_ERROR' ) )
 if( !defined( 'STANDARD_ERROR' ) )
    define( 'STANDARD_ERROR', '<p class="error">Error executing query. ' .
       'Please see the error logs.' );
-?>

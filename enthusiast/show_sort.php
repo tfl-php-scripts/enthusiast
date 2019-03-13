@@ -146,4 +146,3 @@ if( $info['dropdown'] == 1 ) {
             '=' . $sortvalue . '">' . $sortvalue . '</a> </li>';
    echo '</ul>';
 }
-?>

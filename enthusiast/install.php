@@ -904,4 +904,3 @@ if( $show_form ) {
 <?php
 }
 require_once( 'footer.php' );
-?>

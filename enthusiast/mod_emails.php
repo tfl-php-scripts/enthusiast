@@ -735,4 +735,3 @@ function send_email( $to, $from, $subject, $body ) {
    
    return $mail_sent;
 }
-?>

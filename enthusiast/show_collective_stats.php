@@ -280,4 +280,3 @@ if( $row && count( $row ) > 0 ) {
       $days = 1;
    $joined_growth_rate = round( $joined / $days, 2);
 }
-?>

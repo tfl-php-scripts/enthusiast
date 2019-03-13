@@ -551,4 +551,3 @@ if( $show_default ) {
    $finalcount, $qtycol, $pending );
 }
 require_once( 'footer.php' );
-?>

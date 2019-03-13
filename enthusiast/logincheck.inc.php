@@ -75,4 +75,3 @@ function login( $attempt, $remember = 'no' ) {
    $_SESSION['logerrors'] = get_setting( 'log_errors' );
    return $set;
 }
-?>

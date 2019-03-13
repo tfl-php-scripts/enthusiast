@@ -126,4 +126,3 @@ if( $showstats ) {
 } else
    echo '</p>';
 require_once( 'footer.php' );
-?>

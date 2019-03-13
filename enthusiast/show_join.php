@@ -497,4 +497,3 @@ if( $show_form ) {
    Enthusiast <?php include ENTH_PATH . 'show_enthversion.php' ?></a></p>
 <?php
 }
-?>

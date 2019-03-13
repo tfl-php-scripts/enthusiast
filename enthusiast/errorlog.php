@@ -124,4 +124,3 @@ if( $show_default ) {
       echo '</p>';
 }
 require_once( 'footer.php' );
-?>

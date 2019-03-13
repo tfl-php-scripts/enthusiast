@@ -27,4 +27,3 @@ $_SESSION = array();
 session_destroy();
 setcookie( 'e3login', '', time() - 3600 );
 header( 'location: index.php' );
-?>

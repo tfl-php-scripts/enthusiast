@@ -72,4 +72,3 @@ switch( $step ) {
 
    }
 require_once( 'footer.php' );
-?>

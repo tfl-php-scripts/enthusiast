@@ -246,4 +246,3 @@ MARKUP;
 
 echo $posts;
 require_once( 'footer.php' );
-?>

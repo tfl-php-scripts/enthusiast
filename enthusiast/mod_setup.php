@@ -394,5 +394,3 @@ function show_step2() {
    </p>
 <?php
 } // end of show_step2
-
-?>

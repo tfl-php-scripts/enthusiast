@@ -158,4 +158,3 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
 }
 
 require_once( 'footer.php' );
-?>

@@ -40,4 +40,3 @@ if( $info['affiliates'] == 0 ) {
 $affiliates = get_affiliates( $listing );
 foreach( $affiliates as $aff )
    echo parse_affiliates_template( $aff['affiliateid'], $listing );
-?>

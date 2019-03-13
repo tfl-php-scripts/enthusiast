@@ -23,4 +23,3 @@
  For more information please view the readme.txt file.
 ******************************************************************************/
 echo '3.1.6';
-?>

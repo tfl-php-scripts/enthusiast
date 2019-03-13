@@ -221,4 +221,3 @@ if( $show_default ) {
 <?php
 }
 require_once( 'footer.php' );
-?>

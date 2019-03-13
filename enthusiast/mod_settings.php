@@ -267,4 +267,3 @@ function update_settings( $settings ) {
       }
    }
 }
-?>

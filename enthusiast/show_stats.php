@@ -110,4 +110,3 @@ if( $info['affiliates'] == 1 ) {
 }
 
 echo $template;
-?>
