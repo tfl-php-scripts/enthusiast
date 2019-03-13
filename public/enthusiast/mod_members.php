@@ -514,7 +514,7 @@ function edit_member_info( $id, $email, $fields, $hold = 'no' ) {
                $value = '0';
             } else {
                $query = '';
-               continue;
+               continue 2;
             }
             $query .= "'$value' WHERE `email` = '$email'";
             break;

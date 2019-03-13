@@ -1,6 +1,6 @@
 # Enthusiast
 
-[Enthusiast](https://github.com/angelasabas/enthusiast), but using PDO instead of the deprecated MySQL extension. Requires at least PHP 5.4, and compatible with PHP 7 (up to PHP 7.2).
+[Enthusiast](https://github.com/angelasabas/enthusiast), but using PDO instead of the deprecated MySQL extension. Requires at least PHP 5.4, and compatible with PHP 7 (up to PHP 7.3).
 
 ## Changes
 
@@ -11,6 +11,7 @@
 - Updated [PEAR/Mail](https://pear.php.net/package/Mail/) to v1.4.1
 - Removed all closing tags
 - Added docker-compose
+- Fixed continue misbehaviour in switches (PHP 7.3 compatible)
 
 ## Upgrading
 

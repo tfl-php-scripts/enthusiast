@@ -737,7 +737,7 @@ function edit_owned( $id, $fields ) {
             // should move table to appropriate database
             // NOT YET IMPLEMENTED
             if( $value == $dbdatabase )
-               continue; // don't change
+                continue 2; // don't change
             $query = "UPDATE `$db_owned` SET `$field` = '$value' WHERE " .
                "`listingid` = :id";
             if( $value == 'null' )
@@ -797,7 +797,7 @@ function edit_owned( $id, $fields ) {
          case 'country' :
             // get info
             if( $value == 'leave' )
-               continue;
+                continue 2;
                try {
                   $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8', $dbuser, $dbpassword);
                   $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -887,7 +887,7 @@ function edit_owned( $id, $fields ) {
 
          case 'affiliates' :
             if( $value == 'leave' )
-               continue;
+                continue 2;
 
             // connect to remote table
             try {
@@ -1130,7 +1130,7 @@ function edit_owned( $id, $fields ) {
             if( ( $value == 'current' && $info['status'] == 2 ) ||
                ( $value == 'upcoming' && $info['status'] == 1 ) ||
                ( $value == 'pending' && $info['status'] == 0 ) )
-               continue;
+                continue 2;
             $query = "UPDATE `$db_owned` SET `status` = ";
             $status = 0;
             if( $value == 'upcoming' )
@@ -1156,7 +1156,7 @@ function edit_owned( $id, $fields ) {
             $new = $fields['date_year'] . '-' .
                str_pad( $fields['date_month'], 2, '0', STR_PAD_LEFT ) . '-' .
                str_pad( $fields['date_day'], 2, '0', STR_PAD_LEFT );
-            if( $new == $info['opened'] ) continue;
+            if( $new == $info['opened'] ) continue 2;
             $query = "UPDATE `$db_owned` SET `opened` = '$new' " .
                 "WHERE `listingid` = :id";
             $result = $db_link->prepare($query);
@@ -1208,7 +1208,7 @@ function edit_owned( $id, $fields ) {
             } else if( $value == 'yes' ) {
                if( !isset( $fields['imagefile'] ) ||
                   $fields['imagefile'] == '' )
-                  continue; // there is no uploaded image ata eh
+                   continue 2; // there is no uploaded image ata eh
                // get absolute path
                $query = "SELECT `value` FROM `$db_settings` WHERE " .
                   '`setting` = "owned_images_dir"';
@@ -1261,7 +1261,7 @@ function edit_owned( $id, $fields ) {
 
          case 'dbpassword' :
             if( $value == '' )
-               continue;
+                continue 2;
             // verify
             if( $value == $fields['dbpasswordv'] && $value != '' ) {
                // update db_owned
@@ -1287,7 +1287,7 @@ function edit_owned( $id, $fields ) {
          case 'dropdown' :
          case 'notifynew' :
          case 'holdupdate' :
-            if( $value == 'leave' ) continue;
+            if( $value == 'leave' ) continue 2;
             $query = "UPDATE `$db_owned` SET `$field` = ";
             $set = 0;
             if( $value == 'disable' )
@@ -1295,7 +1295,7 @@ function edit_owned( $id, $fields ) {
             else if( $value == 'enable' )
                $set = 1;
             else
-               continue;
+                continue 2;
             $query .= "$set WHERE `listingid` = :id";
             $result = $db_link->prepare($query);
             $result->bindParam(':id', $id, PDO::PARAM_INT);
@@ -1317,12 +1317,12 @@ function edit_owned( $id, $fields ) {
 
          case 'catid' :
             if( $value == '' || !is_array( $value ) )
-               continue;
+                continue 2;
             $cats = implode( '|', $value );
             $cats = str_replace( '||', '|', $cats );
             $cats = '|' . trim( $cats, '|' ) . '|';
             if( $cats == $info['catid'] )
-               continue;
+                continue 2;
             $query = "UPDATE `$db_owned` SET `catid` = :cats " .
                "WHERE `listingid` = :id";
             $result = $db_link->prepare($query);
@@ -1349,7 +1349,7 @@ function edit_owned( $id, $fields ) {
          case 'updatepage' :
          case 'lostpasspage' :
             if( $value == '' )
-               continue; // the above fields are required
+                continue 2; // the above fields are required
          case 'title' :
          case 'subject' :
          case 'url' :
@@ -1363,7 +1363,7 @@ function edit_owned( $id, $fields ) {
          case 'affiliatestemplate' :
          case 'statstemplate' :
             if( stripslashes( $value ) == $info[$field] )
-               continue;
+                continue 2;
             $query = "UPDATE `$db_owned` SET `$field` = '$value' " .
                "WHERE `listingid` = :id";
             if( $value == 'null' )
