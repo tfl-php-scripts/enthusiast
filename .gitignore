@@ -1,3 +1,5 @@
 *.db
 *.ini
 /.idea/
+/.docker/mysql/*
+config.php

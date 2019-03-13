@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  apache:
+    image: enthusiast-php7.3-apache
+    build:
+      context: .
+      dockerfile: .docker/php7.3/Dockerfile
+    ports:
+      - 8081:80
+      - 9001:9001
+    depends_on:
+      - mysql
+    links:
+      - mysql
+    volumes:
+      - ./public:/app/public
+      - ./.docker/vhost.conf:/etc/apache2/sites-available/000-default.conf
+      - ./.docker/configs/config-with-listing.php:/app/public/samplefl/config.php
+      - ./.docker/configs/config-without-listing.php:/app/public/enthusiast/config.php
+      - ./.docker/configs/config-without-listing.php:/app/public/config.php
+      - ./.docker/configs/config-without-listing.php:/app/public/samplecollective/config.php
+
+  mysql:
+    image: mysql:5.5
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: enth_docker
+      MYSQL_USER: enth_docker
+      MYSQL_PASSWORD: password
+    ports:
+      - 13306:3306
+    volumes:
+      - ./.docker/mysql:/var/lib/mysql
+      #- ./.docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
