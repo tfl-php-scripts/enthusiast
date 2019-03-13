@@ -18,6 +18,6 @@ If you are using [this version](https://github.com/angelasabas/enthusiast) of En
 
 1. **Back up all your current Enthusiast configurations, files, and databases first.**
 2. Take note of your database information in all your `config.php` files.
-3. Download an [archive of this repository](./archive/master.zip). Extract the archive.
+3. Download an [archive of this repository](https://github.com/Katenkka/enthusiast/archive/master.zip). Extract the archive.
 4. Replace your current `enthusiast/` files with the `public/enthusiast/` files from this repository.
 5. In every fanlisting folder, paste the `config.sample.php` file. Edit your database information and listing ID variable accordingly, and save it as `config.php` to overwrite your old one.
