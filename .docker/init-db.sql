@@ -154,8 +154,8 @@ CREATE TABLE `joined` (
 LOCK TABLES `joined` WRITE;
 /*!40000 ALTER TABLE `joined` DISABLE KEYS */;
 INSERT INTO `joined` VALUES
-(1, 1, 'http://1234.com', 'Subj1', '','', '', '2019-02-17', '0'),
-(2, 2, 'http://12344.com', 'Subj2', '','', '', '2019-02-19', '0');
+(1, '|1|', 'http://1234.com', 'Subj1', '','', '', '2019-02-17', '0'),
+(2, '|2|', 'http://12344.com', 'Subj2', '','', '', '2019-02-19', '0');
 /*!40000 ALTER TABLE `joined` ENABLE KEYS */;
 UNLOCK TABLES;
 
