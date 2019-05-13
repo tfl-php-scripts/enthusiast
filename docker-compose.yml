@@ -17,6 +17,7 @@ services:
       - ./public:/app/public
       - ./.docker/vhost.conf:/etc/apache2/sites-available/000-default.conf
       - ./.docker/configs/config-with-listing.php:/app/public/samplefl/config.php
+      - ./.docker/configs/config-with-listing.php:/app/public/icanhascheezburger/config.php
       - ./.docker/configs/config-without-listing.php:/app/public/enthusiast/config.php
       - ./.docker/configs/config-without-listing.php:/app/public/config.php
       - ./.docker/configs/config-without-listing.php:/app/public/samplecollective/config.php
@@ -31,5 +32,5 @@ services:
     ports:
       - 13306:3306
     volumes:
-      - ./.docker/mysql:/var/lib/mysql
-      #- ./.docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+      #- ./.docker/mysql:/var/lib/mysql
+      - ./.docker/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
