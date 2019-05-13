@@ -4,21 +4,14 @@
  Copyright (c) by Angela Sabas
  http://scripts.indisguise.org/
 
- Enthusiast is a tool for (fan)listing collective owners to easily
- maintain their listing collectives and listings under that collective.
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ This script is made available for free download, use, and modification as
+ long as this note remains intact and a link back to
+ http://scripts.indisguise.org/ is given. It is hoped that the script
+ will be useful, but does not guarantee that it will solve any problem or is
+ free from errors of any kind. Users of this script are forbidden to sell or
+ distribute the script in whole or in part without written and explicit
+ permission from me, and users agree to hold me blameless from any
+ liability directly or indirectly arising from the use of this script.
 
  For more information please view the readme.txt file.
 ******************************************************************************/
@@ -98,16 +91,16 @@ function show_joined_category_list( $dropdown = false, $intro = true ) {
 
       if( $intro )
          echo '<li> <a href="' . $page . $connector . 'cat=all">All ' .
-            'listings (' . count( get_joined( 'approved' ) ) . ')</a> </li>';
+            'listings (' . count( get_joined( 'approved' ) ) . ' )</a></li>';
 
       // are there pending listings?
       if( $intro && count( get_joined( 'pending' ) ) > 0 )
          echo '<li> <a href="' . $page . $connector .
-            'cat=pending">All Pending approval</a> </li>';
+            'cat=pending">All Pending approval  (' . count( get_joined( 'pending' ) ) . ')</a></li>';
 
       foreach( $cats as $cat )
          echo '<li> <a href="' . $page . $connector . 'cat=' . $cat['catid'] .
-            '">' . $cat['text'] . '</a> </li>';
+            '">' . $cat['text'] . '(' . $cat['qty'] . ')</a> </li>';
       echo '</ul>';
    }
 } // end function
@@ -194,6 +187,25 @@ if( ( !isset( $show_list ) || !$show_list ) ) { // use dropdown
 }
 
 // show listings
+/**
+ * @return string
+ */
+function getCatNameById($getcat)
+{
+    if ($ancestors = array_reverse(get_ancestors($getcat))) {
+        // get ancestors
+        $text = '';
+        foreach ($ancestors as $a) {
+            $text .= get_category_name($a) . ' > ';
+        }
+    } else {
+        $text = get_category_name($getcat);
+    }
+
+    return rtrim($text, ' > ');
+
+}
+
 if( isset( $_GET['cat'] ) && $_GET['cat'] != '' ) {
 
    // "where you are" text
@@ -201,17 +213,9 @@ if( isset( $_GET['cat'] ) && $_GET['cat'] != '' ) {
       echo '<p class="show_joined_where_you_are">Showing ' .
          clean( $_GET['cat'] ) . ' listings...</p>';
    else {
-      $getcat = clean( $_GET['cat'] );
-      if( $ancestors = array_reverse( get_ancestors( $getcat ) ) ) {
-         // get ancestors
-         $text = '';
-         foreach( $ancestors as $a )
-            $text .= get_category_name( $a ) . ' > ';
-      } else
-         $text = get_category_name( $getcat );
-      echo '<p class="show_joined_where_you_are">Showing listings ' .
-         'under the <i>' . str_replace( '>', '&raquo;',
-         rtrim( $text, ' > ' ) ) . '</i> category...</p>';
+       $text = getCatNameById(clean($_GET['cat']));
+       echo '<p class="show_joined_where_you_are">Showing listings ' .
+         'under the <i>' . str_replace( '>', '&raquo;', $text) . '</i> category...</p>';
    }
 
    if( !isset( $show_subcats_in_main_list ) || !$show_subcats_in_main_list ) {
@@ -237,19 +241,31 @@ if( isset( $_GET['cat'] ) && $_GET['cat'] != '' ) {
       }
    }
 
-   $ids = array();
-   if( $_GET['cat'] == 'all' )
-      $ids = get_joined();
-   else if( $_GET['cat'] == 'pending' )
-      $ids = get_joined( 'pending' );
-   else
-      $ids = get_joined_by_category( clean( $_GET['cat'] ) );
+    echo get_setting('joined_template_header');
+    $ids = array();
+    if ($_GET['cat'] == 'all') {
+        foreach (get_joined_cats() as $catId) {
+            echo '<p class="show_joined_all_group_by_cats">' . getCatNameById($catId) . '</p>';
 
-   echo get_setting( 'joined_template_header' );
-   foreach( $ids as $id )
-      echo parse_joined_template( $id );
-   echo get_setting( 'joined_template_footer' );
-   }
+            $ids = get_joined_by_category($catId);
+
+            foreach ($ids as $id) {
+                echo parse_joined_template($id);
+            }
+        }
+    } else {
+        if ($_GET['cat'] == 'pending') {
+            $ids = get_joined('pending');
+        } else {
+            $ids = get_joined_by_category(clean($_GET['cat']));
+        }
+
+        foreach ($ids as $id) {
+            echo parse_joined_template($id);
+        }
+    }
+    echo get_setting('joined_template_footer');
+}
 
 // show notification of having no listings to show if applicable
 if( isset( $ids ) && count( $ids ) == 0 )
@@ -263,9 +279,5 @@ if( ( isset( $show_list ) && $show_list ) &&
    echo '<p class="show_joined_go_back">' .
       '<a href="javascript:history.back()">Go back?</a></p>';
 
-// show link back to Indiscripts
+
 ?>
-<p class="show_joined_credits">
-<a href="http://scripts.indisguise.org">Powered by Enthusiast
-<?php include ENTH_PATH . 'show_enthversion.php' ?></a>
-</p>
