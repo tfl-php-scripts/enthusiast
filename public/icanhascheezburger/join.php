@@ -30,7 +30,8 @@
 <div class="ichcpercent">
 <table><tr><td>
 <?php
-require_once 'backend/add_member.php';
+include 'config.php';
+include ENTH_PATH . 'show_join.php';
 ?>
 </td></tr></table>
 </div>

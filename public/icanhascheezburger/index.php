@@ -55,28 +55,9 @@
     </td>
   </tr>
   <tr>
-    <td width="15">&nbsp;</td>
-    <td>Last updated:</td>
-    <td width="55">&nbsp;</td>
-    <td><?php include 'backend/get_last_updated.php'; ?></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>Member count:</td>
-    <td>&nbsp;</td>
-    <td><?php include 'backend/get_member_count.php'; ?></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>Pending members:</td>
-    <td>&nbsp;</td>
-    <td><?php include 'backend/get_pending_count.php'; ?></td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td>Newest members:</td>
-    <td>&nbsp;</td>
-    <td><?php include 'backend/get_newest_members.php'; ?></td>
+    <td><?php
+        include 'config.php';
+        include ENTH_PATH . 'show_stats.php'; ?></td>
   </tr>
 </table>
 </div>
