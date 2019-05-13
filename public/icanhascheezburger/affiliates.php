@@ -24,9 +24,7 @@
 <p align="center">&nbsp;</p>
 
 <div class="ichc">
-<p><?php
-    include 'config.php';
-    include ENTH_PATH . 'show_affiliates.php';?></p>
+<p><?php include 'backend/show_affiliates.php';?></p>
 <p>&nbsp;</p>
 <p>To be listed here, simply <a href="mailto:nitallica%20{at}%20gmail.com">email me</a>!</p>
 </div>

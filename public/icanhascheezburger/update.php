@@ -30,8 +30,7 @@
 <div class="ichcpercent">
 <table><tr><td>
 <?php
-include 'config.php';
-include ENTH_PATH . 'show_update.php';
+include 'backend/update_member.php';
 ?>
 </td></tr></table>
 </div>

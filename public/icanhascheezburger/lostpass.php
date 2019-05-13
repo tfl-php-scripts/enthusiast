@@ -30,8 +30,7 @@
 <div class="ichcpercent">
 <table><tr><td>
 <?php
-include 'config.php';
-include ENTH_PATH . 'show_lostpass.php';
+include 'backend/reset_password.php';
 ?>
 </td></tr></table>
 </div>

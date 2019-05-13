@@ -30,9 +30,8 @@
 
 <div class="ichcpercent">
 <?php
-include 'config.php';
-include ENTH_PATH . 'show_sort.php';
-include ENTH_PATH . 'show_members.php';
+include 'backend/show_category.php';
+include 'backend/show_fans.php';
 ?>
 </div>
 
