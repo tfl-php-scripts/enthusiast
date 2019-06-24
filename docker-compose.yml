@@ -11,6 +11,7 @@ services:
       - 9001:9001
     depends_on:
       - mysql
+      - mailhog
     links:
       - mysql
     volumes:
@@ -20,6 +21,12 @@ services:
       - ./.docker/configs/config-without-listing.php:/app/public/enthusiast/config.php
       - ./.docker/configs/config-without-listing.php:/app/public/config.php
       - ./.docker/configs/config-without-listing.php:/app/public/samplecollective/config.php
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - "1025:1025"
+      - "8025:8025"
 
   mysql:
     image: mysql:5.5

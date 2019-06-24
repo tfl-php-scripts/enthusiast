@@ -603,8 +603,7 @@ if( $show_default ) {
       <a href="affiliates.php?action=edit&listing=<?php echo $listing
          ?>&id=<?php echo $aff['affiliateid'] ?>"><img src="edit.gif"
          width="42" height="19" alt=" edit" /></a>
-      <a href="emails.php?action=directemail&address=<?php echo $aff['email']
-         ?>&listing=<?php echo $listing ?>&id=<?php echo $aff['affiliateid']
+       <a href="emails.php?action=directemail&address=<?= urlencode($aff['email']); ?>&listing=<?php echo $listing ?>&id=<?php echo $aff['affiliateid']
          ?>"><img src="email.gif" width="42" height="19" alt=" email" /></a>
       <a href="affiliates.php?action=delete&listing=<?php echo $listing
          ?>&id=<?php echo $aff['affiliateid'] ?>"

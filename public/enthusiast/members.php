@@ -372,13 +372,13 @@ if( $show_default ) {
 ?>
          <tr<?php echo $class ?>><td>
          <a href="members.php?action=edit&id=<?php echo $listing
-            ?>&email=<?php echo $member['email'] ?>"><img src="edit.gif" width="42"
-            height="19" border="0" alt=" edit" /></a>
-         <a href="emails.php?action=directemail&address=<?php echo $member['email']
-            ?>&listing=<?php echo $listing ?>"><img src="email.gif"
+         ?>&email=<?= urlencode($member['email']); ?>"><img src="edit.gif" width="42"
+                                                            height="19" border="0" alt=" edit"/></a>
+                 <a href="emails.php?action=directemail&address=<?= urlencode($member['email']); ?>&listing=<?php echo $listing ?>"><img
+                             src="email.gif"
             width="42" height="19" border="0" alt=" email" /></a>
          <a href="members.php?action=delete&id=<?php echo $listing
-            ?>&email=<?php echo $member['email'] ?>" onclick="
+         ?>&email=<?= urlencode($member['email']); ?>" onclick="
             go = confirm('Are you sure you want to delete <?php echo addslashes( $member['name'] ) ?>?'); return go;"><img
             src="delete.gif" width="42" height="19" border="0" alt=" delete"
             /></a>
@@ -490,14 +490,17 @@ if( $show_default ) {
                <tr<?php echo $class ?>><td class="center">
                <input type="checkbox" name="email[]" value="<?php echo $member['email'] ?>" />
                </td><td>
-               <a href="members.php?action=approve&id=<?php echo $id ?>&email=<?php echo $member['email'] ?>"><img src="approve.gif" width="42"
-                  height="19" border="0" alt=" approve" title=" approve" /></a>
-               <a href="members.php?action=edit&id=<?php echo $id ?>&email=<?php echo $member['email'] ?>"><img src="edit.gif" width="42"
-                  height="19" border="0" alt=" edit" title=" edit" /></a>
-               <a href="emails.php?action=directemail&address=<?php echo $member['email'] ?>&listing=<?php echo $id ?>"><img
+                       <a href="members.php?action=approve&id=<?php echo $id ?>&email=<?= urlencode($member['email']); ?>"><img
+                                   src="approve.gif" width="42"
+                                   height="19" border="0" alt=" approve" title=" approve"/></a>
+                       <a href="members.php?action=edit&id=<?php echo $id ?>&email=<?php echo urlencode($member['email']); ?>"><img
+                                   src="edit.gif" width="42"
+                                   height="19" border="0" alt=" edit" title=" edit"/></a>
+                       <a href="emails.php?action=directemail&address=<?= urlencode($member['email']); ?>&listing=<?php echo $id ?>"><img
                   src="email.gif" width="42" height="19" border="0"
                   alt=" email" title=" email" /></a>
-               <a href="members.php?action=reject&id=<?php echo $id ?>&email=<?php echo $member['email'] ?>" onclick="
+                       <a href="members.php?action=reject&id=<?php echo $id ?>&email=<?= urlencode($member['email']); ?>"
+                          onclick="
                   go = confirm('Are you sure you want to reject <?php echo addslashes( $member['name'] ) ?>?'); return go;"><img
                   src="reject.gif" width="42" height="19" border="0"
                   alt=" reject" title=" reject" /></a>

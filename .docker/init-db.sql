@@ -336,6 +336,10 @@ CREATE TABLE `table1` (
 LOCK TABLES `table1` WRITE;
 /*!40000 ALTER TABLE `table1` DISABLE KEYS */;
 /*!40000 ALTER TABLE `table1` ENABLE KEYS */;
+INSERT INTO table1 (email, name, country, url, pending, password, showemail, showurl, added) VALUES ('normalEmail@localhost123456.com', 'Test', 'United States', '', 0, '5f50d9d532eafed158fbd6d56bd76e48', 1, 1, '2019-06-24');
+INSERT INTO table1 (email, name, country, url, pending, password, showemail, showurl, added) VALUES ('normalEmailPending@localhost123456.com', 'Test2 Pending', 'United States', '', 1, '5d84ded02f59b7626ef03f1317669217', 1, 1, null);
+INSERT INTO table1 (email, name, country, url, pending, password, showemail, showurl, added) VALUES ('with+plus@localhost123456.com', 'Plus Pending', 'United States', '', 1, '5d84ded02f59b7626ef03f1317669217', 1, 1, null);
+
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
