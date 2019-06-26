@@ -1,1 +1,0 @@
-<p>$$fan_name$$ $$fan_email_plain$$ &#8212; $$fan_country$$ $$fan_url$$</p>
