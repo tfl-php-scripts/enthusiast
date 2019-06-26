@@ -12,6 +12,7 @@
 - Removed all closing tags
 - Added docker-compose
 - Fixed continue misbehaviour in switches (PHP 7.3 compatible)
+- Members/affiliates emails with a plus are not an issue anymore
 
 ## Upgrading
 
