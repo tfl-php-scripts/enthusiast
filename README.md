@@ -4,6 +4,14 @@
 
 [Enthusiast](https://github.com/angelasabas/enthusiast), but using PDO instead of the deprecated MySQL extension. Requires at least PHP 5.4, and compatible with PHP 7 (up to PHP 7.3).
 
+| PHP version | Supported until | Supported by Enthusiast |
+|------------------------------------------|--------------------|-------------------------|
+| 7.1 | 1 December 2019 | :white_check_mark: |
+| 7.2 | 30 November 2020 | :white_check_mark: |
+| 7.3 | 6 December 2021 | :white_check_mark: |
+| 7.4 (to be released on 21 November 2019) | December 2022 | :question: |
+| 8.0 (not released yet) | Q4 2023 or Q1 2024 | :grey_question: |
+
 ## Changes
 
 - Converted all mysql_* functions to PDO
