@@ -26,3 +26,6 @@ RUN yes | pecl install xdebug \
 
 RUN a2enmod rewrite
 RUN service apache2 restart
+
+RUN mkdir -p /app/public/images
+RUN chmod -R 777 /app/public/images
