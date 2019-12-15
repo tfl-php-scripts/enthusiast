@@ -1,5 +1,9 @@
 *.db
 *.ini
-/.idea/
 /.docker/mysql/*
 config.php
+
+/.idea/enthusiast.iml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/vcs.xml
