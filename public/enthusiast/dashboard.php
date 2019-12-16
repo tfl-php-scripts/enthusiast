@@ -261,7 +261,7 @@ if( !file_exists($cachefilename) || time() > filectime($cachefilename)+86400) { 
             
             $posts .= <<<MARKUP
                 <h2>{$title}<br />
-                <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$m} &bull; <a href="{$link}" target="_blank">permalink</a></small></h2>
+                <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$min} &bull; <a href="{$link}" target="_blank">permalink</a></small></h2>
                 <blockquote>{$description}</blockquote>
 MARKUP;
         }
