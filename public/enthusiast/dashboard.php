@@ -179,9 +179,49 @@ echo '</ul>';
 
 echo '<h1>Enthusiast Updates</h1>';
 
-$updates_url = 'http://scripts.indisguise.org/category/enthusiast/feed/';
+
+/**
+ * @param $cacheFileName
+ * @return string
+ */
+function tryReadingFeedFromCache($cacheFileName)
+{
+    if(!file_exists($cacheFileName)) {
+        log_error('dashboard.php', 'Was not able to open file ' . __DIR__ . DIRECTORY_SEPARATOR . $cacheFileName . ' for cache, please make sure that the file exists and has CHMOD 777', false);
+        return 'File with cache does not exist, please see error log';
+    }
+
+    $result = file_get_contents($cacheFileName);
+    if(!$result) {
+        log_error('dashboard.php', 'Was not able to open file ' . __DIR__ . DIRECTORY_SEPARATOR . $cacheFileName . ' for cache, please make sure that the file exists and has CHMOD 777', false);
+        return 'Was not able to open file for cache, please see error log';
+    }
+
+    return $result;
+}
+
+/**
+ * @param $cacheFileName
+ * @param $posts
+ */
+function tryWritingToCache($cacheFileName, $posts)
+{
+    try {
+        $cacheFile = fopen($cacheFileName, 'wb');
+        if($cacheFile === false) {
+            throw new RuntimeException('Was not able to open file ' . __DIR__ . DIRECTORY_SEPARATOR . $cacheFileName . ' for cache, please make sure that the file exists and has CHMOD 777');
+        }
+        fwrite($cacheFile, $posts);
+        fclose($cacheFile);
+    } catch (Exception $e) {
+        log_error('dashboard.php', $e->getMessage(), false);
+    }
+}
+
+$updates_url = 'http://feeds.feedburner.com/script-enthusiast';
 $cachefilename = 'cache/updates'; // we need to check cache first
 $posts = '';
+
 if( !file_exists($cachefilename) || time() > filectime($cachefilename)+86400) { // one day
     // retrieve from web
     try {
@@ -190,19 +230,13 @@ if( !file_exists($cachefilename) || time() > filectime($cachefilename)+86400) { 
         if( !$success ) {
             throw new Exception('Feed has gone on vacation.');
         }
-        
-        $i = 1;
-        foreach ($doc->getElementsByTagName('item') as $node) {
-            if( $i > 3 ) {
-                break;
-            } else {
-                $i++;
-            }
 
+        /** @var DOMElement $node */
+        foreach ($doc->getElementsByTagName('entry') as $node) {
             $title = $node->getElementsByTagName('title')->item(0)->nodeValue;
-            $link = $node->getElementsByTagName('link')->item(0)->nodeValue;
-            $pubdate = $node->getElementsByTagName('pubDate')->item(0)->nodeValue;
-            $description = $node->getElementsByTagName('description')->item(0)->nodeValue;
+            $link = $node->getElementsByTagName('link')->item(0)->getAttribute('href');
+            $pubdate = $node->getElementsByTagName('updated')->item(0)->nodeValue;
+            $description = $node->getElementsByTagName('summary')->item(0)->textContent;
 
             $dayshort = date( 'D', strtotime( $pubdate ) );
             $daylong = date( 'l', strtotime( $pubdate ) );
@@ -227,21 +261,20 @@ if( !file_exists($cachefilename) || time() > filectime($cachefilename)+86400) { 
             
             $posts .= <<<MARKUP
                 <h2>{$title}<br />
-                <small>{$daylong}, {$dth} {$monlong} {$yyyy} &bull; <a href="{$link}">permalink</a></small></h2>
+                <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$m} &bull; <a href="{$link}" target="_blank">permalink</a></small></h2>
                 <blockquote>{$description}</blockquote>
 MARKUP;
         }
 
         // try caching this now
-        $cachefile = fopen($cachefilename,'w');
-        fwrite($cachefile,$posts);
-        fclose($cachefile);
+        tryWritingToCache($cachefilename, $posts);
 
     } catch( Exception $e ) {
-        $posts = file_get_contents($cachefilename);
+        log_error('dashboard.php', $e->getMessage(), false);
+        $posts = tryReadingFeedFromCache($cachefilename);
     }
 } else {
-    $posts = file_get_contents($cachefilename);
+    $posts = tryReadingFeedFromCache($cachefilename);
 }
 
 echo $posts;
