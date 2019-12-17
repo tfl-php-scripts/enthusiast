@@ -1472,7 +1472,7 @@ function edit_owned($id, $fields)
                 $query = "UPDATE `$db_owned` SET `catid` = :cats " .
                     "WHERE `listingid` = :id";
                 $result = $db_link->prepare($query);
-                $result->bindParam(':cats', $cats, PDO::PARAM_INT);
+                $result->bindParam(':cats', $cats, PDO::PARAM_STR);
                 $result->bindParam(':id', $id, PDO::PARAM_INT);
                 $result->execute();
                 if (!$result) {
@@ -1886,10 +1886,10 @@ function parse_owned_template($id)
 function get_owned_by_category($catid, $status = 'all')
 {
     require 'config.php';
-    $query = "SELECT `listingid` FROM `$db_owned` WHERE `catid` " .
-        "LIKE '%|$catid|%'";
-    if ($status != '' && $status != 'all')
+    $query = "SELECT `listingid` FROM `$db_owned` WHERE `catid` LIKE :catid";
+    if ($status != '' && $status != 'all') {
         $query .= " AND status = '$status'";
+    }
     $query .= ' ORDER BY `subject`';
 
     try {
@@ -1899,6 +1899,8 @@ function get_owned_by_category($catid, $status = 'all')
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
     $result = $db_link->prepare($query);
+    $catidForLike = '%|' . $catid . '|%';
+    $result->bindParam(':catid', $catidForLike, PDO::PARAM_STR);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,

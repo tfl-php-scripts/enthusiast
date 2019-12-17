@@ -328,6 +328,8 @@ function do_step1() {
 
       // prep category id
       $catid = implode( '|', $catids );
+      $catid = str_replace('||', '|', $catid);
+      $catid = '|' . trim($catid, '|') . '|';
 
       // put into $db_owned database
       $query = "INSERT INTO `$db_owned` ( `listingid`,`dbserver`, `dbuser`, " .
@@ -347,7 +349,7 @@ function do_step1() {
       $result->bindParam(':dbtable', $dbtable, PDO::PARAM_STR);
       $result->bindParam(':subject', $subject, PDO::PARAM_STR);
       $result->bindParam(':email', $email, PDO::PARAM_STR);
-      $result->bindParam(':catid', $catid, PDO::PARAM_INT);
+      $result->bindParam(':catid', $catid, PDO::PARAM_STR);
       $result->bindParam(':stat', $stat, PDO::PARAM_STR);
       $result->bindParam(':signup', $signup, PDO::PARAM_STR);
       $result->bindParam(':approval', $approval, PDO::PARAM_STR);
