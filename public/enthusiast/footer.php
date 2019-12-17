@@ -67,9 +67,10 @@ if( isset( $logged_in ) && $logged_in ) {
 </div>
 
 <div class="footer">
-Enthusiast 3 copyright &copy; 2004 - <?php echo date('Y'); ?> by Angela Sabas, support since 2019 by <a href="http://workshop.katenkka.ru" target="_blank">Ekaterina</a>.<br />
+Enthusiast 3 copyright &copy; 2004 - <?php echo date('Y'); ?> by Angela Sabas.<br />
 <a href="http://indisguise.org/" target="_blank">Indisguise</a> |
 <a href="http://scripts.indisguise.org/" target="_blank">Indiscripts</a>
+    <br/><br/>Support since 2019 by <a href="http://workshop.katenkka.ru" target="_blank">Ekaterina</a>, version Enthusiast 3.1.1
 </div>
 
 </body>

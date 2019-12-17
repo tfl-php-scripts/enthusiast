@@ -6,10 +6,10 @@
 
 | PHP version | Supported until | Supported by Enthusiast |
 |------------------------------------------|--------------------|-------------------------|
-| 7.1 | 1 December 2019 | :white_check_mark: |
+| 7.1 (end of support, please upgrade) | 1 December 2019 | :white_check_mark: |
 | 7.2 | 30 November 2020 | :white_check_mark: |
 | 7.3 | 6 December 2021 | :white_check_mark: |
-| 7.4 (to be released on 21 November 2019) | December 2022 | :question: |
+| 7.4 | December 2022 | :question: |
 | 8.0 (not released yet) | Q4 2023 or Q1 2024 | :grey_question: |
 
 ## Changes
@@ -24,12 +24,14 @@
 - Fixed continue misbehaviour in switches (PHP 7.3 compatible)
 - Members/affiliates emails with a plus are not an issue anymore
 
+**New changes will be posted to [separate changelog](CHANGELOG.md)**
+
 ## Upgrading
 
 If you are using [this version](https://github.com/angelasabas/enthusiast) of Enthusiast:
 
 1. **Back up all your current Enthusiast configurations, files, and databases first.**
 2. Take note of your database information in all your `config.php` files.
-3. Download an [archive of this repository](https://gitlab.com/elephanto/enthusiast/-/archive/master/enthusiast-master.zip). Extract the archive.
+3. Download an [archive of this repository](https://gitlab.com/elephpant/enthusiast/-/archive/master/enthusiast-master.zip). Extract the archive.
 4. Replace your current `enthusiast/` files with the `public/enthusiast/` files from this repository.
 5. In every fanlisting folder, paste the `config.sample.php` file. Edit your database information and listing ID variable accordingly, and save it as `config.php` to overwrite your old one.

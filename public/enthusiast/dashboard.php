@@ -236,7 +236,7 @@ if( !file_exists($cachefilename) || time() > filectime($cachefilename)+86400) { 
             $title = $node->getElementsByTagName('title')->item(0)->nodeValue;
             $link = $node->getElementsByTagName('link')->item(0)->getAttribute('href');
             $pubdate = $node->getElementsByTagName('updated')->item(0)->nodeValue;
-            $description = $node->getElementsByTagName('summary')->item(0)->textContent;
+            $description = $node->getElementsByTagName('content')->item(0)->textContent;
 
             $dayshort = date( 'D', strtotime( $pubdate ) );
             $daylong = date( 'l', strtotime( $pubdate ) );
