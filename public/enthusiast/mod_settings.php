@@ -207,6 +207,8 @@ function update_setting( $setting, $value ) {
       $query = "UPDATE `$db_settings` SET `value` = :value WHERE " .
          "`setting` = :setting";
       $result = $db_link->prepare($query);
+      // removing unnecessary slashes
+      $value = stripslashes($value);
       $result->bindParam(':value', $value, PDO::PARAM_STR);
       $result->bindParam(':setting', $setting, PDO::PARAM_STR);
       $result->execute();

@@ -900,7 +900,7 @@ if( $show_form ) {
    <input type="reset" value="Reset settings" />
    </td></tr>
 
-   </table></p>
+   </table></form>
 <?php
 }
 require_once('footer.php');

@@ -153,7 +153,7 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
    <input type="submit" name="tfltafl" value="Install TFL + TAFL categories" />
    </td></tr>
 
-   </table></p>
+   </table></form>
 <?php
 }
 

@@ -8,4 +8,3 @@ $status = 'current';
 $show_list = true;      
 include ENTH_PATH . 'show_owned.php';
 include "footer.php";
-?>

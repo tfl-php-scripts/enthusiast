@@ -257,10 +257,10 @@ if( isset( $_POST['enth_join'] ) && $_POST['enth_join'] == 'yes' ) {
          // email new member, or just show success message
          if( !$send_account_info ) {
 ?>
-            <p class="show_join_processed_noemail">The application form 
-            for the <?php echo $info['subject'] ?> <?php echo $info['listingtype'] ?> has 
-            been sent. You will be notified when you have been added into 
-            the actual members list. If two weeks have passed and you have 
+            <p class="show_join_processed_noemail">The application form
+            for the <?php echo $info['subject'] ?> <?php echo $info['listingtype'] ?> has
+            been sent. You will be notified when you have been added into
+            the actual members list. If two weeks have passed and you have
             received no email, please <a href="mailto:<?php echo
             str_replace( '@', '&#' . ord( '@' ) . ';', $info['email'] )
             ?>">email me</a> if you wish to check up on your form.</p>
@@ -280,30 +280,30 @@ if( isset( $_POST['enth_join'] ) && $_POST['enth_join'] == 'yes' ) {
             $success_mail = send_email( $to, $from, $subject, $message );
             if( $success_mail !== true ) {
 ?>
-               <p class="show_join_processed_errormail">Your form has been 
+               <p class="show_join_processed_errormail">Your form has been
                processed correctly, but unfortunately there was an error
                sending your application information to you. If you
                wish to receive information about your application, please feel
                free to <a href="mailto:<?php echo
                str_replace( '@', '&#' . ord( '@' ) . ';', $info['email'] )
-               ?>">email me</a> and I will personally 
+               ?>">email me</a> and I will personally
                look into it. Please not I cannot send your password to you.</p>
 
-               <p class="show_join_processed_errormail">If two weeks have 
+               <p class="show_join_processed_errormail">If two weeks have
                passed and you have not yet been added,
                please feel free to check up on your application.</p>
 <?php
             } else {
 ?>
-               <p class="show_join_processed_emailsent">The application form 
-               for the <?php echo $info['subject'] ?> <?php echo $info['listingtype'] ?> has 
-               been sent. You will be notified when you have been added into 
-               the actual members list. If two weeks have passed and you have 
+               <p class="show_join_processed_emailsent">The application form
+               for the <?php echo $info['subject'] ?> <?php echo $info['listingtype'] ?> has
+               been sent. You will be notified when you have been added into
+               the actual members list. If two weeks have passed and you have
                received no email, please <a href="mailto:<?php echo
                str_replace( '@', '&#' . ord( '@' ) . ';', $info['email'] )
                ?>">email me</a> if you wish to check up on your form.</p>
 
-               <p class="show_join_processed_emailsent">An email has also 
+               <p class="show_join_processed_emailsent">An email has also
                been sent to you with your information
                as you requested. Please do not lose this information.</p>
 <?php
@@ -359,11 +359,11 @@ if( $show_form ) {
    <p class="show_join_intro">Please use the form below for joining the
    <?php echo $info['listingtype'] ?>. <b>Please hit the submit button only once.</b>
    Your entry is fed instantly into the database, and your email address is
-   checked for duplicates. Passwords are encrypted into the database and will 
-   not be seen by anyone else other than you. If left blank, a password will 
+   checked for duplicates. Passwords are encrypted into the database and will
+   not be seen by anyone else other than you. If left blank, a password will
    be generated for you.</p>
 
-   <p class="show_join_intro_problems">If you encounter problems, please 
+   <p class="show_join_intro_problems">If you encounter problems, please
    feel free to <?php echo $email_js ?>.</p>
 
    <p class="show_join_intro_required">The fields with asterisks (*) are
@@ -375,7 +375,7 @@ if( $show_form ) {
 ?>
    <form method="post" action="<?php echo $info['joinpage'] ?>"
       class="show_join_form">
-   
+
    <p class="show_join_name">
    <input type="hidden" name="enth_join" value="yes" />
    <input type="hidden" name="enth_nonce" value="<?php echo $rand ?>:<?php echo
@@ -492,8 +492,8 @@ if( $show_form ) {
 
    </form>
 
-   <p style="text-align: center;" class="show_join_credits"><a
-   href="http://scripts.indisguise.org">Powered by
-   Enthusiast <?php include ENTH_PATH . 'show_enthversion.php' ?></a></p>
+    <p style="text-align: center;" class="show_join_credits">
+        <?php include ENTH_PATH . 'show_credits.php' ?>
+    </p>
 <?php
 }

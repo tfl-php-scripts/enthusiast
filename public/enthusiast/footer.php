@@ -70,7 +70,7 @@ if( isset( $logged_in ) && $logged_in ) {
 Enthusiast 3 copyright &copy; 2004 - <?php echo date('Y'); ?> by Angela Sabas.<br />
 <a href="http://indisguise.org/" target="_blank">Indisguise</a> |
 <a href="http://scripts.indisguise.org/" target="_blank">Indiscripts</a>
-    <br/><br/>Support since 2019 by <a href="http://workshop.katenkka.ru" target="_blank">Ekaterina</a>, version Enthusiast 3.1.1
+    <br/><br/>Support since 2019 by <a href="http://scripts.robotess.net" target="_blank">Ekaterina</a>, version Enthusiast <?php include ENTH_PATH . 'show_enthversion.php' ?>
 </div>
 
 </body>

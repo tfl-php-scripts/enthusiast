@@ -278,6 +278,3 @@ if( ( isset( $show_list ) && $show_list ) &&
    ( !isset( $ids ) || count( $ids ) != 0 ) )
    echo '<p class="show_joined_go_back">' .
       '<a href="javascript:history.back()">Go back?</a></p>';
-
-
-?>

@@ -883,4 +883,3 @@ function reset_member_password( $listing, $email ) {
    $db_link = null;
    return $password;
 }
-?>
