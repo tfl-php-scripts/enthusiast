@@ -123,6 +123,7 @@ if( $showstats ) {
    </table>
 
 <?php
-} else
-   echo '</p>';
+} else {
+    echo '</p>';
+}
 require_once('footer.php');

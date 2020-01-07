@@ -218,64 +218,53 @@ function tryWritingToCache($cacheFileName, $posts)
     }
 }
 
-$updates_url = 'http://feeds.feedburner.com/script-enthusiast';
-$cachefilename = 'cache/updates'; // we need to check cache first
-$posts = '';
+function printUpdates()
+{
+    $updatesApiUrl = 'https://gitlab.com/api/v4/projects/13880805/merge_requests?state=merged&order_by=updated_at&source_branch=develop&target_branch=master&created_after=2020-01-01';
+    $cachefilename = 'cache/updates'; // we need to check cache first
+    $posts = '';
 
-if( !file_exists($cachefilename) || time() > filectime($cachefilename)+86400) { // one day
-    // retrieve from web
-    try {
-        $doc = new DOMDocument();
-        $success = @$doc->load($updates_url);
-        if( !$success ) {
-            throw new Exception('Feed has gone on vacation.');
-        }
+    if (!file_exists($cachefilename) || time() > filectime($cachefilename) + 86400) { // one day
+        // retrieve from web
+        try {
+            $contents = file_get_contents($updatesApiUrl);
+            $contents = utf8_encode($contents);
+            $updates = json_decode($contents, true);
 
-        /** @var DOMElement $node */
-        foreach ($doc->getElementsByTagName('entry') as $node) {
-            $title = $node->getElementsByTagName('title')->item(0)->nodeValue;
-            $link = $node->getElementsByTagName('link')->item(0)->getAttribute('href');
-            $pubdate = $node->getElementsByTagName('updated')->item(0)->nodeValue;
-            $description = $node->getElementsByTagName('content')->item(0)->textContent;
+            if ($updates === false) {
+                throw new Exception('Was not able to retrieve updates from remote server');
+            }
 
-            $dayshort = date( 'D', strtotime( $pubdate ) );
-            $daylong = date( 'l', strtotime( $pubdate ) );
-            $monshort = date( 'M', strtotime( $pubdate ) );
-            $monlong = date( 'F', strtotime( $pubdate ) );
-            $yy = date( 'y', strtotime( $pubdate ) );
-            $yyyy = date( 'Y', strtotime( $pubdate ) );
-            $m = date( 'n', strtotime( $pubdate ) );
-            $mm = date( 'm', strtotime( $pubdate ) );
-            $d = date( 'j', strtotime( $pubdate ) );
-            $dd = date( 'd', strtotime( $pubdate ) );
-            $dth = date( 'jS', strtotime( $pubdate ) );
-            $ampm = date( 'a', strtotime( $pubdate ) );
-            $AMPM = date( 'A', strtotime( $pubdate ) );
-            $ap = rtrim( $ampm, 'm' );
-            $AP = rtrim( $AMPM, 'm' );
-            $min = date( 'i', strtotime( $pubdate ) );
-            $_12h = date( 'g', strtotime( $pubdate ) );
-            $_12hh = date( 'h', strtotime( $pubdate ) );
-            $_24h = date( 'G', strtotime( $pubdate ) );
-            $_24hh = date( 'H', strtotime( $pubdate ) );
-            
-            $posts .= <<<MARKUP
-                <h2>{$title}<br />
-                <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$min} &bull; <a href="{$link}" target="_blank">permalink</a></small></h2>
-                <blockquote>{$description}</blockquote>
+            foreach ($updates as $node) {
+                $timestamp = strtotime($node['updated_at']);
+                $daylong = date('l', $timestamp);
+                $monlong = date('F', $timestamp);
+                $yyyy = date('Y', $timestamp);
+                $dth = date('jS', $timestamp);
+                $min = date('i', $timestamp);
+                $_24hh = date('H', $timestamp);
+
+                $posts .= <<<MARKUP
+                <h2>{$node['title']}<br />
+                <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$min} &bull; <a href="{$node['web_url']}" target="_blank">permalink</a></small></h2>
+                <blockquote>{$node['$description']}</blockquote>
 MARKUP;
+            }
+
+            // try caching this now
+            tryWritingToCache($cachefilename, $posts);
+
+        } catch (Exception $e) {
+            log_error('dashboard.php', $e->getMessage(), false);
+            $posts = tryReadingFeedFromCache($cachefilename);
         }
-
-        // try caching this now
-        tryWritingToCache($cachefilename, $posts);
-
-    } catch( Exception $e ) {
-        log_error('dashboard.php', $e->getMessage(), false);
+    } else {
         $posts = tryReadingFeedFromCache($cachefilename);
     }
-} else {
-    $posts = tryReadingFeedFromCache($cachefilename);
+
+    echo $posts;
 }
 
-echo $posts;
+printUpdates();
+
 require_once( 'footer.php' );

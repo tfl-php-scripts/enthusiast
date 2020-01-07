@@ -168,8 +168,8 @@ if( $show_form ) {
 
    </form>
 
-   <p style="text-align: center;" class="show_lostpass_credits"><a
-   href="http://scripts.indisguise.org">Powered by
-   Enthusiast <?php include ENTH_PATH . 'show_enthversion.php' ?></a></p>
+   <p style="text-align: center;" class="show_lostpass_credits">
+       <?php include ENTH_PATH . 'show_credits.php' ?>
+    </p>
 <?php
 }

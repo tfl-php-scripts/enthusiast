@@ -67,9 +67,9 @@ foreach( $_COOKIE as $index => $value ) {
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title> Enthusiast 3.1 ~ Listing Collective Management System </title>
+<title> Enthusiast <?php include ENTH_PATH . 'show_enthversion.php' ?> ~ Listing Collective Management System </title>
 <meta name="author" content="Angela Maria Protacia M. Sabas" />
-<meta http-equiv="content-type" content="application/xhtml+xml; 
+<meta http-equiv="content-type" content="application/xhtml+xml;
 charset=iso-8859-1" />
 <meta http-equiv="imagetoolbar" content="no" />
 <link rel="stylesheet" type="text/css" href="style.css" />
