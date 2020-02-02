@@ -1,4 +1,4 @@
-container=enthusiast-php7.3-apache
+container=enthusiast-php7-apache
 
 up:
 	docker-compose up -d

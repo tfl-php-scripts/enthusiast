@@ -91,7 +91,7 @@ function show_joined_category_list( $dropdown = false, $intro = true ) {
 
       if( $intro )
          echo '<li> <a href="' . $page . $connector . 'cat=all">All ' .
-            'listings (' . count( get_joined( 'approved' ) ) . ' )</a></li>';
+            'listings (' . count( get_joined( 'approved' ) ) . ')</a></li>';
 
       // are there pending listings?
       if( $intro && count( get_joined( 'pending' ) ) > 0 )
@@ -100,7 +100,7 @@ function show_joined_category_list( $dropdown = false, $intro = true ) {
 
       foreach( $cats as $cat )
          echo '<li> <a href="' . $page . $connector . 'cat=' . $cat['catid'] .
-            '">' . $cat['text'] . '(' . $cat['qty'] . ')</a> </li>';
+            '">' . $cat['text'] . ' (' . $cat['qty'] . ')</a> </li>';
       echo '</ul>';
    }
 } // end function
