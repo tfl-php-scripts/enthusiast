@@ -1,179 +1,206 @@
 <?php
 /*****************************************************************************
- Enthusiast: Listing Collective Management System
- Copyright (c) by Angela Sabas
- http://scripts.indisguise.org/
-
- Enthusiast is a tool for (fan)listing collective owners to easily
- maintain their listing collectives and listings under that collective.
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
- For more information please view the readme.txt file.
-******************************************************************************/
+ * Enthusiast: Listing Collective Management System
+ * Copyright (c) by Angela Sabas
+ * http://scripts.indisguise.org/
+ *
+ * Enthusiast is a tool for (fan)listing collective owners to easily
+ * maintain their listing collectives and listings under that collective.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * For more information please view the readme.txt file.
+ ******************************************************************************/
 session_start();
-require_once( 'logincheck.inc.php' );
-if( !isset( $logged_in ) || !$logged_in ) {
-   $_SESSION['message'] = 'You are not logged in. Please log in to continue.';
-   $next = '';
-   if( isset( $_SERVER['REQUEST_URI'] ) )
-      $next = $_SERVER['REQUEST_URI'];
-   else if( isset( $_SERVER['PATH_INFO'] ) )
-      $next = $_SERVER['PATH_INFO'];
-   $_SESSION['next'] = $next;
-   header( 'location: index.php' );
-   die( 'Redirecting you...' );
+
+require_once('logincheck.inc.php');
+if (!isset($logged_in) || !$logged_in) {
+    $_SESSION['message'] = 'You are not logged in. Please log in to continue.';
+    $next = '';
+    if (isset($_SERVER['REQUEST_URI']))
+        $next = $_SERVER['REQUEST_URI'];
+    else if (isset($_SERVER['PATH_INFO']))
+        $next = $_SERVER['PATH_INFO'];
+    $_SESSION['next'] = $next;
+    header('location: index.php');
+    die('Redirecting you...');
 }
 
-require_once( 'header.php' );
-require( 'config.php' );
-require_once( 'mod_categories.php' );
-require_once( 'mod_joined.php' );
-require_once( 'mod_owned.php' );
-require_once( 'mod_affiliates.php' );
-require_once( 'mod_settings.php' );
-require_once( 'mod_errorlogs.php' );
+require_once('header.php');
+require('config.php');
+require_once('mod_categories.php');
+require_once('mod_joined.php');
+require_once('mod_owned.php');
+require_once('mod_affiliates.php');
+require_once('mod_settings.php');
+require_once('mod_errorlogs.php');
 ?>
 
-<h1>You are managing: <?php echo get_setting( 'collective_title' ) ?></h1>
+    <h1>You are managing: <?php echo get_setting('collective_title') ?></h1>
 
 <?php
-$today = date( 'F j, Y (l)' );
-if( date( 'a' ) == 'am' )
-	$greeting = 'Good morning';
+$today = date('F j, Y (l)');
+if (date('a') === 'am') {
+    $greeting = 'Good morning';
+}
+else if (date('G') <= 18) {
+    $greeting = 'Good afternoon';
+}
 else {
-	if( date( 'G' ) <= 18 )
-		$greeting = 'Good afternoon';
-	else
-		$greeting = 'Good evening';
+    $greeting = 'Good evening';
 }
 ?>
-<p><?php echo $greeting ?>! Today is <?php echo $today ?>.</p>
+    <p><?php echo $greeting ?>! Today is <?php echo $today ?>.</p>
 
-<h2>Collective statistics:</h2>
+    <h2>Collective statistics:</h2>
 
 <?php
-require_once( 'show_collective_stats.php' );
+require_once('show_collective_stats.php');
 ?>
-<table class="stats">
+    <table class="stats">
 
-<tr><td class="right">
-Number of categories:
-</td><td>
-<?php echo $total_cats ?>
-</td></tr>
+        <tr>
+            <td class="right">
+                Number of categories:
+            </td>
+            <td>
+                <?php echo $total_cats ?>
+            </td>
+        </tr>
 
-<tr><td class="right">
-Number of joined listings:
-</td><td>
-<?php echo $joined_approved ?> approved, <?php echo $joined_pending ?> pending
-</td></tr>
+        <tr>
+            <td class="right">
+                Number of joined listings:
+            </td>
+            <td>
+                <?php echo $joined_approved ?> approved, <?php echo $joined_pending ?> pending
+            </td>
+        </tr>
 
-<tr><td class="right">
-Number of owned listings:
-</td><td>
-<?php echo $owned_current ?> current, <?php echo $owned_upcoming ?> upcoming, <?php echo $owned_pending ?> pending
-</td></tr>
+        <tr>
+            <td class="right">
+                Number of owned listings:
+            </td>
+            <td>
+                <?php echo $owned_current ?> current, <?php echo $owned_upcoming ?>
+                upcoming, <?php echo $owned_pending ?> pending
+            </td>
+        </tr>
 
-<tr><td class="right">
-Number of collective affiliates:
-</td><td>
-<?php echo $affiliates_collective ?> affiliates
-</td></tr>
+        <tr>
+            <td class="right">
+                Number of collective affiliates:
+            </td>
+            <td>
+                <?php echo $affiliates_collective ?> affiliates
+            </td>
+        </tr>
 
-<tr><td class="right">
-Newest owned listing
-</td><td>
+        <tr>
+            <td class="right">
+                Newest owned listing
+            </td>
+            <td>
+                <?php
+                if (count($owned_newest) > 0) {
+                    ?>
+                    <a href="<?php echo $owned_newest['url'] ?>"><?php echo $owned_newest['title']
+                        ?>: the <?php echo $owned_newest['subject'] ?> <?php echo $owned_newest['listingtype']
+                        ?></a>
+                    <?php
+                } else echo 'None';
+                ?>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="right">
+                Newest joined listing
+            </td>
+            <td>
+                <?php
+                if (count($joined_newest) > 0) {
+                    ?>
+                    <a href="<?php echo $joined_newest['url'] ?>"><?php echo $joined_newest['subject'] ?></a>
+                    <?php
+                } else echo 'None';
+                ?>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="right">
+                Total members in collective:
+            </td>
+            <td>
+                <?php echo $collective_total_fans_approved ?> (<?php echo $collective_total_fans_pending ?> pending)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="right">
+                Collective members growth rate:
+            </td>
+            <td>
+                <?php echo $collective_fans_growth_rate ?> members/day
+            </td>
+        </tr>
+
+    </table>
+
 <?php
-if( count( $owned_newest ) > 0 ) {
-?>
-   <a href="<?php echo $owned_newest['url'] ?>"><?php echo $owned_newest['title']
-   ?>: the <?php echo $owned_newest['subject'] ?> <?php echo $owned_newest['listingtype']
-   ?></a>
-<?php
-} else echo 'None';
-?>
-</td></tr>
-
-<tr><td class="right">
-Newest joined listing
-</td><td>
-<?php
-if( count( $joined_newest ) > 0 ) {
-?>
-   <a href="<?php echo $joined_newest['url'] ?>"><?php echo $joined_newest['subject'] ?></a>
-<?php
-} else echo 'None';
-?>
-</td></tr>
-
-<tr><td class="right">
-Total members in collective:
-</td><td>
-<?php echo $collective_total_fans_approved ?> (<?php echo $collective_total_fans_pending ?> pending)
-</td></tr>
-
-<tr><td class="right">
-Collective members growth rate:
-</td><td>
-<?php echo $collective_fans_growth_rate ?> members/day
-</td></tr>
-
-</table>
-
-<?php
-$owned = get_owned( 'current' );
+$owned = get_owned('current');
 $header = true;
-foreach( $owned as $id ) {
-   $info = get_listing_info( $id );
-   $stats = get_listing_stats( $id );
+foreach ($owned as $id) {
+    $info = get_listing_info($id);
+    $stats = get_listing_stats($id);
 
-   // now check $lastupdated -- if more than 8 weeks ago, notify!
-   $weeks = 0;
-   if( $stats['lastupdated'] && date( 'Y' ) != date( 'Y', strtotime( $stats['lastupdated'] ) ) ) {
-      $weeks = ( 52 - date( 'W', strtotime( $stats['lastupdated'] ) ) ) + date( 'W' );
-   } else if( $stats['lastupdated'] ) {
-      $weeks = date( 'W' ) - date( 'W', strtotime( $stats['lastupdated'] ) );
-   }
+    // now check $lastupdated -- if more than 8 weeks ago, notify!
+    $weeks = 0;
+    if ($stats['lastupdated'] && date('Y') != date('Y', strtotime($stats['lastupdated']))) {
+        $weeks = (52 - date('W', strtotime($stats['lastupdated']))) + date('W');
+    } else if ($stats['lastupdated']) {
+        $weeks = date('W') - date('W', strtotime($stats['lastupdated']));
+    }
 
-   if( $stats['lastupdated'] == '' || // no last updated date
-      $weeks >= 8 ){
-      if( $header ) {
-?>
-         <h2>Neglected Listings Notification</h2>
-         <p>The following listings have gone on two months without a 
-         newly-approved member or a new/updated affiliate!</p>
-         <ul>
-<?php
-         $header = false;
-      }
-      // prepare date format
-      $readable = @date( get_setting( 'date_format' ),
-         strtotime( $stats['lastupdated'] ) );
-      echo '<li> ';
-      if( $info['title'] )
-         echo $info['title'];
-      else
-         echo $info['subject'];
-      echo ", last updated $readable;<br />manage ";
-      echo '<a href="members.php?id=' . $info['listingid'] .
-         '">members</a>';
-      if( $info['affiliates'] == 1 ) // don't show if affiliates aren't enabled
-         echo ' or <a href="affiliates.php?listing=' .
-            $info['listingid'] . '">affiliates</a>';
-      echo '?</li>';
-   }
+    if ($stats['lastupdated'] == '' || // no last updated date
+        $weeks >= 8) {
+        if ($header) {
+            ?>
+            <h2>Neglected Listings Notification</h2>
+            <p>The following listings have gone on two months without a
+                newly-approved member or a new/updated affiliate!</p>
+            <ul>
+            <?php
+            $header = false;
+        }
+        // prepare date format
+        $readable = @date(get_setting('date_format'),
+            strtotime($stats['lastupdated']));
+        echo '<li> ';
+        if ($info['title'])
+            echo $info['title'];
+        else
+            echo $info['subject'];
+        echo ", last updated $readable;<br />manage ";
+        echo '<a href="members.php?id=' . $info['listingid'] .
+            '">members</a>';
+        if ($info['affiliates'] == 1) // don't show if affiliates aren't enabled
+            echo ' or <a href="affiliates.php?listing=' .
+                $info['listingid'] . '">affiliates</a>';
+        echo '?</li>';
+    }
 }
 echo '</ul>';
 
@@ -186,13 +213,13 @@ echo '<h1>Enthusiast Updates</h1>';
  */
 function tryReadingFeedFromCache($cacheFileName)
 {
-    if(!file_exists($cacheFileName)) {
+    if (!file_exists($cacheFileName)) {
         log_error('dashboard.php', 'Was not able to open file ' . __DIR__ . DIRECTORY_SEPARATOR . $cacheFileName . ' for cache, please make sure that the file exists and has CHMOD 777', false);
         return 'File with cache does not exist, please see error log';
     }
 
     $result = file_get_contents($cacheFileName);
-    if(!$result) {
+    if (!$result) {
         log_error('dashboard.php', 'Was not able to open file ' . __DIR__ . DIRECTORY_SEPARATOR . $cacheFileName . ' for cache, please make sure that the file exists and has CHMOD 777', false);
         return 'Was not able to open file for cache, please see error log';
     }
@@ -208,7 +235,7 @@ function tryWritingToCache($cacheFileName, $posts)
 {
     try {
         $cacheFile = fopen($cacheFileName, 'wb');
-        if($cacheFile === false) {
+        if ($cacheFile === false) {
             throw new RuntimeException('Was not able to open file ' . __DIR__ . DIRECTORY_SEPARATOR . $cacheFileName . ' for cache, please make sure that the file exists and has CHMOD 777');
         }
         fwrite($cacheFile, $posts);
@@ -220,45 +247,50 @@ function tryWritingToCache($cacheFileName, $posts)
 
 function printUpdates()
 {
-    $updatesApiUrl = 'https://gitlab.com/api/v4/projects/13880805/merge_requests?state=merged&order_by=updated_at&source_branch=develop&target_branch=master&created_after=2020-01-01';
-    $cachefilename = 'cache/updates'; // we need to check cache first
+    $updatesFeedUrl = 'https://scripts.robotess.net/projects/enthusiast/atom.xml';
+    $cachefilename = 'cache/updates';
     $posts = '';
 
-    if (!file_exists($cachefilename) || time() > filectime($cachefilename) + 86400) { // one day
-        // retrieve from web
-        try {
-            $contents = file_get_contents($updatesApiUrl);
-            $contents = utf8_encode($contents);
-            $updates = json_decode($contents, true);
-
-            if ($updates === false) {
-                throw new Exception('Was not able to retrieve updates from remote server');
-            }
-
-            foreach ($updates as $node) {
-                $timestamp = strtotime($node['updated_at']);
-                $daylong = date('l', $timestamp);
-                $monlong = date('F', $timestamp);
-                $yyyy = date('Y', $timestamp);
-                $dth = date('jS', $timestamp);
-                $min = date('i', $timestamp);
-                $_24hh = date('H', $timestamp);
-
-                $posts .= <<<MARKUP
-                <h2>{$node['title']}<br />
-                <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$min} &bull; <a href="{$node['web_url']}" target="_blank">permalink</a></small></h2>
-                <blockquote>{$node['$description']}</blockquote>
-MARKUP;
-            }
-
-            // try caching this now
-            tryWritingToCache($cachefilename, $posts);
-
-        } catch (Exception $e) {
-            log_error('dashboard.php', $e->getMessage(), false);
-            $posts = tryReadingFeedFromCache($cachefilename);
+    try {
+        $doc = new DOMDocument();
+        $success = @$doc->load($updatesFeedUrl);
+        if (!$success) {
+            throw new Exception('Was not able to retrieve updates from remote server');
         }
-    } else {
+
+        $domChannel = $doc->getElementsByTagName('channel');
+        if(count($domChannel) !== 1) {
+            // nothing here..
+            return;
+        }
+
+        /** @var DOMElement $node */
+        foreach ($domChannel->item(0)->getElementsByTagName('item') as $node) {
+            $title = $node->getElementsByTagName('title')->item(0)->nodeValue;
+            $link = $node->getElementsByTagName('link')->item(0)->nodeValue;
+            $pubdate = $node->getElementsByTagName('pubDate')->item(0)->nodeValue;
+            $description = $node->getElementsByTagName('description')->item(0)->nodeValue;
+
+            $timestamp = strtotime($pubdate);
+            $daylong = date('l', $timestamp);
+            $monlong = date('F', $timestamp);
+            $yyyy = date('Y', $timestamp);
+            $dth = date('jS', $timestamp);
+            $min = date('i', $timestamp);
+            $_24hh = date('H', $timestamp);
+
+            $posts .= <<<MARKUP
+                <h2>{$title}<br />
+                <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$min} &bull; <a href="{$link}" target="_blank">permalink</a></small></h2>
+                <blockquote>{$description}</blockquote>
+MARKUP;
+        }
+
+        // try caching this now
+        tryWritingToCache($cachefilename, $posts);
+
+    } catch (Exception $e) {
+        log_error('dashboard.php', $e->getMessage(), false);
         $posts = tryReadingFeedFromCache($cachefilename);
     }
 
@@ -267,4 +299,4 @@ MARKUP;
 
 printUpdates();
 
-require_once( 'footer.php' );
+require_once('footer.php');

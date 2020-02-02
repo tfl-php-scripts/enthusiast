@@ -1,6 +1,6 @@
-FROM php:7.3-apache
+FROM php:7.4-apache
 
-MAINTAINER Katenkka
+MAINTAINER Scripts.robotess.net
 
 RUN docker-php-ext-install pdo pdo_mysql
 RUN apt-get update &&\

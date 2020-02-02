@@ -2,11 +2,11 @@ version: '3'
 
 services:
   apache:
-    container_name: enthusiast-php7.3-apache
+    container_name: enthusiast-php7-apache
     image: enthusiast-php7.3-apache
     build:
       context: .
-      dockerfile: .docker/php7.3/Dockerfile
+      dockerfile: .docker/php7.4/Dockerfile
     ports:
       - 8081:80
       - 9001:9001
