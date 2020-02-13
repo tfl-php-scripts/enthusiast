@@ -524,6 +524,7 @@ if( $action == 'add' ) {
 
 
 if( $show_default ) {
+    $search = RobotessNet\cleanSearchString($_GET['search']);
 ?>
    <div class="submenu">
    <a href="joined.php?action=add">Add</a>
@@ -540,20 +541,18 @@ if( $show_default ) {
    <input type="hidden" name="dosearch" value="now" />
 
    <p class="center">
-   <input type="text" name="search" />
+   <input type="text" name="search" <?= $search !== null ? (' value="' . $search . '"') : '' ?>/>
    <select name="status" value="">
    <option value="">All</option>
-   <option value="pending">Pending</option>
-   <option value="approved">Approved</option>
+   <option value="pending"<?= isset($_GET['status']) && $_GET['status'] === 'pending'?' selected':''?>>Pending</option>
+   <option value="approved"<?= isset($_GET['status']) && $_GET['status'] === 'approved'?' selected':''?>>Approved</option>
    </select>
    <input type="submit" value="Search" />
    </p>
 
    </form>
 <?php
-   $start = '0';
-   if( isset( $_REQUEST['start'] ) )
-      $start = $_REQUEST['start'];
+   $start = $_REQUEST['start'] ?? '0';
 
    $total = 0;
    $ids = array();
@@ -562,11 +561,9 @@ if( $show_default ) {
          $ids = get_joined( $_GET['status'], $start, 'id' );
          $total = count( get_joined( $_GET['status'] ) );
       } else { // search!
-         $status = '';
-         if( isset( $_GET['status'] ) )
-            $status = $_GET['status'];
-         $ids = search_joined( $_GET['search'], $status, $start );
-         $total = count( search_joined( $_GET['search'], $status ) );
+         $status = $_GET['status'] ?? '';
+         $ids = search_joined( $search, $status, $start );
+         $total = count( search_joined( $search, $status ) );
       }
    } else {
       $ids = get_joined( 'all', $start, 'id' );
@@ -649,30 +646,16 @@ if( $show_default ) {
    echo '</table>';
 
    $page_qty = $total / get_setting( 'per_page' );
-   $url = $_SERVER['REQUEST_URI'];
-
    $url = 'joined.php';
    $connector = '?';
    foreach( $_GET as $key => $value )
-      if( $key != 'start' && $key != 'PHPSESSID' && $key != 'action' &&
-         $key != 'id' ) {
+      if( $key !== 'start' && $key !== 'PHPSESSID' && $key !== 'action' &&
+         $key !== 'id' ) {
          $url .= $connector . $key . '=' . $value;
          $connector = '&amp;';
       }
 
-   if( $page_qty > 1 )
-      echo '<p class="center">Go to page: ';
-
-   $i = 1;
-   while( ( $i <= $page_qty + 1 ) && $page_qty > 1 ) {
-      $start_link = ( $i - 1 ) * get_setting( 'per_page' );
-      echo '<a href="' . $url . $connector . 'start=' . $start_link . '">' .
-      $i . '</a> ';
-      $i++;
-   }
-
-   if( $page_qty > 1 )
-      echo '</p>';
-
+   echo RobotessNet\getPaginatorHTML($page_qty, $url, $connector);
 }
+
 require_once( 'footer.php' );

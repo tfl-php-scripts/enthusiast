@@ -3,10 +3,10 @@ version: '3'
 services:
   apache:
     container_name: enthusiast-php7-apache
-    image: enthusiast-php7.3-apache
+    image: enthusiast-php7.4-apache
     build:
       context: .
-      dockerfile: .docker/php7.4/Dockerfile
+      dockerfile: .docker/Dockerfile
     ports:
       - 8081:80
       - 9001:9001
@@ -17,11 +17,12 @@ services:
       - mysql
     volumes:
       - ./public:/app/public
+      - ./.docker/samplefl300members:/app/public/samplefl300members:ro
       - ./.docker/vhost.conf:/etc/apache2/sites-available/000-default.conf
-      - ./.docker/configs/config-with-listing.php:/app/public/samplefl/config.php
-      - ./.docker/configs/config-without-listing.php:/app/public/enthusiast/config.php
-      - ./.docker/configs/config-without-listing.php:/app/public/config.php
-      - ./.docker/configs/config-without-listing.php:/app/public/samplecollective/config.php
+      - ./.docker/configs/config-with-listing-1.php:/app/public/samplefl/config.php:ro
+      - ./.docker/configs/config-without-listing.php:/app/public/enthusiast/config.php:ro
+      - ./.docker/configs/config-without-listing.php:/app/public/config.php:ro
+      - ./.docker/configs/config-without-listing.php:/app/public/samplecollective/config.php:ro
     environment:
       XDEBUG_CONFIG: "remote_host=192.168.221.1 remote_enable=1 remote_port=9002"
       PHP_IDE_CONFIG: "serverName=Docker"
@@ -56,7 +57,7 @@ services:
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
-      - 8080:80
+      - 8011:80
     environment:
       PMA_HOST: mysql
       MYSQL_ROOT_PASSWORD: password

@@ -22,4 +22,4 @@
 
  For more information please view the readme.txt file.
 ******************************************************************************/
-echo '3.2.3';
+echo '3.2.4';

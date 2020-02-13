@@ -99,28 +99,14 @@ if( $show_default ) {
    echo '</table>';
 
    $page_qty = $total / get_setting( 'per_page' );
-   $url = $_SERVER['REQUEST_URI'];
-
    $url = 'errorlog.php';
    $connector = '?';
    foreach( $_GET as $key => $value )
-      if( $key != 'start' && $key != 'PHPSESSID' ) {
+      if( $key !== 'start' && $key !== 'PHPSESSID' ) {
          $url .= $connector . $key . '=' . $value;
          $connector = '&amp;';
       }
 
-   if( $page_qty > 1 )
-      echo '<p class="center">Go to page: ';
-
-   $i = 1;
-   while( ( $i <= $page_qty + 1 ) && $page_qty > 1 ) {
-      $start_link = ( $i - 1 ) * get_setting( 'per_page' );
-      echo '<a href="' . $url . $connector . 'start=' . $start_link . '">' .
-         $i . '</a> ';
-      $i++;
-   }
-
-   if( $page_qty > 1 )
-      echo '</p>';
+    echo RobotessNet\getPaginatorHTML($page_qty, $url, $connector);
 }
 require_once( 'footer.php' );

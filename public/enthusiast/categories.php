@@ -317,6 +317,7 @@ if( $action == 'add' ) {
 
 /*__________________________________________________________________DEFAULT__*/
 if( $show_default ) {
+    $search = RobotessNet\cleanSearchString($_GET['search']);
 ?>
    <div class="submenu">
    <a href="categories.php?action=add">Add</a>
@@ -331,15 +332,14 @@ if( $show_default ) {
    <input type="hidden" name="dosearch" value="now" />
 
    <p class="center">
-   <input type="text" name="search" />
+   <input type="text" name="search" <?= $search !== null ? (' value="' . $search . '"') : '' ?>/>
    <input type="submit" value="Search" />
    </p>
 
    </form>
 
 <?php
-   $start = ( isset( $_REQUEST['start'] ) ) ? $_REQUEST['start'] : '0';
-   $search = ( isset( $_GET['search'] ) ) ? $_GET['search'] : '';
+   $start = $_REQUEST['start'] ?? '0';
 
    $total = 0;
    $cats = enth_get_categories( $search, $start );
@@ -395,30 +395,16 @@ if( $show_default ) {
    }
    echo '</table>';
 
-   $page_qty = $total / get_setting( 'per_page' );
-   $url = $_SERVER['REQUEST_URI'];
+    $url = 'categories.php';
 
-   $url = 'categories.php';
-   $connector = '?';
-   foreach( $_GET as $key => $value )
-      if( $key != 'start' && $key != 'PHPSESSID' ) {
-         $url .= $connector . $key . '=' . $value;
-         $connector = '&amp;';
-      }
+    $page_qty = $total / get_setting('per_page');
+    $connector = '?';
+    foreach ($_GET as $key => $value)
+        if ($key !== 'start' && $key !== 'PHPSESSID') {
+            $url .= $connector . $key . '=' . $value;
+            $connector = '&amp;';
+        }
 
-   if( $page_qty > 1 )
-      echo '<p class="center">Go to page: ';
-
-   $i = 1;
-   while( ( $i <= $page_qty + 1 ) && $page_qty > 1 ) {
-      $start_link = ( $i - 1 ) * get_setting( 'per_page' );
-      echo '<a href="' . $url . $connector . 'start=' . $start_link . '">' .
-      $i . '</a> ';
-      $i++;
-   }
-
-   if( $page_qty > 1 )
-      echo '</p>';
-
+    echo RobotessNet\getPaginatorHTML($page_qty, $url, $connector);
 }
 require_once( 'footer.php' );
