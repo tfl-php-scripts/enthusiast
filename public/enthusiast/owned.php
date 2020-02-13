@@ -27,10 +27,12 @@ require_once('logincheck.inc.php');
 if( !isset( $logged_in ) || !$logged_in ) {
    $_SESSION['message'] = 'You are not logged in. Please log in to continue.';
    $next = '';
-   if( isset( $_SERVER['REQUEST_URI'] ) )
-      $next = $_SERVER['REQUEST_URI'];
-   else if( isset( $_SERVER['PATH_INFO'] ) )
-      $next = $_SERVER['PATH_INFO'];
+   if( isset( $_SERVER['REQUEST_URI'] ) ) {
+       $next = $_SERVER['REQUEST_URI'];
+   }
+   else if( isset( $_SERVER['PATH_INFO'] ) ) {
+       $next = $_SERVER['PATH_INFO'];
+   }
    $_SESSION['next'] = $next;
    header( 'location: index.php' );
    die( 'Redirecting you...' );
@@ -48,8 +50,9 @@ $show_default = true;
 <h1>Owned Listings</h1>
 <?php
 $action = '';
-if( isset( $_REQUEST["action"] ) )
-   $action = $_REQUEST['action'];
+if( isset( $_REQUEST['action'] ) ) {
+    $action = $_REQUEST['action'];
+}
 
 
 /*__________________________________________________________________TEMPLATE_*/
@@ -133,8 +136,7 @@ if( $action == 'template' ) {
    $info = get_listing_info( $_REQUEST['id'] );
 
    if( isset( $_POST['done'] ) ) {
-      if( isset( $_POST['image_change'] ) && $_POST['image_change'] == 'yes' &&
-         isset( $_FILES['image']['name'] ) && $_FILES['image']['name'] != '' ){
+      if(isset($_POST['image_change'], $_FILES['image']['name']) && $_POST['image_change'] == 'yes' && $_FILES['image']['name'] != ''){
          $dir = get_setting( 'owned_images_dir' );
          $filename = $_FILES['image']['name'];
          $upload_success = @move_uploaded_file( $_FILES['image']['tmp_name'],
@@ -175,7 +177,9 @@ if( $action == 'template' ) {
       $changes = edit_owned( $_POST['id'], $_POST );
       if( count( $changes ) > 0 ) {
          echo '<div class="success">The following changes have been made:<ul>';
-         foreach( $changes as $c ) echo '<li> ' . $c . ' </li>';
+         foreach( $changes as $c ) {
+             echo '<li> ' . $c . ' </li>';
+         }
          echo '</ul></div>';
       }
    }
@@ -191,15 +195,17 @@ if( $action == 'template' ) {
 } else if( $action == 'delete' ) {
    $info = get_listing_info( $_REQUEST['id'] );
    $success = delete_owned( $_REQUEST['id'] );
-   if( $success )
-      echo '<p class="success">Successfully deleted the <i>' .
-         $info['subject'] . ' ' . $info['listingtype'] . '</i>.</p>';
+   if( $success ) {
+       echo '<p class="success">Successfully deleted the <i>' .
+           $info['subject'] . ' ' . $info['listingtype'] . '</i>.</p>';
+   }
       
 
 }
 
 
 if( $show_default ) {
+    $search = RobotessNet\cleanSearchString($_GET['search']);
 ?>
    <div class="submenu">
    <a href="setup.php">Add</a>
@@ -218,7 +224,7 @@ if( $show_default ) {
    <input type="hidden" name="dosearch" value="now" />
 
    <p class="center">
-   <input type="text" name="search" />
+   <input type="text" name="search" <?= $search !== null ? (' value="' . $search . '"') : '' ?>/>
 
    <select name="status" value="">
    <option value="">All</option>
@@ -233,11 +239,9 @@ if( $show_default ) {
    </form>
 
 <?php
-   $start = '0';
-   if( isset( $_REQUEST['start'] ) )
-      $start = $_REQUEST['start'];
+    $start = $_REQUEST['start'] ?? '0';
 
-   $total = 0;
+    $total = 0;
    $ids = array();
    if( isset( $_GET['dosearch'] ) ) {
       if( $_GET['search'] == '' ) {
@@ -245,10 +249,11 @@ if( $show_default ) {
          $total = count( get_owned( $_GET['status'] ) );
       } else { // search!
          $status = '';
-         if( isset( $_GET['status'] ) )
-            $status = $_GET['status'];
-         $ids = search_owned( $_GET['search'], $status, $start );
-         $total = count( search_owned( $_GET['search'], $status ) );
+         if( isset( $_GET['status'] ) ) {
+             $status = $_GET['status'];
+         }
+         $ids = search_owned( $search, $status, $start );
+         $total = count( search_owned( $search, $status ) );
       }
    } else {
       $ids = get_owned( 'all', $start, 'bydate' );
@@ -272,7 +277,9 @@ if( $show_default ) {
       if( $shade ) {
          $class = ' class="rowshade"';
          $shade = false;
-      } else $shade = true;
+      } else {
+          $shade = true;
+      }
 
       $dir = get_setting( 'owned_images_dir' );
       $root_web = get_setting( 'root_path_web' );
@@ -281,17 +288,21 @@ if( $show_default ) {
       $image = ( $info['imagefile'] && is_file( $dir . $info['imagefile'] ) )
          ? getimagesize( $dir . $info['imagefile'] ) : array();
       // make sure $image is an array, in case getimagesize() failed
-      if( !is_array( $image ) ) 
-         $image = array();
+      if( !is_array( $image ) ) {
+          $image = array();
+      }
 
       $target = '_self';
 
-      if( $info['status'] == 0 )
-         echo '<tr' . $class . '><td class="important"><b>?</b></td>';
-      else if( $info['status'] == 1 )
-         echo '<tr' . $class . '><td class="upcoming"><b>!</b></td>';
-      else
-         echo '<tr' . $class . '><td></td>';
+      if( $info['status'] == 0 ) {
+          echo '<tr' . $class . '><td class="important"><b>?</b></td>';
+      }
+      else if( $info['status'] == 1 ) {
+          echo '<tr' . $class . '><td class="upcoming"><b>!</b></td>';
+      }
+      else {
+          echo '<tr' . $class . '><td></td>';
+      }
 ?>
       <td><?php echo $info['listingid'] ?></td>
       <td><?php echo $info['title'] ?></td>
@@ -300,30 +311,35 @@ if( $show_default ) {
 <?php
       $catstring = '';
       $cats = explode( '|', $info['catid'] );
-      foreach( $cats as $c )
-         if( $c != '' ) {
-            if( $ancestors = array_reverse( get_ancestors( $c ) ) ) {
-               // get ancestors
-               $text = '';
-               foreach( $ancestors as $a )
-                  $text .= get_category_name( $a ) . ' > ';
-               $catstring .= str_replace( '>', '&raquo;', rtrim( $text, ' > ' ) ) .
-                  ', ';
-            }
-         }
+      foreach( $cats as $c ) {
+          if ($c != '') {
+              if ($ancestors = array_reverse(get_ancestors($c))) {
+                  // get ancestors
+                  $text = '';
+                  foreach ($ancestors as $a) {
+                      $text .= get_category_name($a) . ' > ';
+                  }
+                  $catstring .= str_replace('>', '&raquo;', rtrim($text, ' > ')) .
+                      ', ';
+              }
+          }
+      }
       $catstring = rtrim( $catstring, ', ' );
 ?>
       <td><?php echo $catstring ?></td>
 <?php
       $dir = str_replace( '\\', '/', $dir );
-      if( $info['imagefile'] != '' && count( $image ) )
-         echo '<td class="center"><img src="' . $dir . $info['imagefile'] .
-            '" ' . $image[3] . 'border="0" alt="" /></td>';
-      else if( $info['imagefile'] != '' && count( $image ) == 0 )
-         echo '<td class="center"><img src="' . $dir . $info['imagefile'] .
-            '" border="0" alt="" /></td>';
-      else
-         echo '<td class="center">x</td>';
+      if( $info['imagefile'] != '' && count( $image ) ) {
+          echo '<td class="center"><img src="' . $dir . $info['imagefile'] .
+              '" ' . $image[3] . 'border="0" alt="" /></td>';
+      }
+      else if( $info['imagefile'] != '' && count( $image ) == 0 ) {
+          echo '<td class="center"><img src="' . $dir . $info['imagefile'] .
+              '" border="0" alt="" /></td>';
+      }
+      else {
+          echo '<td class="center">x</td>';
+      }
 ?>
       <td class="center">
       <a href="owned.php?action=edit&id=<?php echo $id ?>"><img src="edit.gif"
@@ -341,29 +357,16 @@ if( $show_default ) {
    </table>
 <?php
    $page_qty = $total / get_setting( 'per_page' );
-   $url = $_SERVER['REQUEST_URI'];
-
    $url = 'owned.php';
    $connector = '?';
-   foreach( $_GET as $key => $value )
-      if( $key != 'start' && $key != 'PHPSESSID' && $key != 'action' &&
-         $key != 'id' ) {
-         $url .= $connector . $key . '=' . $value;
-         $connector = '&amp;';
-      }
-
-   if( $page_qty > 1 )
-      echo '<p class="center">Go to page: ';
-
-   $i = 1;
-   while( ( $i <= $page_qty + 1 ) && $page_qty > 1 ) {
-      $start_link = ( $i - 1 ) * get_setting( 'per_page' );
-      echo '<a href="' . $url . $connector . 'start=' . $start_link . '">' .
-      $i . '</a> ';
-      $i++;
+   foreach( $_GET as $key => $value ) {
+       if ($key != 'start' && $key != 'PHPSESSID' && $key != 'action' &&
+           $key != 'id') {
+           $url .= $connector . $key . '=' . $value;
+           $connector = '&amp;';
+       }
    }
 
-   if( $page_qty > 1 )
-      echo '</p>';
+    echo RobotessNet\getPaginatorHTML($page_qty, $url, $connector);
 }
 require_once('footer.php');

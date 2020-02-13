@@ -41,7 +41,9 @@ require_once( 'mod_errorlogs.php' );
 require_once( 'mod_settings.php' );
 
 $show_default = true;
-echo '<h1>Enthusiast 3 Settings</h1>';
+echo '<h1>Enthusiast ';
+include ENTH_PATH . 'show_enthversion.php';
+echo ' Settings</h1>';
 $action = ( isset( $_REQUEST["action"] ) ) ? $_REQUEST['action'] : '';
 
 /*______________________________________________________________________EDIT_*/
@@ -138,7 +140,7 @@ if( $show_default ) {
    </td></tr>
 
    <tr class="rowshade"><td>
-   Items per page
+   Items per page in the panel
    </td><td>
    <input type="text" name="per_page" value="<?php echo get_setting( 'per_page' ) ?>" />
    </td></tr>
