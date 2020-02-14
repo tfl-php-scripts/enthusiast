@@ -282,41 +282,6 @@ namespace {
 
 namespace RobotessNet {
 
-    use PDO;
-    use PDOException;
-    use function strtolower;
-
-    /**
-     * @return string
-     */
-    function getPDOInfo()
-    {
-        include 'config.php';
-        try {
-            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
-            $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $db_link->getAttribute(PDO::ATTR_DRIVER_NAME) . ' ' . $db_link->getAttribute(PDO::ATTR_SERVER_VERSION);
-        } catch (PDOException $e) {
-            die(DATABASE_CONNECT_ERROR . $e->getMessage());
-        }
-    }
-
-    /**
-     * @param string|null $searchText
-     * @return string|null
-     */
-    function cleanSearchString(?string $searchText)
-    {
-        if(!isset($searchText) || $searchText === null){
-            return null;
-        }
-
-        $searchText = trim($searchText);
-        $searchText = strtolower($searchText);
-
-        return $searchText;
-    }
-
     /**
      * @param int $numberOfPages
      * @param string $url

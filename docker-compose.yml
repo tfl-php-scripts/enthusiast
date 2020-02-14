@@ -3,7 +3,7 @@ version: '3'
 services:
   apache:
     container_name: enthusiast-php7-apache
-    image: enthusiast-php7.4-apache
+    image: enthusiast-php7.1-apache
     build:
       context: .
       dockerfile: .docker/Dockerfile

@@ -524,7 +524,7 @@ if( $action == 'add' ) {
 
 
 if( $show_default ) {
-    $search = RobotessNet\cleanSearchString($_GET['search']);
+    $search = $_GET['search'] ?? null;
 ?>
    <div class="submenu">
    <a href="joined.php?action=add">Add</a>
