@@ -41,9 +41,7 @@ require_once( 'mod_errorlogs.php' );
 require_once( 'mod_settings.php' );
 
 $show_default = true;
-echo '<h1>Enthusiast ';
-include ENTH_PATH . 'show_enthversion.php';
-echo ' Settings</h1>';
+echo '<h1>Enthusiast '. ( $currentVersion ?? 'v. Unknown' ). ' Settings</h1>';
 $action = ( isset( $_REQUEST["action"] ) ) ? $_REQUEST['action'] : '';
 
 /*______________________________________________________________________EDIT_*/

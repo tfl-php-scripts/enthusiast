@@ -24,5 +24,5 @@
 ******************************************************************************/
 ?>
 <a href="http://scripts.robotess.net" target="_blank" title="PHP Scripts collections">Powered by
-    Enthusiast <?php include ENTH_PATH . 'show_enthversion.php' ?></a>
+    Enthusiast <?= $currentVersion ?? 'v. Unknown' ?></a>
 (original author: <a href="http://scripts.indisguise.org" target="_blank">Angela Sabas</a>)

@@ -48,24 +48,15 @@ require_once('mod_errorlogs.php');
 ?>
     <h1>Enthusiast version and server info</h1>
 
-    <p>You are currently using Enthusiast <?php include ENTH_PATH . 'show_enthversion.php' ?>. Please make sure you
+    <p>You are currently using Enthusiast <?= $currentVersion ?? 'v. Unknown' ?>. Please make sure you
         always keep your script up-to-date. Link to the latest version is available on
         <a href="https://scripts.robotess.net/projects/enthusiast" target="_blank"
            title="PHP Script Enthusiast ported to PHP7">project's page</a>.</p>
 
     <h2>Server info (useful for debugging and reporting issues)</h2>
     <p>When you're asking for help with the script, please share the following information:</p>
-    <p>Enthusiast: <?php include ENTH_PATH . 'show_enthversion.php' ?></p>
+    <p>Enthusiast: <?= $currentVersion ?? 'v. Unknown' ?></p>
     <p>PHP: <?= PHP_VERSION ?></p>
-    <p>PDO: <?= RobotessNet\getPDOInfo() ?></p>
-<?php
-$apacheVersion = apache_get_version();
-if ($apacheVersion !== false) {
-    ?>
-    <p>Apache: <?= $apacheVersion ?></p>
-    <?php
-}
-?>
 
     <h1>You are managing: <?php echo get_setting('collective_title') ?></h1>
 <?php

@@ -367,7 +367,7 @@ if ($show_default) {
     <?php
     if ($listing) { //////////////////////////////////////////////// MANAGE
         $info = get_listing_info($listing);
-        $searchText = RobotessNet\cleanSearchString($_GET['search']);
+        $searchText = $_GET['search'] ?? null;
         ?>
         <form action="members.php" method="get">
             <input type="hidden" name="dosearch" value="now"/>

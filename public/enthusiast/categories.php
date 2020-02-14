@@ -317,7 +317,7 @@ if( $action == 'add' ) {
 
 /*__________________________________________________________________DEFAULT__*/
 if( $show_default ) {
-    $search = RobotessNet\cleanSearchString($_GET['search']);
+    $search = $_GET['search'] ?? null;
 ?>
    <div class="submenu">
    <a href="categories.php?action=add">Add</a>

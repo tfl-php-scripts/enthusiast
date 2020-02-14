@@ -1,4 +1,4 @@
-FROM php:7.4-apache
+FROM php:7.1-apache
 
 MAINTAINER Scripts.robotess.net
 
@@ -12,6 +12,9 @@ ENV PATH /usr/local/go/bin:$PATH
 RUN go get github.com/mailhog/mhsendmail
 RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
 RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' > /usr/local/etc/php/php.ini
+
+RUN echo 'display_errors = on' > /usr/local/etc/php/php.ini \
+    && echo 'log_errors = off' > /usr/local/etc/php/php.ini
 
 RUN yes | pecl install xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
