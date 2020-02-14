@@ -392,8 +392,7 @@ if ($show_default) {
         } else {
             $members = get_members($listing, 'approved', array(), $start,
                 'bydate', get_setting('per_page'));
-            $total = count(get_members($listing, 'approved', array(), $start,
-                'bydate'));
+            $total = count(get_members($listing, 'approved'));
         }
         ?>
         <table>
