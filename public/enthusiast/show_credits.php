@@ -22,7 +22,7 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
-if(isset($currentVersion)) {
+if(!isset($currentVersion)) {
     try {
         if (file_exists(ENTH_PATH . 'show_enthversion.php')) {
             ob_start();
