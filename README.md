@@ -22,6 +22,6 @@ If you are using [this version](https://github.com/angelasabas/enthusiast) of En
 2. Take note of your database information in all your `config.php` files.
 3. Download [an archive of the public folder of this repository](https://gitlab.com/tfl-php-scripts/enthusiast/-/archive/master/enthusiast-master.zip?path=public). Extract the archive.
 4. Replace your current `enthusiast/` files with the `public/enthusiast/` files from this repository.
-5. In every fanlisting folder, paste the `config.sample.php` file. Edit your database information and listing ID variable accordingly, and save it as `config.php` to overwrite your old one.
+5. In every fanlisting folder, as well as in the enthusiast and collective folder, paste the `config.sample.php` file. Edit your database information and listing ID variable accordingly, and save it as `config.php` to overwrite your old one.
 
 That's it! Should you encounter any problems, please create an issue here, and I will try and solve it if I can.
