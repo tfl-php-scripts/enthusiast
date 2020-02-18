@@ -16,7 +16,9 @@ Changes are available in [changelog](CHANGELOG.md).
 
 ## Upgrading
 
-If you are using [this version](https://github.com/angelasabas/enthusiast) of Enthusiast:
+I'm not providing support for those who have version lower than 3.1.5.
+
+If you are using Enthusiast 3.1.6, not lower:
 
 1. **Back up all your current Enthusiast configurations, files, and databases first.**
 2. Take note of your database information in all your `config.php` files.
