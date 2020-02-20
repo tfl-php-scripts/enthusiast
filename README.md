@@ -1,8 +1,10 @@
 # Enthusiast for PHP7
 
+Original author is [Angela Sabas](https://github.com/angelasabas/enthusiast), the other contributor is [Lysianthus](https://github.com/Lysianthus/enthusiast) / Original readme is [here](readme.txt).
+
 #### I would highly recommend not to use this script for new installations. Although some modifications were made, this script is still pretty old, not very secure, and does not have any tests, that's why please only update it if you have already installed it before.
 
-[Enthusiast](https://github.com/angelasabas/enthusiast) is a listing and listing collective management system ported to PHP 7. Requires at least PHP 7.2.
+This version requires at least PHP 7.2.
 
 | PHP version | Supported until | Supported by Enthusiast |
 |------------------------------------------|--------------------|-------------------------|
