@@ -318,7 +318,7 @@ if( isset( $_POST['install'] ) && $_POST['install'] == 'yes' ) {
       $query = "INSERT INTO `$db_settings` VALUES ('affiliates_template', " .
          "'Collective affiliates template', '<a href=\"enth3-url\"><img " .
          "src=\"enth3-image\" width=\"enth3-width\" height=\"enth3-height\" " .
-         "border=\"0\" alt=\" enth3-title\" /></a> ', 'Template for showing " .
+         "border=\"0\" alt=\" enth3-title\" /></a>', 'Template for showing " .
          "collective affiliates.')";
       try {
          $success = $db_link->prepare($query);

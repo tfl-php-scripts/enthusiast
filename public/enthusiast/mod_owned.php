@@ -2122,6 +2122,11 @@ function get_listing_stats($id, $extended = false)
                 return;
             }
 
+            // set default values so that no "undefined index" notice is shown
+            $stats['randomaffiliates'] = '';
+            $stats['randomaffiliateimg'] = '';
+            $stats['randomaffiliate'] = '';
+
             // get total affiliates
             $query = "SELECT COUNT(*) AS `count` FROM `$afftable`";
             $result = $db_link_list->prepare($query);
@@ -2133,6 +2138,7 @@ function get_listing_stats($id, $extended = false)
                 die(STANDARD_ERROR);
             }
             $result->setFetchMode(PDO::FETCH_ASSOC);
+
             $affnum = $result->fetch();
             $stats['totalaffiliates'] = $affnum['count'];
 
