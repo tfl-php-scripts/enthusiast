@@ -1,8 +1,8 @@
 <?php
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
- * Copyright (c) by Angela Sabas
- * http://scripts.indisguise.org/
+ * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
+ * Copyright (c) 2019 by Ekaterina (contributor) http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -77,7 +77,9 @@
     Enthusiast 3 copyright &copy; 2004 - <?php echo date('Y'); ?> by Angela Sabas.<br/>
     <a href="http://indisguise.org/" target="_blank">Indisguise</a> |
     <a href="http://scripts.indisguise.org/" target="_blank">Indiscripts</a>
-    <br/><br/><a href="https://scripts.robotess.net" target="_blank" title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP7">Enthusiast <?= $currentVersion ?? 'v. Unknown' ?></a> - support since 2019 by <a href="https://robotess.net" target="_blank" title="PHP Developer">Ekaterina</a>
+    <br/><br/><a href="https://scripts.robotess.net" target="_blank"
+                 title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">Enthusiast <?= $currentVersion ?? 'v. Unknown' ?> for PHP 7</a>
+    - support since 2019 by <a href="https://robotess.net" target="_blank" title="PHP Developer">Ekaterina</a>
 </div>
 
 </body>

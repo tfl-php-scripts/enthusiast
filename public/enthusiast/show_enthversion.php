@@ -1,8 +1,7 @@
 <?php
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
- * Copyright (c) by Angela Sabas
- * http://scripts.indisguise.org/
+ * Copyright (c) 2019 by Ekaterina http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.

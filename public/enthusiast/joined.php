@@ -1,27 +1,27 @@
 <?php
 /*****************************************************************************
- Enthusiast: Listing Collective Management System
- Copyright (c) by Angela Sabas
- http://scripts.indisguise.org/
-
- Enthusiast is a tool for (fan)listing collective owners to easily
- maintain their listing collectives and listings under that collective.
-
- This program is free software: you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
- For more information please view the readme.txt file.
-******************************************************************************/
+ * Enthusiast: Listing Collective Management System
+ * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
+ * Copyright (c) 2019 by Ekaterina (contributor) http://scripts.robotess.net
+ *
+ * Enthusiast is a tool for (fan)listing collective owners to easily
+ * maintain their listing collectives and listings under that collective.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * For more information please view the readme.txt file.
+ ******************************************************************************/
 session_start();
 require_once( 'logincheck.inc.php' );
 if( !isset( $logged_in ) || !$logged_in ) {
@@ -30,7 +30,7 @@ if( !isset( $logged_in ) || !$logged_in ) {
    if( isset( $_SERVER['REQUEST_URI'] ) )
       $next = $_SERVER['REQUEST_URI'];
    else if( isset( $_SERVER['PATH_INFO'] ) )
-      $next = $_SERVER['PATH_INFO'];
+      { $next = $_SERVER['PATH_INFO']; }
    $_SESSION['next'] = $next;
    header( 'location: index.php' );
    die( 'Redirecting you...' );
@@ -589,7 +589,7 @@ if( $show_default ) {
       if( $shade ) {
          $class = ' class="rowshade"';
          $shade = false;
-      } else $shade = true;
+      } else { $shade = true; }
 
       $dir = get_setting( 'joined_images_dir' );
       $root_web = get_setting( 'root_path_web' );
@@ -601,9 +601,9 @@ if( $show_default ) {
       $target = '_self';
 
       if( $info['pending'] == 1 )
-         echo '<tr' . $class . '><td class="important"><b>x</b></td>';
+         { echo '<tr' . $class . '><td class="important"><b>x</b></td>'; }
       else
-         echo "<tr$class><td></td>";
+         { echo "<tr$class><td></td>"; }
 ?>
       <td><a href="<?php echo $info['url'] ?>" target="<?php echo $target
          ?>"><?php echo $info['subject'] ?></a></td>
@@ -611,7 +611,7 @@ if( $show_default ) {
       $catstring = '';
       $cats = explode( '|', $info['catid'] );
       foreach( $cats as $c )
-         if( $c != '' ) {
+         { if( $c != '' ) {
             if( $ancestors = array_reverse( get_ancestors( $c ) ) ) {
                // get ancestors
                $text = '';
@@ -620,18 +620,20 @@ if( $show_default ) {
                $catstring .= str_replace( '>', '&raquo;', rtrim( $text, ' > ' ) ) .
                   ', ';
             }
-         }
+         } }
       $catstring = rtrim( $catstring, ', ' );
 ?>
       <td><?php echo $catstring ?></td>
 <?php
       $dir = str_replace( '\\', '/', $dir );
       if( $info['imagefile'] != '' )
-         echo '<td class="center"><img src="' . $dir . $info['imagefile'] .
+         { echo '<td class="center"><img src="' . $dir . $info['imagefile'] .
             '" ' . ( ( isset( $image[3] ) ) ? $image[3] : '' ) .
             'border="0" alt="" /></td>';
-      else
-         echo '<td class="center">x</td>';
+         }
+      else {
+          echo '<td class="center">x</td>';
+      }
 ?>
       <td class="center">
       <a href="joined.php?action=edit&id=<?php echo $id ?>"><img src="edit.gif"
