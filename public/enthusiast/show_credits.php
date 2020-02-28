@@ -33,6 +33,6 @@ if(!isset($currentVersion)) {
     }
 }
 ?>
-Powered by <a href="http://scripts.robotess.net" target="_blank" title="PHP Scripts collection">
+Powered by <a href="https://scripts.robotess.net" target="_blank" title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">
     Enthusiast <?= $currentVersion ?? 'v. Unknown' ?> for PHP 7</a>
 (original author: <a href="http://scripts.indisguise.org" target="_blank">Angela Sabas</a>)
