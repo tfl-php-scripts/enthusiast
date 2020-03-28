@@ -18,3 +18,8 @@ jumpin:
 
 logs:
 	docker-compose logs -f
+
+codecept:
+	docker exec -ti ${container} composer install
+	docker exec -ti ${container} php vendor/bin/codecept generate:scenarios acceptance
+	docker exec -ti ${container} php vendor/bin/codecept run tests/acceptance/simpleui --steps --html --env localdocker

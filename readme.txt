@@ -1,9 +1,21 @@
-
 Enthusiast
 -----------------------------
 Copyright (c) Angela Sabas
 http://scripts.indisguise.org
 =============================
+
+
+[[IMPORTANT NOTE]] ---------------------------------------------------------
+
+This is now an unsupported script. There is a version of this script
+updated for the latest PHP version at
+https://gitlab.com/tfl-php-scripts/enthusiast
+-- please use that instead if you must use this script or need to
+update your installation.
+
+I'm sorry for ending development on Enthusiast. Perhaps one day.
+
+----------------------------------------------------------------------------
 
 
 

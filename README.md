@@ -1,6 +1,8 @@
-# Enthusiast for PHP7
+# Enthusiast for PHP7 [Robotess Fork]
 
-Original author is [Angela Sabas](https://github.com/angelasabas/enthusiast), the other contributor is [Lysianthus](https://github.com/Lysianthus/enthusiast) / Original readme is [here](readme.txt).
+The main repository with issue tracking is at gitlab: https://gitlab.com/tfl-php-scripts/enthusiast
+
+Original author is [Angela Sabas](https://github.com/angelasabas/enthusiast), the other contributor is [Lysianthus](https://github.com/Lysianthus/enthusiast) / Original readme by Angela is [here](readme.txt).
 
 #### I would highly recommend not to use this script for new installations. Although some modifications were made, this script is still pretty old, not very secure, and does not have any tests, that's why please only update it if you have already installed it before.
 
@@ -19,7 +21,7 @@ Changes are available in [changelog](CHANGELOG.md).
 
 I'm not providing support for those who have version lower than 3.1.5.
 
-If you are using Enthusiast 3.1.6 (old version by Angela) or 3.2.* (my version):
+If you are using Enthusiast 3.1.6 (old version by Angela) or Enthusiast [Robotess Fork] 1.*:
 
 1. **Back up all your current Enthusiast configurations, files, and databases first.**
 2. Take note of your database information in all your `config.php` files.
@@ -29,4 +31,4 @@ If you are using Enthusiast 3.1.6 (old version by Angela) or 3.2.* (my version):
 
 Please follow the instructions carefully. A lot of issues were related to facts that users had incorrect config files.
 
-That's it! Should you encounter any problems, please [create an issue](https://gitlab.com/tfl-php-scripts/enthusiast/issues/new?issue%5Bassignee_id%5D=&issue%5Bmilestone_id%5D=), and I will try and solve it if I can.
+That's it! Should you encounter any problems, please create an issue (here: https://gitlab.com/tfl-php-scripts/enthusiast/-/issues), and I will try and solve it if I can. 

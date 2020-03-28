@@ -283,6 +283,22 @@ namespace {
 
 namespace RobotessNet {
 
+    use PDOStatement;
+    use function file_exists;
+    use function ob_get_clean;
+    use function ob_start;
+    const DUPLICATE_ENTRY_SQL_ERROR_CODE = 1062;
+
+    /**
+     * @param PDOStatement $result
+     * @return bool
+     */
+    function isDuplicateSqlError(PDOStatement $result)
+    {
+        $errorInfo = $result->errorInfo() ?? [];
+        return isset($errorInfo[1]) && $errorInfo[1] === DUPLICATE_ENTRY_SQL_ERROR_CODE;
+    }
+
     /**
      * @param int $numberOfPages
      * @param string $url
@@ -291,7 +307,7 @@ namespace RobotessNet {
      */
     function getPaginatorHTML(int $numberOfPages, string $url, string $connector)
     {
-        if($numberOfPages <= 1) {
+        if ($numberOfPages <= 1) {
             return '';
         }
 
@@ -308,5 +324,20 @@ namespace RobotessNet {
         $result .= '</p>';
 
         return $result;
+    }
+
+    /**
+     * @return string
+     */
+    function getVersion()
+    {
+        $result = '[Robotess Fork] v. ';
+        if (file_exists(ENTH_PATH . 'show_enthversion.php')) {
+            ob_start();
+            include ENTH_PATH . 'show_enthversion.php';
+            return $result . ob_get_clean();
+        }
+
+        return $result . 'Unknown';
     }
 }

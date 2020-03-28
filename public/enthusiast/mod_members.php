@@ -226,7 +226,7 @@ function get_members($listing, $status = 'all', $sort = array(), $start = 'none'
 
 
 /*___________________________________________________________________________*/
-function delete_member($id, $email)
+function delete_member($listingId, $email)
 {
     require 'config.php';
 
@@ -240,7 +240,7 @@ function delete_member($id, $email)
     // get info
     $query = "SELECT * FROM `$db_owned` WHERE `listingid` = :id";
     $result = $db_link->prepare($query);
-    $result->bindParam(':id', $id, PDO::PARAM_INT);
+    $result->bindParam(':id', $listingId, PDO::PARAM_INT);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
@@ -265,7 +265,7 @@ function delete_member($id, $email)
     }
 
     // delete fan
-    $query = "DELETE FROM `$table` WHERE `email` = :email";
+    $query = "DELETE FROM `$table` WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email))";
     $result = $db_link_list->prepare($query);
     $result->bindParam(':email', $email, PDO::PARAM_STR);
     $result->execute();
@@ -407,6 +407,7 @@ function get_member_info($listing, $email)
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
 
+
     // get info
     $query = "SELECT * FROM `$db_owned` WHERE `listingid` = :listing";
     $result = $db_link->prepare($query);
@@ -434,7 +435,7 @@ function get_member_info($listing, $email)
     }
 
     // get member info
-    $query = "SELECT * FROM `$table` WHERE `email` = :email";
+    $query = "SELECT * FROM `$table` WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email))";
     $result = $db_link_list->prepare($query);
     $result->bindParam(':email', $email, PDO::PARAM_STR);
     $result->execute();

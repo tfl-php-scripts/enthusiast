@@ -1,4 +1,4 @@
-<blockquote>Script used: <a href="http://scripts.indisguise.org" target="_blank">Enthusiast</a> (<a href="http://scripts.robotess.net" target="_blank" title="PHP Scripts collections">3.2.x</a>)<br />
+<blockquote>Script used: <a href="https://scripts.robotess.net" target="_blank" title="PHP Scripts collection">Enthusiast [Robotess Fork]</a><br />
 Last updated: $$stat_updated$$<br />
 Member count: $$stat_approved$$, from $$stat_countries$$ countries<br />
 Pending members: $$stat_pending$$<br />

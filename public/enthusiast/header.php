@@ -23,15 +23,6 @@
  * For more information please view the readme.txt file.
  ******************************************************************************/
 
-//show all errors here
-/*
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
-*/
-
-$currentVersion = '3.2.4+';
-
 // clean function
 function clean($data, $leavehtml = false)
 {
@@ -82,7 +73,7 @@ foreach ($_COOKIE as $index => $value) {
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-    <title> Enthusiast <?= $currentVersion ?? 'v. Unknown' ?> ~ Listing Collective Management
+    <title> Enthusiast <?= RobotessNet\getVersion() ?> ~ Listing Collective Management
         System </title>
     <meta name="author" content="Angela Maria Protacia M. Sabas"/>
     <meta http-equiv="content-type" content="application/xhtml+xml;
