@@ -78,7 +78,7 @@
     <a href="http://indisguise.org/" target="_blank">Indisguise</a> |
     <a href="http://scripts.indisguise.org/" target="_blank">Indiscripts</a>
     <br/><br/><a href="https://scripts.robotess.net" target="_blank"
-                 title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">Enthusiast <?= $currentVersion ?? 'v. Unknown' ?> for PHP 7</a>
+                 title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">Enthusiast <?= RobotessNet\getVersion() ?> for PHP 7</a>
     - support since 2019 by <a href="https://robotess.net" target="_blank" title="PHP Developer">Ekaterina</a>
 </div>
 

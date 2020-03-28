@@ -21,4 +21,4 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
-echo '3.2.4+';
+echo '1.0';

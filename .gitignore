@@ -2,6 +2,8 @@
 *.ini
 /.docker/mysql/*
 config.php
+tests/_data/*
+tests/_output/*
 
 /.idea/enthusiast.iml
 /.idea/misc.xml

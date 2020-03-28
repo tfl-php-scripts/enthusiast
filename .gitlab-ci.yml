@@ -1,0 +1,60 @@
+image: php:7.1
+
+cache:
+  paths:
+    - vendor/
+
+before_script:
+  - apt-get update -yqq
+  - apt-get install -yqq git zip unzip default-mysql-client
+  - docker-php-ext-install pdo pdo_mysql
+  - curl -sS https://getcomposer.org/installer | php
+  - php composer.phar install
+  - php -S localhost:8081 --docroot public &>/dev/null&
+
+services:
+  - mysql:5.7
+
+variables:
+  MYSQL_ROOT_PASSWORD: password
+  MYSQL_DATABASE: enth_docker
+  MYSQL_USER: enth_docker
+  MYSQL_PASSWORD: password
+
+test:
+  script:
+    - cp -R .docker/samplefl300members public/samplefl300members
+    - cp .docker/configs/config-with-listing-1.php public/samplefl/config.php
+    - cp .docker/configs/config-without-listing.php public/enthusiast/config.php
+    - cp .docker/configs/config-without-listing.php public/config.php
+    - cp .docker/configs/config-without-listing.php public/samplecollective/config.php
+    - echo "SELECT 'OK';" | mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -h mysql "$MYSQL_DATABASE"
+    - mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -h mysql < ".docker/gitlabci.sql"
+    - php vendor/bin/codecept run --steps --xml --env gitlabci
+  only:
+    - merge_requests
+    - develop
+    - master
+    - triggers
+    - schedules
+  except:
+    changes:
+      - "*.md"
+      - "*.gif"
+      - "changelog.txt"
+      - "install.txt"
+      - "readme.txt"
+      - "license.txt"
+      - "Makefile"
+      - ".gitignore"
+      - "docker-compose.yml"
+      - ".docker/Dockerfile"
+      - ".docker/vhost.conf"
+      - ".docker/init-db.sql"
+  artifacts:
+    when: on_failure
+    expire_in: 2 days
+    paths:
+      - tests/_output/
+    reports:
+      junit: tests/_output/report.xml

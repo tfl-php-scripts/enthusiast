@@ -21,18 +21,7 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
-if(!isset($currentVersion)) {
-    try {
-        if (file_exists(ENTH_PATH . 'show_enthversion.php')) {
-            ob_start();
-            include ENTH_PATH . 'show_enthversion.php';
-            $currentVersion = ob_get_clean();
-        }
-    } finally {
-        // nothing.
-    }
-}
 ?>
 Powered by <a href="https://scripts.robotess.net" target="_blank" title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">
-    Enthusiast <?= $currentVersion ?? 'v. Unknown' ?> for PHP 7</a>
+    Enthusiast <?= RobotessNet\getVersion() ?></a>
 (original author: <a href="http://scripts.indisguise.org" target="_blank">Angela Sabas</a>)
