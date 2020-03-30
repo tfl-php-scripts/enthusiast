@@ -31,12 +31,6 @@ test:
     - echo "SELECT 'OK';" | mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -h mysql "$MYSQL_DATABASE"
     - mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -h mysql < ".docker/gitlabci.sql"
     - php vendor/bin/codecept run --steps --xml --env gitlabci
-  only:
-    - merge_requests
-    - develop
-    - master
-    - triggers
-    - schedules
   except:
     changes:
       - "*.md"

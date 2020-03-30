@@ -284,9 +284,6 @@ namespace {
 namespace RobotessNet {
 
     use PDOStatement;
-    use function file_exists;
-    use function ob_get_clean;
-    use function ob_start;
     const DUPLICATE_ENTRY_SQL_ERROR_CODE = 1062;
 
     /**
@@ -331,13 +328,6 @@ namespace RobotessNet {
      */
     function getVersion()
     {
-        $result = '[Robotess Fork] v. ';
-        if (file_exists(ENTH_PATH . 'show_enthversion.php')) {
-            ob_start();
-            include ENTH_PATH . 'show_enthversion.php';
-            return $result . ob_get_clean();
-        }
-
-        return $result . 'Unknown';
+        return '[Robotess Fork] v. 1.0';
     }
 }
