@@ -22,6 +22,8 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+require_once ('mod_version.php');
+
 ?>
 </div></div>
 

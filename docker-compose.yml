@@ -24,7 +24,7 @@ services:
       - ./.docker/samplefl300members:/app/public/samplefl300members:ro
       - ./.docker/vhost.conf:/etc/apache2/sites-available/000-default.conf
       - ./.docker/configs/config-with-listing-1.php:/app/public/samplefl/config.php:ro
-      - ./.docker/configs/config-without-listing.php:/app/public/enthusiast/config.php:ro
+      - ./.docker/configs/config-enthusiast-folder.php:/app/public/enthusiast/config.php:ro
       - ./.docker/configs/config-without-listing.php:/app/public/config.php:ro
       - ./.docker/configs/config-without-listing.php:/app/public/samplecollective/config.php:ro
       - php-vendor:/app/vendor

@@ -23,8 +23,10 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
-
 namespace {
+
+    require_once ('mod_version.php');
+
     /*___________________________________________________________________________*/
     function get_setting($setting)
     {
@@ -321,13 +323,5 @@ namespace RobotessNet {
         $result .= '</p>';
 
         return $result;
-    }
-
-    /**
-     * @return string
-     */
-    function getVersion()
-    {
-        return '[Robotess Fork] v. 1.0';
     }
 }
