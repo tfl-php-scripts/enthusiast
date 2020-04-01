@@ -25,26 +25,12 @@ test:
   script:
     - cp -R .docker/samplefl300members public/samplefl300members
     - cp .docker/configs/config-with-listing-1.php public/samplefl/config.php
-    - cp .docker/configs/config-without-listing.php public/enthusiast/config.php
+    - cp .docker/configs/config-enthusiast-folder.php public/enthusiast/config.php
     - cp .docker/configs/config-without-listing.php public/config.php
     - cp .docker/configs/config-without-listing.php public/samplecollective/config.php
     - echo "SELECT 'OK';" | mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -h mysql "$MYSQL_DATABASE"
     - mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -h mysql < ".docker/gitlabci.sql"
     - php vendor/bin/codecept run --steps --xml --env gitlabci
-  except:
-    changes:
-      - "*.md"
-      - "*.gif"
-      - "changelog.txt"
-      - "install.txt"
-      - "readme.txt"
-      - "license.txt"
-      - "Makefile"
-      - ".gitignore"
-      - "docker-compose.yml"
-      - ".docker/Dockerfile"
-      - ".docker/vhost.conf"
-      - ".docker/init-db.sql"
   artifacts:
     when: on_failure
     expire_in: 2 days

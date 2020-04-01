@@ -22,6 +22,7 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+require_once ('mod_version.php');
 
 // clean function
 function clean($data, $leavehtml = false)
