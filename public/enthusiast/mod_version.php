@@ -29,6 +29,6 @@ namespace RobotessNet {
      */
     function getVersion()
     {
-        return '[Robotess Fork] v. 1.0';
+        return '[Robotess Fork] v. 1.0.1';
     }
 }

@@ -42,7 +42,8 @@ require_once('header.php');
 $showstats = (isset($_GET['nostats'])) ? false : true;
 ?>
 
-    <h1>Welcome to the Enthusiast 3 admin panel for <?php echo get_setting('collective_title') ?>!</h1>
+    <h1>Welcome to the Enthusiast <?= RobotessNet\getVersion() ?> admin panel
+        for <?php echo get_setting('collective_title') ?>!</h1>
 
     <p>
     To log into the admin panel, enter your password in the login box on the left.

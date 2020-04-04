@@ -1,8 +1,14 @@
 # Changes:
 
+v.1.0.1
+
+* Small change: added $$stat_opened$$ variable to statistics template
+
+---
+
 Robotess Fork v1.0
 
-* First and the most important change - I renamed the version so that now it version Robotess Fork v1.0
+* First and the most important change - I renamed the version so that now it is version Robotess Fork v1.0
 * Second important change - I added Codeception, so now each PR will be tested against acceptance tests
 * Closed #32 - Now approved users can remove themselves + wrote an acceptance test for that
 * Fixed #31 - Fatal error when user with the same email tries signing up again + wrote an acceptance test for that
