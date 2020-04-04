@@ -56,7 +56,7 @@ require_once('mod_errorlogs.php');
 
     <h2>Server info (useful for debugging and reporting issues)</h2>
     <p>When you're asking for help with the script, please share the following information:</p>
-    <p>Enthusiast: <?= RobotessNet\getVersion() ?></p>
+    <p class="enth-version">Enthusiast: <?= RobotessNet\getVersion() ?></p>
     <p>PHP: <?= PHP_VERSION ?></p>
 
     <h1>You are managing: <?php echo get_setting('collective_title') ?></h1>
