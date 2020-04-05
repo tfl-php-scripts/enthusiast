@@ -338,63 +338,6 @@ function approve_member($id, $email)
     return $result;
 }
 
-
-/*___________________________________________________________________________*/
-function enqueue_member($id, $email)
-{
-    require 'config.php';
-
-    try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
-        $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die(DATABASE_CONNECT_ERROR . $e->getMessage());
-    }
-
-    // get info
-    $query = "SELECT * FROM `$db_owned` WHERE `listingid` = :listing";
-    $result = $db_link->prepare($query);
-    $result->bindParam(':listing', $listing, PDO::PARAM_INT);
-    $result->execute();
-    if (!$result) {
-        log_error(__FILE__ . ':' . __LINE__,
-            'Error executing query: <i>' . $result->errorInfo()[2] .
-            '</i>; Query is: <code>' . $query . '</code>');
-        die(STANDARD_ERROR);
-    }
-    $result->setFetchMode(PDO::FETCH_ASSOC);
-    $info = $result->fetch();
-    $table = $info['dbtable'];
-    $dbserver = $info['dbserver'];
-    $dbdatabase = $info['dbdatabase'];
-    $dbuser = $info['dbuser'];
-    $dbpassword = $info['dbpassword'];
-
-    try {
-        $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8', $dbuser, $dbpassword);
-        $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die(DATABASE_CONNECT_ERROR . $e->getMessage());
-    }
-
-    // approve member
-    $query = "UPDATE `$table` SET `pending` = 1 WHERE `email` = :email";
-    $result = $db_link_list->prepare($query);
-    $result->bindParam(':email', $email, PDO::PARAM_STR);
-    $result->execute();
-    if (!$result) {
-        log_error(__FILE__ . ':' . __LINE__,
-            'Error executing query: <i>' . $result->errorInfo()[2] .
-            '</i>; Query is: <code>' . $query . '</code>');
-        die(STANDARD_ERROR);
-    }
-
-    $db_link_list = null;
-    $db_link = null;
-    return $result;
-}
-
-
 /*___________________________________________________________________________*/
 function get_member_info($listing, $email)
 {
@@ -508,7 +451,7 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
                     $query = '';
                     continue 2;
                 }
-                $query .= "'$value' WHERE `email` = '$email'";
+                $query .= "'$value' WHERE LOWER(TRIM(`email`)) = LOWER(TRIM('$email'))";
                 break;
 
             case 'name' :
@@ -520,7 +463,7 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
                     $col = 'email';
                 }
                 $query = "UPDATE `$table` SET `$col` = '$value' " .
-                    "WHERE `email` = '$email'";
+                    "WHERE LOWER(TRIM(`email`)) = LOWER(TRIM('$email'))";
                 if ($field === 'email_new') {
                     $email = $value;
                 }
@@ -529,14 +472,14 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
             case 'password' :
                 if ($value != '') {
                     $query = "UPDATE `$table` SET `password` = " .
-                        "MD5( '$value' ) WHERE `email` = '$email'";
+                        "MD5( '$value' ) WHERE LOWER(TRIM(`email`)) = LOWER(TRIM('$email'))";
                 }
                 break;
 
             case 'approved' :
                 if ($value == '1') {
-                    $query = "UPDATE `$table` SET `pending` = 0 WHERE `email` = " .
-                        "'$email'";
+                    $query = "UPDATE `$table` SET `pending` = 0 WHERE LOWER(TRIM(`email`)) = " .
+                        "LOWER(TRIM('$email'))";
                 }
                 break;
 
@@ -544,7 +487,7 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
                 if (substr_count($info['additional'], $field) > 0) {
                     // update field
                     $query = "UPDATE `$table` SET `$field` = '" .
-                        $value . "' WHERE `email` = '$email'";
+                        $value . "' WHERE LOWER(TRIM(`email`)) = LOWER(TRIM('$email'))";
                 }
                 break;
 
@@ -563,7 +506,7 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
 
     if ($hold !== 'no' && $info['holdupdate'] == 1) {
         // place on pending!
-        $query = "UPDATE `$table` SET `pending` = 1 WHERE `email` = :email";
+        $query = "UPDATE `$table` SET `pending` = 1 WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email))";
         $result = $db_link_list->prepare($query);
         $result->bindParam(':email', $email, PDO::PARAM_STR);
         $result->execute();
@@ -576,7 +519,7 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
     }
 
     // update added date
-    $query = "UPDATE `$table` SET `added` = CURDATE() WHERE `email` = :email";
+    $query = "UPDATE `$table` SET `added` = CURDATE() WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email))";
     $result = $db_link_list->prepare($query);
     $result->bindParam(':email', $email, PDO::PARAM_STR);
     $result->execute();
@@ -587,8 +530,6 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
         die(STANDARD_ERROR);
     }
 
-    $db_link_list = null;
-    $db_link = null;
     return true;
 }
 
@@ -799,7 +740,7 @@ function check_member_password($listing, $email, $attempt)
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
 
-    $query = "SELECT * FROM `$table` WHERE `email` = :email AND " .
+    $query = "SELECT * FROM `$table` WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email)) AND " .
         '`password` = MD5( :attempt )';
     $result = $db_link_list->prepare($query);
     $result->bindParam(':email', $email, PDO::PARAM_STR);
@@ -817,8 +758,6 @@ function check_member_password($listing, $email, $attempt)
         $passwordvalid = true;
     }
 
-    $db_link_list = null;
-    $db_link = null;
     return $passwordvalid;
 }
 

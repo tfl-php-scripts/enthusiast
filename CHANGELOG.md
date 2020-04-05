@@ -1,5 +1,13 @@
 # Changes:
 
+v.1.0.2
+
+* Fixed #34 - a bug that didn't allow users to update their emails via form
+
+Also there were various fixes implemented regarding forms.
+
+---
+
 v.1.0.1
 
 * Small change: added $$stat_opened$$ variable to statistics template

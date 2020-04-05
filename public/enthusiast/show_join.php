@@ -3,7 +3,7 @@
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
  * Copyright (c) 2018 by Lysianthus (contributor) <she@lysianth.us>
- * Copyright (c) 2019 by Ekaterina http://scripts.robotess.net
+ * Copyright (c) 2019 by Ekaterina (contributor) http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -24,6 +24,8 @@
  * For more information please view the readme.txt file.
  ******************************************************************************/
 
+use function RobotessNet\clean;
+use function RobotessNet\cleanNormalize;
 use function RobotessNet\isDuplicateSqlError;
 
 require 'config.php';
@@ -37,22 +39,6 @@ require_once('mod_emails.php');
 $install_path = get_setting('installation_path');
 require_once($install_path . 'Mail.php');
 
-// functions
-if (!function_exists('clean')) {
-    function clean($data)
-    {
-        $data = trim(htmlentities(strip_tags($data), ENT_QUOTES));
-
-        if (get_magic_quotes_gpc()) {
-            $data = stripslashes($data);
-        }
-
-        $data = addslashes($data);
-
-        return $data;
-    }
-}
-
 // get listing information
 $info = get_listing_info($listing);
 
@@ -64,6 +50,8 @@ $errorstyle = ' style="font-weight: bold; display: block;" ' .
 $name = '';
 $email = '';
 $country = '';
+$countriesValues = include 'countries.inc.php';
+$countryId = null;
 $password = '';
 $vpassword = '';
 $url = '';
@@ -151,13 +139,18 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
     $matchstring = '/^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+' .
         '@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/';
     if ($_POST['enth_email'] && preg_match($matchstring, $_POST['enth_email'])) {
-        $email = clean($_POST['enth_email']);
+        $email = cleanNormalize($_POST['enth_email']);
     } else {
         $messages['email'] = 'You must enter a valid email address.';
     }
 
-    if (isset($_POST['enth_country']) && $_POST['enth_country']) {
-        $country = clean($_POST['enth_country']);
+    if (isset($_POST['enth_country']) && $_POST['enth_country'] !== '') {
+        $countryId = (int)(cleanNormalize($_POST['enth_country']));
+        if (isset($countriesValues[$countryId])) {
+            $country = $countriesValues[$countryId];
+        } else {
+            $messages['country'] = 'You must choose a country from the list.';
+        }
     } else if ($info['country'] == 1) {
         $messages['country'] = 'You must specify your country.';
     }
@@ -179,10 +172,9 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
             '(does not match each other).';
     }
 
-    if ($_POST['enth_url'] && $_POST['enth_url'] != 'n/a' && $_POST['enth_url'] != 'N/A' &&
-        $_POST['enth_url'] != 'none' && $_POST['enth_url'] != '-') {
-        $url = clean($_POST['enth_url']);
-        if (substr_count($url, 'http://') == 0) {
+    if (isset($_POST['enth_url'])) {
+        $url = cleanNormalize($_POST['enth_url']);
+        if (preg_match('@^https?://@', $url) === false) {
             $url = 'http://' . $url;
         }
     }
@@ -405,7 +397,7 @@ if ($show_form) {
                 echo "<span$errorstyle>{$messages['name']}</span>";
             }
             ?>
-            <input type="text" name="enth_name" value="<?php echo $name ?>"
+            <input type="text" name="enth_name" value="<?php echo $name ?>" required
                    class="show_join_name_field"/>
         </p>
 
@@ -417,7 +409,7 @@ if ($show_form) {
                 echo "<span$errorstyle>{$messages['email']}</span>";
             }
             ?>
-            <input type="text" name="enth_email" value="<?php echo $email ?>"
+            <input type="email" name="enth_email" value="<?php echo $email ?>" required
                    class="show_join_email_field"/>
         </p>
 
@@ -447,13 +439,16 @@ if ($show_form) {
                     echo "<span$errorstyle>{$messages['country']}</span>";
                 }
                 ?>
-                <select name="enth_country" class="show_join_country_field">
+                <select name="enth_country" class="show_join_country_field" required>
+                    <option value="">?</option>
                     <?php
-                    if ($country != '') {
-                        echo '<option selected="selected">' . $country . '</option>';
-                        echo '<option value="' . $country . '">---</option>';
+                    foreach ($countriesValues as $key => $countryVal) {
+                        $selected = '';
+                        if ($country !== '' && $countryId === $key) {
+                            $selected = ' selected="selected"';
+                        }
+                        echo '<option value="' . $key . '"' . $selected . '>' . $countryVal . '</option>';
                     }
-                    include ENTH_PATH . 'countries.inc.php';
                     ?>
                 </select>
             </p>
@@ -475,7 +470,7 @@ if ($show_form) {
         <p class="show_join_url">
    <span style="display: block;" class="show_join_url_label">Website
    URL:</span>
-            <input type="text" name="enth_url" value="<?php echo $url ?>"
+            <input type="url" name="enth_url" value="<?php echo $url ?>"
                    class="show_join_url_field"/>
         </p>
         <?php
