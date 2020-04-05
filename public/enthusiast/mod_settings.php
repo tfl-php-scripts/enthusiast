@@ -23,9 +23,10 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+
 namespace {
 
-    require_once ('mod_version.php');
+    require_once('mod_version.php');
 
     /*___________________________________________________________________________*/
     function get_setting($setting)
@@ -296,6 +297,32 @@ namespace RobotessNet {
     {
         $errorInfo = $result->errorInfo() ?? [];
         return isset($errorInfo[1]) && $errorInfo[1] === DUPLICATE_ENTRY_SQL_ERROR_CODE;
+    }
+
+    /**
+     * @param $data
+     * @return string
+     */
+    function clean(string $data): string
+    {
+        $data = trim(htmlentities(strip_tags($data), ENT_QUOTES));
+
+        if (get_magic_quotes_gpc()) {
+            $data = stripslashes($data);
+        }
+
+        $data = addslashes($data);
+
+        return $data;
+    }
+
+    /**
+     * @param $data
+     * @return string
+     */
+    function cleanNormalize(string $data): string
+    {
+        return strtolower(clean($data));
     }
 
     /**

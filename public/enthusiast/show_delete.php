@@ -24,7 +24,8 @@
 
 namespace RobotessNet\DeleteYourself {
 
-    use function strtolower;
+    use function RobotessNet\cleanNormalize;
+    use function RobotessNet\clean;
 
     require 'config.php';
 
@@ -53,23 +54,6 @@ namespace RobotessNet\DeleteYourself {
          * @var string
          */
         private $cleanEmail = '';
-
-        /**
-         * @param $data
-         * @return string
-         */
-        private function clean(string $data): string
-        {
-            $data = strtolower(trim(htmlentities(strip_tags($data), ENT_QUOTES)));
-
-            if (get_magic_quotes_gpc()) {
-                $data = stripslashes($data);
-            }
-
-            $data = addslashes($data);
-
-            return $data;
-        }
 
         /**
          * @param int $listing
@@ -113,7 +97,7 @@ namespace RobotessNet\DeleteYourself {
             }
 
             // check nonce field
-            $nonce = explode(':', $this->clean($postData['enth_nonce']));
+            $nonce = explode(':', clean($postData['enth_nonce']));
             $mdfived = substr($nonce[2], 0, (strlen($nonce[2]) - 3));
             $appended = substr($nonce[2], -3);
 
@@ -138,8 +122,8 @@ namespace RobotessNet\DeleteYourself {
                 return false;
             }
 
-            $this->cleanEmail = $this->clean($postData['enth_email']);
-            $password = $this->clean($postData['enth_password']);
+            $this->cleanEmail = cleanNormalize($postData['enth_email']);
+            $password = clean($postData['enth_password']);
 
             if ($this->cleanEmail === '' || $password === '') {
                 $this->showForm = true;
@@ -237,7 +221,7 @@ HTML;
                            value="<?php echo $rand ?>:<?php echo strtotime(date('r')) ?>:<?php echo md5($rand) . substr($rand, 2, 3) ?>"/>
                     <span style="display: block;" class="show_delete_email_label">
    Email address:</span>
-                    <input type="email" autocomplete="off" name="enth_email" class="show_delete_email_field"
+                    <input type="email" autocomplete="off" name="enth_email" class="show_delete_email_field" required
                            value="<?= $email ?>">
                 </p>
 
@@ -245,7 +229,7 @@ HTML;
    <span style="display: block;" class="show_delete_password_label">
    Password: (<a href="<?php echo $listingInfo['lostpasspage'] ?>">Lost it?</a>)
    </span>
-                    <input type="password" autocomplete="off" name="enth_password" class="show_delete_password_field">
+                    <input type="password" autocomplete="off" name="enth_password" class="show_delete_password_field" required>
                 </p>
 
                 <p class="show_delete_submit">

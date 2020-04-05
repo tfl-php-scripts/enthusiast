@@ -3,7 +3,7 @@
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
  * Copyright (c) 2018 by Lysianthus (contributor) <she@lysianth.us>
- * Copyright (c) 2019 by Ekaterina http://scripts.robotess.net
+ * Copyright (c) 2019 by Ekaterina (contributor) http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -23,6 +23,10 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+
+use function RobotessNet\clean;
+use function RobotessNet\cleanNormalize;
+
 require_once 'config.php';
 
 require_once('mod_errorlogs.php');
@@ -36,21 +40,6 @@ require_once($install_path . 'Mail.php');
 
 // get listing info
 $info = get_listing_info($listing);
-
-// functions
-if (!function_exists('clean')) {
-    function clean($data)
-    {
-        $data = trim(htmlentities(strip_tags($data), ENT_QUOTES));
-
-        if (get_magic_quotes_gpc())
-            $data = stripslashes($data);
-
-        $data = addslashes($data);
-
-        return $data;
-    }
-}
 
 // initialize variables
 $show_form = true;
@@ -85,25 +74,28 @@ if (isset($_POST['enth_email']) && $_POST['enth_email'] != '') {
         }
         $goahead = true;
     }
-    unset($k, $v, $v2, $badStrings);
+
     if (!$goahead) {
         echo "<p$errorstyle>ERROR: Attempted circumventing of the form detected.</p>";
         return;
     }
 
+    $cleanNormalizedEmail = cleanNormalize($_POST['enth_email']);
+
     $email = '';
     $matchstring = '/^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+' .
-        "@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/";
-    if (!preg_match($matchstring, clean($_POST['enth_email'])) ||
-        !ctype_graph(clean($_POST['enth_email']))) {
+        '@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/';
+    if (!preg_match($matchstring, $cleanNormalizedEmail) ||
+        !ctype_graph($cleanNormalizedEmail)) {
         ?>
         <p style="font-weight: bold;" class="show_lostpass_bad_email">That
             email address is not valid. Please check your entered address and try
             again.</p>
         <?php
         return;
-    } else
-        $email = clean($_POST['enth_email']);
+    }
+
+    $email = $cleanNormalizedEmail;
 
     $member = get_member_info($listing, $email);
     if ($member['email'] == '') {
@@ -163,7 +155,7 @@ if ($show_form) {
         <p class="show_lostpass_email">
    <span style="display: block;" class="show_lostpass_email_label">
    Email address: </span>
-            <input type="text" name="enth_email" class="show_lostpass_email_field"/>
+            <input type="email" name="enth_email" class="show_lostpass_email_field" required/>
             <input type="submit" value="Reset my password"
                    class="show_lostpass_submit_button"/>
         </p>

@@ -24,23 +24,55 @@
 
 class SignUpToFlCest
 {
-    public function getCorrectErrorWhenEmailAlreadyRegistered(AcceptanceTester $I): void
+    private $clickBtn = 'Join the fanlisting';
+    private $page = '/samplefl/join.php';
+    private $header = 'Join the Fanlisting';
+    private $formElement = '.show_join_form';
+
+    /**
+     * @param AcceptanceTester $I
+     */
+    private function fillNonce(AcceptanceTester $I): void
     {
         $rand = md5(uniqid('', true));
         $time = time();
         $nonce = $rand . ':' . strtotime(date('r', $time - 1000)) . ':' . md5($rand) . substr($rand, 2, 3);
+        $I->fillField('enth_nonce', $nonce);
+    }
 
-        $I->amOnPage('/samplefl/join.php');
-        $I->see('Join the Fanlisting');
+    public function getCorrectErrorWhenEmailAlreadyRegistered(AcceptanceTester $I): void
+    {
+        $I->amOnPage($this->page);
+        $I->see($this->header);
         $I->amGoingTo('submit user form with email that is already registered');
+        $this->fillNonce($I);
         $I->fillField('enth_name', 'Tester');
         $I->fillField('enth_email', 'with+plus@localhost123456.com');
-        $I->fillField('enth_nonce', $nonce);
-        $I->selectOption('enth_country', 'United States');
-        $I->click('Join the fanlisting');
+        $I->selectOption('enth_country', 0);
+        $I->click($this->clickBtn);
         $I->see('An error occured while attempting to add you to the pending members queue. This is because you are possibly already a member (approved or unapproved) or someone used your email address to join this fanlisting before.');
-        $I->seeElement('.show_join_form');
+        $I->seeElement($this->formElement);
         $I->seeInField('enth_email', 'with+plus@localhost123456.com');
         $I->seeInField('enth_name', 'Tester');
+        $I->seeInField('enth_country', 0);
+    }
+
+    public function canRegisterWithHttpsWebsite(AcceptanceTester $I): void
+    {
+        $I->amOnPage($this->page);
+        $I->see($this->header);
+        $I->amGoingTo('submit user form with https url');
+        $this->fillNonce($I);
+        $I->fillField('enth_name', 'Tester');
+        $I->fillField('enth_email', 'SUPERNEWEMAIL@localhost123456.com');
+        $I->fillField('enth_url', 'https://website.localhost.com');
+        $I->selectOption('enth_country', 0);
+        $I->click($this->clickBtn);
+        if($I->cantSeeElement('.show_join_processed_emailsent')) {
+            $I->seeElement('.show_join_processed_errormail');
+        }
+        $I->dontSeeElement($this->formElement);
+        $I->amOnPage('/samplefl/index.php');
+        $I->see('Pending members: 4');
     }
 }

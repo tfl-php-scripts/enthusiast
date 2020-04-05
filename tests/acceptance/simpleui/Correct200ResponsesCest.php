@@ -22,27 +22,28 @@
  * For more information please view the readme.txt file.
  ******************************************************************************/
 
-class CheckUICest
+class Correct200ResponsesCest
 {
-    public function seeCorrectVersionInDashboard(AcceptanceTester $I): void
+    /**
+     * @example { "url": "/samplefl" }
+     * @example { "url": "/samplefl/list.php" }
+     * @example { "url": "/samplefl/join.php" }
+     * @example { "url": "/samplefl/update.php" }
+     * @example { "url": "/samplefl/lostpass.php" }
+     * @example { "url": "/samplefl/delete.php" }
+     * @example { "url": "/samplefl/affiliates.php" }
+     * @example { "url": "/samplecollective" }
+     * @example { "url": "/samplecollective/joined.php" }
+     * @example { "url": "/samplecollective/current.php" }
+     * @example { "url": "/samplecollective/upcoming.php" }
+     * @example { "url": "/samplecollective/pending.php" }
+     * @example { "url": "/samplecollective/affiliates.php" }
+     * @example { "url": "/enthusiast" }
+     * @example { "url": "/enthusiast/install.php" }
+     */
+    public function staticPages(AcceptanceTester $I, \Codeception\Example $example)
     {
-        $I->amOnPage('/enthusiast/dashboard.php');
-        $I->amOnPage('/enthusiast/index.php');
-        $I->see('Welcome to the Enthusiast [Robotess Fork] v. 1.0.2 admin panel for My Collective!', 'h1');
-    }
-
-    public function seeCorrectOpenedDateInStatsWidget(AcceptanceTester $I): void
-    {
-        $I->amOnPage('/samplefl');
-        $I->see('Opened: 17th February 2010');
-    }
-
-    public function seeCorrectLinkToLostpassPage(AcceptanceTester $I): void
-    {
-        $I->amOnPage('/samplefl/delete.php');
-        $I->see('Delete Yourself');
-        $I->amGoingTo('check if lostpass link is correct');
-        $I->click(['link' => 'Lost it?']);
+        $I->amOnPage($example['url']);
         $I->seeResponseCodeIs(200);
     }
 }

@@ -382,10 +382,10 @@ INSERT INTO `table1` (`email`, `name`, `country`, `url`, `extra_field`, `pending
 ('normalEmailPending@localhost123456.com', 'Test2 Pending', 'United States', '', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
 ('with+plus@localhost123456.com', 'Plus Pending', 'United States', '', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
 ('pendinguser@localhost123456.com', 'Pending', 'United States', '', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
-('user1@user.com', 'abc', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
-('user2@user.com', 'cab', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
-('user3@user.com', 'abc', 'Canada', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
-('user4@user.com', 'cab', 'England', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL);
+('user1@user.com', 'abc', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-01-24'),
+('user2@user.com', 'cab', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-02-24'),
+('user3@user.com', 'abc', 'Canada', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-05-24'),
+('user4@user.com', 'cab', 'England', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-03-24');
 
 -- --------------------------------------------------------
 

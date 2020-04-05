@@ -25,6 +25,9 @@
  ******************************************************************************/
 require 'config.php';
 
+use function RobotessNet\clean;
+use function RobotessNet\cleanNormalize;
+
 require_once('mod_errorlogs.php');
 require_once('mod_owned.php');
 require_once('mod_members.php');
@@ -33,23 +36,6 @@ require_once('mod_emails.php');
 
 $install_path = get_setting('installation_path');
 require_once($install_path . 'Mail.php');
-
-// functions
-// functions
-if (!function_exists('clean')) {
-    function clean($data)
-    {
-        $data = trim(htmlentities(strip_tags($data), ENT_QUOTES));
-
-        if (get_magic_quotes_gpc()) {
-            $data = stripslashes($data);
-        }
-
-        $data = addslashes($data);
-
-        return $data;
-    }
-}
 
 // get listing info
 $info = get_listing_info($listing);
@@ -60,6 +46,9 @@ $messages = array();
 $errorstyle = ' style="font-weight: bold; display: block;" ' .
     'class="show_update_error"';
 $data = array();
+
+$countriesValues = include 'countries.inc.php';
+$countryId = null;
 
 // process forms
 if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
@@ -124,23 +113,17 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
         return;
     }
 
-    // email matching
-    $matchstring = '/^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+' .
-        '@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/';
-
     // check password
-    if (!(check_member_password($listing, clean($_POST['enth_email']),
-        clean($_POST['enth_old_password'])))) {
+    $cleanNormalizedOldEmail = cleanNormalize($_POST['enth_email']);
+
+    if (!(check_member_password($listing, $cleanNormalizedOldEmail, clean($_POST['enth_old_password'])))) {
         $messages['form'] = 'The password you supplied does not match ' .
             'the password entered in the system. If you have lost your ' .
             'password, <a href="' . $info['lostpasspage'] .
             '">click here</a>.';
     } // check email
-    else if (!preg_match($matchstring, $_POST['enth_email'])) {
-        $messages['form'] = 'The email you supplied is not valid. Please ' .
-            'try again.';
-    } else {
-        $data['email'] = clean($_POST['enth_email']);
+    else {
+        $data['email'] = $cleanNormalizedOldEmail;
         $data['old_password'] = clean($_POST['enth_old_password']);
     }
 
@@ -154,13 +137,13 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
 
     if (count($messages) == 0) {
         // fill out blank fields with current member info
-        $member = get_member_info($listing, clean($_POST['enth_email']));
+        $member = get_member_info($listing, $cleanNormalizedOldEmail);
 
         // "new" email?
-        if ($_POST['email_new'] == '') {
+        if ($_POST['enth_email_new'] == '') {
             $data['email_new'] = $member['email'];
         } else {
-            $data['email_new'] = clean($_POST['enth_email_new']);
+            $data['email_new'] = cleanNormalize($_POST['enth_email_new']);
         }
 
         // new name?
@@ -173,14 +156,19 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
         if (isset($_POST['enth_country']) && $_POST['enth_country'] == '') {
             $data['country'] = $member['country'];
         } else {
-            $data['country'] = clean($_POST['enth_country']);
+            $countryId = (int)(cleanNormalize($_POST['enth_country']));
+            $data['country'] = $countriesValues[$countryId] ?? $member['country'];
         }
 
         // new url
         if ($_POST['enth_url'] == '' && !isset($_POST['enth_url_delete'])) {
             $data['url'] = $member['url'];
         } else {
-            $data['url'] = clean($_POST['enth_url']);
+            $url = cleanNormalize($_POST['enth_url']);
+            if (preg_match('@^https?://@', $url) === false) {
+                $url = 'http://' . $url;
+            }
+            $data['url'] = $url;
         }
 
         // show email address?
@@ -208,7 +196,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
         }
 
         // do actual update!
-        $success = edit_member_info($listing, clean($_POST['enth_email']), $data, 'hold');
+        $success = edit_member_info($listing, $cleanNormalizedOldEmail, $data, 'hold');
         if ($success) {
             // check if hold and send email
             if ($info['holdupdate'] == 1 && $info['notifynew'] == 1) {
@@ -235,7 +223,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
                         get_setting('root_path_web'),
                         get_setting('installation_path')) . "members.php\r\n";
                 $notify_message = stripslashes($notify_message);
-                $notify_from = 'Enthusiast 3 <' .
+                $notify_from = 'Enthusiast <' .
                     get_setting('owner_email') . '>';
 
                 // use send_email function
@@ -314,7 +302,7 @@ if ($show_form) {
                    value="<?php echo $rand ?>:<?php echo strtotime(date('r')) ?>:<?php echo md5($rand) . substr($rand, 2, 3) ?>"/>
             <span style="display: block;" class="show_update_old_email_label">
    * Old email address:</span>
-            <input type="text" name="enth_email" class="show_update_old_email_field"/>
+            <input type="email" name="enth_email" class="show_update_old_email_field" required/>
         </p>
 
         <p class="show_update_current_password">
@@ -322,7 +310,7 @@ if ($show_form) {
    * Current password: (<a href="<?php echo $info['lostpasspage'] ?>">Lost it?</a>)
    </span>
             <input type="password" name="enth_old_password"
-                   class="show_update_current_password_field"/>
+                   class="show_update_current_password_field" autocomplete="off" required/>
         </p>
 
         <p class="show_update_name">
@@ -334,7 +322,7 @@ if ($show_form) {
         <p class="show_update_email">
    <span style="display: block;" class="show_update_email_label">
    New email address: </span>
-            <input type="text" name="enth_email_new" class="show_update_email_field"/>
+            <input type="email" name="enth_email_new" class="show_update_email_field"/>
         </p>
 
         <p class="show_update_password">
@@ -377,7 +365,13 @@ if ($show_form) {
                 <select name="enth_country" class="show_update_country_field">
                     <option value=""></option>
                     <?php
-                    include ENTH_PATH . 'countries.inc.php';
+                    foreach ($countriesValues as $key => $countryVal) {
+                        $selected = '';
+                        if ($country !== '' && $countryId === $key) {
+                            $selected = ' selected="selected"';
+                        }
+                        echo '<option value="' . $key . '"' . $selected . '>' . $countryVal . '</option>';
+                    }
                     ?>
                 </select>
             </p>
@@ -387,7 +381,7 @@ if ($show_form) {
         <p class="show_update_url">
    <span style="display: block;" class="show_update_url_label">
    New website URL: </span>
-            <input type="text" name="enth_url" class="show_update_url_field"/>
+            <input type="url" name="enth_url" class="show_update_url_field"/>
             <span style="display: block;" class="show_update_url_delete">
    <input type="checkbox" name="enth_url_delete" value="yes"
           class="show_update_url_delete_field"/>
