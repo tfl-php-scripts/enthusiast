@@ -63,29 +63,29 @@ function show_step1() {
    $dbuser = $db_user;
    $dbpassword = '';
    $dbtable = '';
-   $catids = array();
+   $catids = [];
    $subject = '';
    $email = '';
    $status = 'current';
 
    if( isset( $_POST['dbserver'] ) )
-      $dbserver = $_POST['dbserver'];
+      { $dbserver = $_POST['dbserver']; }
    if( isset( $_POST['dbdatabase'] ) )
-      $dbdatabase = $_POST['dbdatabase'];
+      { $dbdatabase = $_POST['dbdatabase']; }
    if( isset( $_POST['dbuser'] ) )
-      $dbuser = $_POST['dbuser'];
+      { $dbuser = $_POST['dbuser']; }
    if( isset( $_POST['dbpassword'] ) )
-      $dbpassword = $_POST['dbpassword'];
+      { $dbpassword = $_POST['dbpassword']; }
    if( isset( $_POST['dbtable'] ) )
-      $dbtable = $_POST['dbtable'];
+      { $dbtable = $_POST['dbtable']; }
    if( isset( $_POST['catid'] ) )
-      $catids = $_POST['catid'];
+      { $catids = $_POST['catid']; }
    if( isset( $_POST['subject'] ) )
-      $subject = $_POST['subject'];
+      { $subject = $_POST['subject']; }
    if( isset( $_POST['email'] ) )
-      $email = $_POST['email'];
+      { $email = $_POST['email']; }
    if( isset( $_POST['status'] ) )
-      $status = $_POST['status'];
+      { $status = $_POST['status']; }
 ?>
    <tr><th colspan="2">Database settings</th></tr>
 
@@ -108,7 +108,7 @@ function show_step1() {
    This is the server your MySQL database is running on. The value you have
    set for this collective is, by default, set in the field for you.<br />
    <br />
-   <input type="text" name="dbserver" value="<?php echo $dbserver ?>" />
+   <input type="text" name="dbserver" value="<?= $dbserver ?>" />
    </td></tr>
 
    <tr><td><b>
@@ -117,7 +117,7 @@ function show_step1() {
    This is the actual name of the database you will be using for this
    listing. The database that you have set for this collective is, by
    default, set in the field for you..<br /><br />
-   <input type="text" name="dbdatabase" value="<?php echo $dbdatabase ?>" />
+   <input type="text" name="dbdatabase" value="<?= $dbdatabase ?>" />
    </td></tr>
 
    <tr class="rowshade"><td><b>
@@ -126,7 +126,7 @@ function show_step1() {
    This is the database username that has access privileges for the database
    set above. The user that you have set for this collective is, by default,
    set in the field for you.<br /><br />
-   <input type="text" name="dbuser" value="<?php echo $dbuser ?>" />
+   <input type="text" name="dbuser" value="<?= $dbuser ?>" />
    </td></tr>
 
    <tr><td><b>
@@ -142,7 +142,7 @@ function show_step1() {
    Database table
    </b></td><td>
    This is the database table that the fanlisting will use.<br /><br />
-   <input type="text" name="dbtable" value="<?php echo $dbtable ?>" />
+   <input type="text" name="dbtable" value="<?= $dbtable ?>" />
    </td></tr>
 
    <tr><th colspan="2">
@@ -157,7 +157,7 @@ function show_step1() {
    <select name="catid[]" multiple="multiple" size="5">
 <?php
    $cats = enth_get_categories();
-   $options = array();
+   $options = [];
    foreach( $cats as $cat ) {
       $optiontext = $cat['catname'];
       if( count( $ancestors =
@@ -165,18 +165,18 @@ function show_step1() {
          // get ancestors
          $text = '';
          foreach( $ancestors as $a )
-            $text .= get_category_name( $a ) . ' > ';
+            { $text .= get_category_name( $a ) . ' > '; }
          $optiontext = rtrim( $text, ' > ' );
          $optiontext = str_replace( '>', '&raquo;', $optiontext );
       }
-      $options[] = array( 'text' => $optiontext, 'id' => $cat['catid'] );
+      $options[] = [ 'text' => $optiontext, 'id' => $cat['catid'] ];
    }
    usort( $options, 'category_array_compare' );
    $selected = explode( '|', $info['catid'] );
    foreach( $options as $o ) {
       echo '<option value="' . $o['id'];
       if( in_array( $o['id'], $catids ) )
-         echo '" selected="selected';
+         { echo '" selected="selected'; }
       echo '">' . $o['text'] . '</option>';
    }
 ?>
@@ -187,7 +187,7 @@ function show_step1() {
    Subject
    </b></td><td>
    This is the subject of the listing.<br /><br />
-   <input type="text" name="subject" value="<?php echo $subject ?>" />
+   <input type="text" name="subject" value="<?= $subject ?>" />
    </td></tr>
 
    <tr><td><b>
@@ -195,7 +195,7 @@ function show_step1() {
    </b></td><td>
    This is the email address that all listing emails will come from.
    <br /><br />
-   <input type="text" name="email" value="<?php echo $email ?>" />
+   <input type="text" name="email" value="<?= $email ?>" />
    </td></tr>
 
    <tr class="rowshade"><td><b>
@@ -204,7 +204,7 @@ function show_step1() {
    This is the status of your listing, and is especially useful for
    making 'upcoming' lists. It is set to "current" by default.<br /><br />
    <select name="status">
-   <option value="<?php echo $status ?>"><?php echo ucfirst( $status ) ?></option>
+   <option value="<?= $status ?>"><?= ucfirst( $status ) ?></option>
    <option value="">--</option>
    <option value="current">Current</option>
    <option value="upcoming">Upcoming</option>
@@ -233,31 +233,31 @@ function do_step1() {
    $dbpassword = '';
    $dbpasswordv = '';
    $dbtable = '';
-   $catids = array();
+   $catids = [];
    $subject = '';
    $email = '';
    $status = '';
 
    if( isset( $_POST['dbserver'] ) )
-      $dbserver = $_POST['dbserver'];
+      { $dbserver = $_POST['dbserver']; }
    if( isset( $_POST['dbdatabase'] ) )
-      $dbdatabase = $_POST['dbdatabase'];
+      { $dbdatabase = $_POST['dbdatabase']; }
    if( isset( $_POST['dbuser'] ) )
-      $dbuser = $_POST['dbuser'];
+      { $dbuser = $_POST['dbuser']; }
    if( isset( $_POST['dbpassword'] ) )
-      $dbpassword = $_POST['dbpassword'];
+      { $dbpassword = $_POST['dbpassword']; }
    if( isset( $_POST['dbpasswordv'] ) )
-      $dbpasswordv = $_POST['dbpasswordv'];
+      { $dbpasswordv = $_POST['dbpasswordv']; }
    if( isset( $_POST['dbtable'] ) )
-      $dbtable = $_POST['dbtable'];
+      { $dbtable = $_POST['dbtable']; }
    if( isset( $_POST['catid'] ) )
-      $catids = $_POST['catid'];
+      { $catids = $_POST['catid']; }
    if( isset( $_POST['subject'] ) )
-      $subject = $_POST['subject'];
+      { $subject = $_POST['subject']; }
    if( isset( $_POST['email'] ) )
-      $email = $_POST['email'];
+      { $email = $_POST['email']; }
    if( isset( $_POST['status'] ) )
-      $status = $_POST['status'];
+      { $status = $_POST['status']; }
 
    if( $dbserver && $dbdatabase && $dbuser && $dbpassword && $dbtable &&
       $dbpasswordv && $catids && $subject && $email && $status ) {
@@ -313,9 +313,9 @@ function do_step1() {
       // setup temp database values
       $stat = '0';
       if( $status == 'upcoming' )
-         $stat = 1;
+         { $stat = 1; }
       else if( $status == 'current' )
-         $stat = 2;
+         { $stat = 2; }
 
       // use templates
       $signup = file_get_contents( 'templates/signup.txt' );
@@ -391,8 +391,8 @@ function show_step2() {
 ?>
    <p>
    <b>Congratulations!</b> Your listing information and database has been
-   set up successfully. Your new listing has the Listing ID <b><?php echo $info['listingid'] ?></b>. You can now continue on to
-   <a href="owned.php?action=edit&id=<?php echo $info['listingid'] ?>">this page</a>
+   set up successfully. Your new listing has the Listing ID <b><?= $info['listingid'] ?></b>. You can now continue on to
+   <a href="owned.php?action=edit&id=<?= $info['listingid'] ?>">this page</a>
    to continue customizing the listing.
    </p>
 <?php

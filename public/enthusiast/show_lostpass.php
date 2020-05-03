@@ -24,8 +24,7 @@
  * For more information please view the readme.txt file.
  ******************************************************************************/
 
-use function RobotessNet\clean;
-use function RobotessNet\cleanNormalize;
+use RobotessNet\StringUtils;
 
 require_once 'config.php';
 
@@ -50,7 +49,7 @@ $errorstyle = ' style="font-weight: bold; display: block;" ' .
 if (isset($_POST['enth_email']) && $_POST['enth_email'] != '') {
     // do some spam/bot checking first
     $goahead = false;
-    $badStrings = array('Content-Type:',
+    $badStrings = ['Content-Type:',
         'MIME-Version:',
         'Content-Transfer-Encoding:',
         'bcc:',
@@ -58,7 +57,7 @@ if (isset($_POST['enth_email']) && $_POST['enth_email'] != '') {
         'content-type',
         'onload',
         'onclick',
-        'javascript');
+        'javascript'];
     // 1. check that user is submitting from browser
     // 2. check the POST was indeed used
     // 3. no bad strings in any of the form fields
@@ -80,12 +79,12 @@ if (isset($_POST['enth_email']) && $_POST['enth_email'] != '') {
         return;
     }
 
-    $cleanNormalizedEmail = cleanNormalize($_POST['enth_email']);
+    $cleanNormalizedEmail = StringUtils::instance()->cleanNormalize($_POST['enth_email']);
 
     $email = '';
     $matchstring = '/^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+' .
         '@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/';
-    if (!preg_match($matchstring, $cleanNormalizedEmail) ||
+    if (!StringUtils::instance()->isEmailValid($cleanNormalizedEmail) ||
         !ctype_graph($cleanNormalizedEmail)) {
         ?>
         <p style="font-weight: bold;" class="show_lostpass_bad_email">That
@@ -102,7 +101,7 @@ if (isset($_POST['enth_email']) && $_POST['enth_email'] != '') {
         ?>
         <p style="font-weight: bold;" class="show_lostpass_no_such_member">There
             was an error in your request to reset your password. This may be
-            because there is no member recorded in the <?php echo $info['listingtype'] ?>
+            because there is no member recorded in the <?= $info['listingtype'] ?>
             with that email address. Please check your spelling and try
             again.</p>
         <?php
@@ -149,7 +148,7 @@ if ($show_form) {
     <p class="show_lostpass_intro_instructions">Enter your email address on
         the field below to generate a password.</p>
 
-    <form method="post" action="<?php echo $info['lostpasspage'] ?>"
+    <form method="post" action="<?= $info['lostpasspage'] ?>"
           class="show_lostpass_form">
 
         <p class="show_lostpass_email">

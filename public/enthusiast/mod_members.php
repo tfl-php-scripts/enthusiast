@@ -22,7 +22,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * For more information please view the readme.txt file.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
 /*___________________________________________________________________________*/
 function parse_email($type, $listing, $email, $password = '')
@@ -104,12 +105,12 @@ function parse_email($type, $listing, $email, $password = '')
     }
 
     // search and replace special variables
-    $template = str_replace(array('$$owner_name$$', '$$fanlisting_title$$', '$$fanlisting_subject$$', '$$fanlisting_email$$', '$$fanlisting_url$$', '$$fanlisting_list$$', '$$fanlisting_update$$', '$$fanlisting_join$$', '$$fanlisting_lostpass$$', '$$listing_type$$', '$$fan_name$$', '$$fan_email$$'), array($owner_name, $info['title'], $info['subject'], $info['email'], $info['url'], $info['listpage'], $info['updatepage'], $info['joinpage'], $info['lostpasspage'], $info['listingtype'], $fan['name'], $fan['email']), $template);
+    $template = str_replace(['$$owner_name$$', '$$fanlisting_title$$', '$$fanlisting_subject$$', '$$fanlisting_email$$', '$$fanlisting_url$$', '$$fanlisting_list$$', '$$fanlisting_update$$', '$$fanlisting_join$$', '$$fanlisting_lostpass$$', '$$listing_type$$', '$$fan_name$$', '$$fan_email$$'], [$owner_name, $info['title'], $info['subject'], $info['email'], $info['url'], $info['listpage'], $info['updatepage'], $info['joinpage'], $info['lostpasspage'], $info['listingtype'], $fan['name'], $fan['email']], $template);
     if ($info['country'] == 1) {
         $template = str_replace('$$fan_country$$', $fan['country'],
             $template);
     }
-    $template = str_replace(array('$$fan_url$$', '$$fan_password$$'), array($fan['url'], $password), $template);
+    $template = str_replace(['$$fan_url$$', '$$fan_password$$'], [$fan['url'], $password], $template);
     $fields = explode(',', $info['additional']);
     foreach ($fields as $field) {
         if ($field == '') {
@@ -126,7 +127,7 @@ function parse_email($type, $listing, $email, $password = '')
 
 
 /*___________________________________________________________________________*/
-function get_members($listing, $status = 'all', $sort = array(), $start = 'none', $bydate = 'no', $perpage = null)
+function get_members($listing, $status = 'all', $sort = [], $start = 'none', $bydate = 'no', $perpage = null)
 {
     require('config.php');
 
@@ -213,7 +214,7 @@ function get_members($listing, $status = 'all', $sort = array(), $start = 'none'
             '</i>; Query is: <code>' . $query . '</code>');
         die(STANDARD_ERROR);
     }
-    $members = array();
+    $members = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
     while ($row = $result->fetch()) {
         $members[] = $row;
@@ -599,7 +600,7 @@ function search_members($search, $listing = '', $status = 'all',
         die(STANDARD_ERROR);
     }
 
-    $members = array();
+    $members = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
     while ($row = $result->fetch()) {
         $members[] = $row;
@@ -612,7 +613,7 @@ function search_members($search, $listing = '', $status = 'all',
 
 
 /*___________________________________________________________________________*/
-function get_member_sorter($listing, $level = 1, $top = array())
+function get_member_sorter($listing, $level = 1, $top = [])
 {
     require 'config.php';
 
@@ -690,7 +691,7 @@ function get_member_sorter($listing, $level = 1, $top = array())
             '</i>; Query is: <code>' . $query . '</code>');
         die(STANDARD_ERROR);
     }
-    $sorters = array();
+    $sorters = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
     while ($row = $result->fetch()) {
         $sorters[] = $row['sort'];

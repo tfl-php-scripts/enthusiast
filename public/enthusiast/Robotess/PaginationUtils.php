@@ -1,7 +1,8 @@
 <?php
+declare(strict_types = 1);
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
- * Copyright (c) 2019 by Ekaterina http://scripts.robotess.net
+ * Copyright (c) by Ekaterina http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -21,8 +22,41 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
-?>
-Powered by <a href="https://scripts.robotess.net" target="_blank"
-              title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">
-    Enthusiast <?= RobotessNet\App::getVersion() ?></a>
-(original author: <a href="http://scripts.indisguise.org" target="_blank">Angela Sabas</a>)
+
+namespace RobotessNet;
+
+/**
+ * Class PaginationUtils
+ * @package Robotess
+ */
+final class PaginationUtils
+{
+    /**
+     * @param int $totalEntries
+     * @param int $perPage
+     * @param string $url
+     * @return string
+     */
+    public static function getPaginatorHTML(int $totalEntries, int $perPage, string $url): string
+    {
+        $numberOfPages = (int)ceil($totalEntries / $perPage);
+
+        if ($numberOfPages <= 1) {
+            return '';
+        }
+
+        $result = '<p class="center">Go to page: ';
+
+        $i = 1;
+        while ($i <= $numberOfPages) {
+            $start_link = ($i - 1) * $perPage;
+            $result .= '<a href="' . $url . 'start=' . $start_link . '">' .
+                $i . '</a> ';
+            $i++;
+        }
+
+        $result .= '</p>';
+
+        return $result;
+    }
+}

@@ -25,9 +25,9 @@
  ******************************************************************************/
 require_once('header.php');
 require_once('config.php');
-echo '<h1>Welcome to the Enthusiast ' . RobotessNet\getVersion() . ' Setup!</h1>';
+echo '<h1>Welcome to the Enthusiast ' . RobotessNet\App::getVersion() . ' Setup!</h1>';
 
-$errors = array();
+$errors = [];
 $show_form = true;
 
 $owner_name = $_POST['owner_name'] ?? 'Your Name';
@@ -597,9 +597,9 @@ if ($show_form) {
     ?>
     <p>
         Welcome to the setup/installation of
-        <a href="https://scripts.robotess.net">Enthusiast <?= RobotessNet\getVersion() ?></a>, the listing
+        <a href="https://scripts.robotess.net">Enthusiast <?= RobotessNet\App::getVersion() ?></a>, the listing
         collective management system! Thank you for trying out the script. This file
-        sets up the database tables and initial settings for your Enthusiast <?= RobotessNet\getVersion() ?>
+        sets up the database tables and initial settings for your Enthusiast <?= RobotessNet\App::getVersion() ?>
         installation. Please make sure that your <code>config.php</code> file has
         been edited and customized to reflect the proper database settings.
     </p>
@@ -634,13 +634,13 @@ if ($show_form) {
                 <td>
                     Your name as the owner of the collective; this will show up on outgoing
                     collective emails (such as affiliate addition notifications).
-                    <?php echo (isset($errors['owner_name']))
+                    <?= (isset($errors['owner_name']))
                         ? '<br /><span class="error">' . $errors['owner_name'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="text" size="50" name="owner_name" value="<?php echo $owner_name ?>"/>
+                    <input type="text" size="50" name="owner_name" value="<?= $owner_name ?>"/>
                 </td>
             </tr>
 
@@ -654,13 +654,13 @@ if ($show_form) {
                 <td>
                     This is the email address connected to this collective; all outgoing
                     emails will come from this email account.
-                    <?php echo (isset($errors['owner_email']))
+                    <?= (isset($errors['owner_email']))
                         ? '<br /><span class="error">' . $errors['owner_email'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr class="rowshade">
                 <td>
-                    <input type="text" size="50" name="owner_email" value="<?php echo $owner_email ?>"/>
+                    <input type="text" size="50" name="owner_email" value="<?= $owner_email ?>"/>
                 </td>
             </tr>
 
@@ -679,7 +679,7 @@ if ($show_form) {
             <tr>
                 <td>
                     <input type="text" size="50" name="collective_title"
-                           value="<?php echo $collective_title ?>"/>
+                           value="<?= $collective_title ?>"/>
                 </td>
             </tr>
 
@@ -697,7 +697,7 @@ if ($show_form) {
             <tr class="rowshade">
                 <td>
                     <input type="text" size="50" name="collective_url"
-                           value="<?php echo $collective_url ?>"/>
+                           value="<?= $collective_url ?>"/>
                 </td>
             </tr>
 
@@ -712,7 +712,7 @@ if ($show_form) {
                     This is the password you will be using to log into Enthusiast 3. This
                     is case-sensitive, and it is encrypted in the database. Type it twice
                     for verification purposes.
-                    <?php echo (isset($errors['password']))
+                    <?= (isset($errors['password']))
                         ? '<br /><span class="error">' . $errors['password'] . '</span>' : '' ?>
                 </td>
             </tr>
@@ -744,10 +744,10 @@ if ($show_form) {
             </tr>
             <tr>
                 <td>
-                    <input type="radio" name="log_errors" value="no" <?php echo ($log_errors == 'no')
+                    <input type="radio" name="log_errors" value="no" <?= ($log_errors == 'no')
                         ? 'checked="checked"' : '' ?> />
                     No, do not log errors.<br/>
-                    <input type="radio" name="log_errors" value="yes" <?php echo ($log_errors == 'yes')
+                    <input type="radio" name="log_errors" value="yes" <?= ($log_errors == 'yes')
                         ? 'checked="checked"' : '' ?> />
                     Yes, log errors!<br/>
                 </td>
@@ -761,14 +761,14 @@ if ($show_form) {
                     This is the absolute path for this installation of Enthusiast 3, i.e.,
                     <code>/home/username/public_html/enthusiast3/</code>. This
                     is important for showing the proper forms for fanlistings.
-                    <?php echo (isset($errors['installation_path']))
+                    <?= (isset($errors['installation_path']))
                         ? '<br /><span class="error">' . $errors['installation_path'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr class="rowshade">
                 <td>
                     <input type="text" size="50" name="installation_path"
-                           value="<?php echo $installation_path ?>"/>
+                           value="<?= $installation_path ?>"/>
                 </td>
             </tr>
 
@@ -784,14 +784,14 @@ if ($show_form) {
                     different from the root of your collective. This is important if you plan
                     to use images (i.e., on joined fanlistings, owned fanlistings, and
                     affiliates). Example: <code>/home/username/public_html/</code>
-                    <?php echo (isset($errors['root_path_absolute']))
+                    <?= (isset($errors['root_path_absolute']))
                         ? '<br /><span class="error">' . $errors['root_path_absolute'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr>
                 <td>
                     <input type="text" size="50" name="root_path_absolute"
-                           value="<?php echo $root_path_absolute ?>"/>
+                           value="<?= $root_path_absolute ?>"/>
                 </td>
             </tr>
 
@@ -809,14 +809,14 @@ if ($show_form) {
                     affiliates). This value will replace the value of <i>Root path
                         (Absolute)</i> when plugged into IMG tags. Example:
                     <code>http://yourdomain.tld/</code> (don't forget the trailing slash).
-                    <?php echo (isset($errors['root_path_web']))
+                    <?= (isset($errors['root_path_web']))
                         ? '<br /><span class="error">' . $errors['root_path_web'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr class="rowshade">
                 <td>
                     <input type="text" size="50" name="root_path_web"
-                           value="<?php echo $root_path_web ?>"/>
+                           value="<?= $root_path_web ?>"/>
                 </td>
             </tr>
 
@@ -834,7 +834,7 @@ if ($show_form) {
             </tr>
             <tr>
                 <td>
-                    <input type="text" size="50" name="date_format" value="<?php echo $date_format ?>"/>
+                    <input type="text" size="50" name="date_format" value="<?= $date_format ?>"/>
                 </td>
             </tr>
 
@@ -851,7 +851,7 @@ if ($show_form) {
             </tr>
             <tr class="rowshade">
                 <td>
-                    <input type="text" size="50" name="per_page" value="<?php echo $per_page ?>"/>
+                    <input type="text" size="50" name="per_page" value="<?= $per_page ?>"/>
                 </td>
             </tr>
 
@@ -871,20 +871,20 @@ if ($show_form) {
                 <td>
                     This sets what mailing mechanism PHP will use. You can probably leave this
                     alone unless you know what you are doing.
-                    <?php echo (isset($errors['mail_settings']))
+                    <?= (isset($errors['mail_settings']))
                         ? '<br /><span class="error">' . $errors['mail_settings'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr>
                 <td>
                     <select name="mail_settings">
-                        <option value="mail" <?php echo ($mail_settings == 'mail')
+                        <option value="mail" <?= ($mail_settings == 'mail')
                             ? 'selected="selected"' : '' ?>>PHP's native mail() function
                         </option>
-                        <option value="sendmail" <?php echo ($mail_settings == 'sendmail')
+                        <option value="sendmail" <?= ($mail_settings == 'sendmail')
                             ? 'selected="selected"' : '' ?>>Sendmail
                         </option>
-                        <option value="smtp" <?php echo ($mail_settings == 'SMTP')
+                        <option value="smtp" <?= ($mail_settings == 'SMTP')
                             ? 'selected="selected"' : '' ?>>SMTP
                         </option>
                     </select>
@@ -901,7 +901,7 @@ if ($show_form) {
                 <td>
                     <strong>Only needed if using Sendmail above.</strong> This should
                     be the path for your host's sendmail; please ask your host for this.
-                    <?php echo (isset($errors['sendmail_path']))
+                    <?= (isset($errors['sendmail_path']))
                         ? '<br /><span class="error">' . $errors['sendmail_path'] . '</span>' : '' ?>
                 </td>
             </tr>
@@ -909,7 +909,7 @@ if ($show_form) {
                 <td>
                     <input type="hidden" name="sendmail_args" value=""/>
                     <input type="text" size="50" name="sendmail_path"
-                           value="<?php echo $sendmail_path ?>"/>
+                           value="<?= $sendmail_path ?>"/>
                 </td>
             </tr>
 
@@ -923,17 +923,17 @@ if ($show_form) {
                 <td>
                     <strong>Only needed if using SMTP above.</strong> This is the SMTP host and
                     port for the SMTP server.
-                    <?php echo (isset($errors['smtp_host']))
+                    <?= (isset($errors['smtp_host']))
                         ? '<br /><span class="error">' . $errors['smtp_host'] . '</span>' : '' ?>
-                    <?php echo (isset($errors['smtp_port']))
+                    <?= (isset($errors['smtp_port']))
                         ? '<br /><span class="error">' . $errors['smtp_post'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr>
                 <td>
                     <input type="text" size="50" name="smtp_host"
-                           value="<?php echo $smtp_host ?>"/>:<input type="text" size="5" name="smtp_port"
-                                                                     value="<?php echo $smtp_port ?>"/>
+                           value="<?= $smtp_host ?>"/>:<input type="text" size="5" name="smtp_port"
+                                                              value="<?= $smtp_port ?>"/>
 
                 </td>
             </tr>
@@ -948,30 +948,29 @@ if ($show_form) {
                 <td>
                     <strong>Only needed if using SMTP above.</strong> This is the authentication
                     settings for the SMTP server (if needed).
-                    <?php echo (isset($errors['smtp_auth']))
+                    <?= (isset($errors['smtp_auth']))
                         ? '<br /><span class="error">' . $errors['smtp_auth'] . '</span>' : '' ?>
-                    <?php echo (isset($errors['smtp_username']))
+                    <?= (isset($errors['smtp_username']))
                         ? '<br /><span class="error">' . $errors['smtp_username'] . '</span>' : '' ?>
-                    <?php echo (isset($errors['smtp_password']))
+                    <?= (isset($errors['smtp_password']))
                         ? '<br /><span class="error">' . $errors['smtp_password'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr class="rowshade">
                 <td>
-                    <input type="checkbox" name="smtp_auth" value="yes" <?php echo
-                    ($smtp_auth == 'yes') ? 'checked="checked"' : ''; ?>/> Yes, SMTP server requires authentication
+                    <input type="checkbox" name="smtp_auth" value="yes" <?= ($smtp_auth == 'yes') ? 'checked="checked"' : '' ?>/> Yes, SMTP server requires authentication
                 </td>
             </tr>
             <tr class="rowshade">
                 <td>
                     Username: <input type="text" name="smtp_username" size="50"
-                                     value="<?php echo $smtp_username ?>"/>
+                                     value="<?= $smtp_username ?>"/>
                 </td>
             </tr>
             <tr class="rowshade">
                 <td>
                     Password: <input type="password" size="50" name="smtp_password"
-                                     value="<?php echo $smtp_password ?>"/>
+                                     value="<?= $smtp_password ?>"/>
                 </td>
             </tr>
 
@@ -991,14 +990,14 @@ if ($show_form) {
                 <td>
                     This is the absolute path to your affiliates image directory.
                     Do not forget the trailing slash.
-                    <?php echo (isset($errors['affiliates_dir']))
+                    <?= (isset($errors['affiliates_dir']))
                         ? '<br /><span class="error">' . $errors['affiliates_dir'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr>
                 <td>
                     <input type="text" size="50" name="affiliates_dir"
-                           value="<?php echo $affiliates_dir ?>"/>
+                           value="<?= $affiliates_dir ?>"/>
                 </td>
             </tr>
 
@@ -1012,14 +1011,14 @@ if ($show_form) {
                 <td>
                     This is the absolute path to your joined listings image directory. Do not
                     forget the trailing slash.
-                    <?php echo (isset($errors['joined_images_dir']))
+                    <?= (isset($errors['joined_images_dir']))
                         ? '<br /><span class="error">' . $errors['joined_images_dir'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr class="rowshade">
                 <td>
                     <input type="text" size="50" name="joined_images_dir"
-                           value="<?php echo $joined_images_dir ?>"/>
+                           value="<?= $joined_images_dir ?>"/>
                 </td>
             </tr>
 
@@ -1033,14 +1032,14 @@ if ($show_form) {
                 <td>
                     This is the absolute path to your owned listings image directory. Do not
                     forget the trailing slash.
-                    <?php echo (isset($errors['owned_images_dir']))
+                    <?= (isset($errors['owned_images_dir']))
                         ? '<br /><span class="error">' . $errors['owned_images_dir'] . '</span>' : '' ?>
                 </td>
             </tr>
             <tr>
                 <td>
                     <input type="text" size="50" name="owned_images_dir"
-                           value="<?php echo $owned_images_dir ?>"/>
+                           value="<?= $owned_images_dir ?>"/>
                 </td>
             </tr>
 
@@ -1049,7 +1048,7 @@ if ($show_form) {
 
             <tr>
                 <td colspan="2" class="right">
-                    <input type="submit" value="Install Enthusiast <?= RobotessNet\getVersion() ?>!"/>
+                    <input type="submit" value="Install Enthusiast <?= RobotessNet\App::getVersion() ?>!"/>
                     <input type="reset" value="Reset settings"/>
                 </td>
             </tr>

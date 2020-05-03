@@ -22,15 +22,20 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+
+use RobotessNet\PaginationUtils;
+
 session_start();
 require_once('logincheck.inc.php');
 if (!isset($logged_in) || !$logged_in) {
     $_SESSION['message'] = 'You are not logged in. Please log in to continue.';
     $next = '';
-    if (isset($_SERVER['REQUEST_URI']))
+    if (isset($_SERVER['REQUEST_URI'])) {
         $next = $_SERVER['REQUEST_URI'];
-    else if (isset($_SERVER['PATH_INFO']))
+    }
+    else if (isset($_SERVER['PATH_INFO'])) {
         $next = $_SERVER['PATH_INFO'];
+    }
     $_SESSION['next'] = $next;
     header('location: index.php');
     die('Redirecting you...');
@@ -52,17 +57,16 @@ if ($action == 'add') {
     $show_default = false;
     $show_form = true;
 
-    if (isset($_POST['done']) && $_POST['done'] == 'yes') {
-        if (isset($_POST['catname']) && $_POST['catname'] != '') {
-            $success = add_category($_POST['catname'], $_POST['parent']);
-            if ($success) {
-                echo '<p class="success">Category <i>' . $_POST['catname'] .
-                    '</i> added.</p>';
-                $show_form = false;
-                $show_default = true;
-            } else
-                echo '<p class="error">Error adding category. ' .
-                    'Please try again.</p>';
+    if (isset($_POST['done']) && $_POST['done'] == 'yes' && isset($_POST['catname']) && $_POST['catname'] != '') {
+        $success = add_category($_POST['catname'], $_POST['parent']);
+        if ($success) {
+            echo '<p class="success">Category <i>' . $_POST['catname'] .
+                '</i> added.</p>';
+            $show_form = false;
+            $show_default = true;
+        } else {
+            echo '<p class="error">Error adding category. ' .
+                'Please try again.</p>';
         }
     }
 
@@ -89,23 +93,25 @@ if ($action == 'add') {
                             <option value="0">(No parent)</option>
                             <?php
                             $cats = enth_get_categories();
-                            $options = array();
+                            $options = [];
                             foreach ($cats as $cat) {
                                 $optiontext = $cat['catname'];
                                 if (count($ancestors =
                                         array_reverse(get_ancestors($cat['catid']))) > 1) {
                                     // get ancestors
                                     $text = '';
-                                    foreach ($ancestors as $a)
+                                    foreach ($ancestors as $a) {
                                         $text .= ($text) ? ' > ' . get_category_name($a) : get_category_name($a);
+                                    }
                                     $optiontext = rtrim($text, ' > ');
                                     $optiontext = str_replace('>', '&raquo;', $optiontext);
                                 }
-                                $options[] = array('text' => $optiontext, 'id' => $cat['catid']);
+                                $options[] = ['text' => $optiontext, 'id' => $cat['catid']];
                             }
                             usort($options, 'category_array_compare');
-                            foreach ($options as $o)
+                            foreach ($options as $o) {
                                 echo '<option value="' . $o['id'] . '">' . $o['text'] . '</option>';
+                            }
                             ?>
                         </select>
                     </td>
@@ -142,15 +148,18 @@ if ($action == 'add') {
         if (count(get_enth_category_children($_GET['id'])) == 0) {
             $cat = get_category_name($_GET['id']);
             $success = delete_category($_GET['id']);
-            if ($success)
+            if ($success) {
                 echo '<p class="success">Category <i>' . $cat . '</i> deleted.</p>';
-            else
+            }
+            else {
                 echo '<p class="error">Error deleting category. ' .
                     'Please try again.</p>';
-        } else
+            }
+        } else {
             echo '<p class="error">There are categories that are assigned as ' .
                 'children to this category. Please delete them before ' .
                 'attempting to delete this category.</p>';
+        }
     }
 
 
@@ -168,22 +177,23 @@ if ($action == 'add') {
                 '</i> successfully changed.</p>';
             $show_edit_form = false;
             $show_default = true;
-        } else
+        } else {
             echo '<p class="error">Error editing <i>' . $old .
                 ' </i> category. Please try again.</p>';
+        }
     } // end if catname is present
 
     if ($show_edit_form) {
         $old = get_category_name($_GET['id']);
         $parent = get_category_parent($_GET['id']);
         ?>
-        <p>You can edit the category info for <i><?php echo $old ?></i> via this page.
+        <p>You can edit the category info for <i><?= $old ?></i> via this page.
             Edit the pre-loaded information in the form below, then click "Edit this
             Category".</p>
 
         <form method="post" action="categories.php">
             <input type="hidden" name="action" value="edit"/>
-            <input type="hidden" name="id" value="<?php echo $_GET['id'] ?>"/>
+            <input type="hidden" name="id" value="<?= $_GET['id'] ?>"/>
 
             <table>
 
@@ -192,7 +202,7 @@ if ($action == 'add') {
                         Category name
                     </td>
                     <td>
-                        <input type="text" name="catname" value="<?php echo $old ?>"/>
+                        <input type="text" name="catname" value="<?= $old ?>"/>
                     </td>
                 </tr>
 
@@ -205,26 +215,30 @@ if ($action == 'add') {
                             <option value=""></option>
                             <?php
                             $cats = enth_get_categories();
-                            $options = array();
+                            $options = [];
                             foreach ($cats as $cat) {
-                                if ($cat['catid'] == $_GET['id'])
+                                if ($cat['catid'] == $_GET['id']) {
                                     continue;
+                                }
                                 $optiontext = $cat['catname'];
                                 if (count($ancestors =
                                         array_reverse(get_ancestors($cat['catid']))) > 1) {
                                     // get ancestors
                                     $text = '';
-                                    foreach ($ancestors as $a)
+                                    foreach ($ancestors as $a) {
                                         $text .= get_category_name($a) . ' > ';
+                                    }
                                     $optiontext = rtrim($text, ' > ');
                                     $optiontext = str_replace('>', '&raquo;', $optiontext);
                                 }
-                                $options[] = array('text' => $optiontext, 'id' => $cat['catid']);
+                                $options[] = ['text' => $optiontext, 'id' => $cat['catid']];
                             }
                             usort($options, 'category_array_compare');
                             foreach ($options as $o) {
                                 echo '<option value="' . $o['id'];
-                                if ($o['id'] == $parent) echo '" selected="selected';
+                                if ($o['id'] == $parent) {
+                                    echo '" selected="selected';
+                                }
                                 echo '">' . $o['text'] . '</option>';
                             }
                             ?>
@@ -288,36 +302,36 @@ if ($action == 'add') {
                 <tr>
                     <td>
                         Header<br/>
-                        <a href="#" onclick="alert( '<?php echo addslashes($header_help) ?>' );"><img
+                        <a href="#" onclick="alert( '<?= addslashes($header_help) ?>' );"><img
                                     src="help.gif" width="42" height="19" border="0"
                                     alt=" click for help on this setting"/></a>
                     </td>
                     <td>
-                        <textarea name="header" rows="5" cols="65"><?php echo $header ?></textarea>
+                        <textarea name="header" rows="5" cols="65"><?= $header ?></textarea>
                     </td>
                 </tr>
 
                 <tr class="rowshade">
                     <td>
                         Template<br/>
-                        <a href="#" onclick="alert('<?php echo addslashes($template_help) ?>');"><img
+                        <a href="#" onclick="alert('<?= addslashes($template_help) ?>');"><img
                                     src="help.gif" width="42" height="19" border="0"
                                     alt=" click for help on this setting"/></a>
                     </td>
                     <td>
-                        <textarea name="template" rows="5" cols="65"><?php echo $template ?></textarea>
+                        <textarea name="template" rows="5" cols="65"><?= $template ?></textarea>
                     </td>
                 </tr>
 
                 <tr>
                     <td>
                         Footer<br/>
-                        <a href="#" onclick="alert( '<?php echo addslashes($footer_help) ?>' );"><img
+                        <a href="#" onclick="alert( '<?= addslashes($footer_help) ?>' );"><img
                                     src="help.gif" width="42" height="19" border="0"
                                     alt=" click for help on this setting"/></a>
                     </td>
                     <td>
-                        <textarea name="footer" rows="5" cols="65"><?php echo $footer ?></textarea>
+                        <textarea name="footer" rows="5" cols="65"><?= $footer ?></textarea>
                     </td>
                 </tr>
 
@@ -375,10 +389,13 @@ if ($show_default) {
         if ($ancestors = array_reverse(get_ancestors($c['catid']))) {
             // get ancestors
             $text = '';
-            foreach ($ancestors as $a)
+            foreach ($ancestors as $a) {
                 $text .= (strlen($text) > 0) ? ' &raquo; ' . get_category_name($a) : get_category_name($a);
+            }
             $cats[$i]['text'] .= $text;
-        } else $cats[$i]['text'] = get_category_name($c['catid']);
+        } else {
+            $cats[$i]['text'] = get_category_name($c['catid']);
+        }
     }
 
     usort($cats, 'category_array_compare');
@@ -408,10 +425,13 @@ if ($show_default) {
         if ($ancestors = array_reverse(get_ancestors($cat['catid']))) {
             // get ancestors
             $text = '';
-            foreach ($ancestors as $a)
+            foreach ($ancestors as $a) {
                 $text .= (strlen($text) > 0) ? ' &raquo; ' . get_category_name($a) : get_category_name($a);
+            }
             $catstring .= $text;
-        } else $catstring = get_category_name($cat['catid']);
+        } else {
+            $catstring = get_category_name($cat['catid']);
+        }
 
         echo $catstring . '</td><td class="center">';
         echo '<a href="?action=edit&id=' . $cat['catid'] . '">' .
@@ -424,15 +444,14 @@ if ($show_default) {
     echo '</table>';
 
     $url = 'categories.php';
-
-    $page_qty = $total / get_setting('per_page');
     $connector = '?';
-    foreach ($_GET as $key => $value)
+    foreach ($_GET as $key => $value) {
         if ($key !== 'start' && $key !== 'PHPSESSID') {
             $url .= $connector . $key . '=' . $value;
             $connector = '&amp;';
         }
+    }
 
-    echo RobotessNet\getPaginatorHTML($page_qty, $url, $connector);
+    echo PaginationUtils::getPaginatorHTML($total, (int)get_setting('per_page'), $url . $connector);
 }
 require_once('footer.php');

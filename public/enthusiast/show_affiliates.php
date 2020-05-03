@@ -2,6 +2,7 @@
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
+ * Copyright (c) 2020 by Ekaterina http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -23,19 +24,20 @@
  ******************************************************************************/
 require 'config.php';
 
-require_once( 'mod_errorlogs.php' );
-require_once( 'mod_affiliates.php' );
-require_once( 'mod_owned.php' );
-require_once( 'mod_settings.php' );
+require_once('mod_errorlogs.php');
+require_once('mod_affiliates.php');
+require_once('mod_owned.php');
+require_once('mod_settings.php');
 
 // make sure fanlisting is set to have affiliates
-$info = get_listing_info( $listing );
-if( $info['affiliates'] == 0 ) {
-   echo '<p>The fanlisting has not been set up to have affiliates.</p>';
-   return;
+$info = get_listing_info($listing);
+if ($info['affiliates'] == 0) {
+    echo '<p>The fanlisting has not been set up to have affiliates.</p>';
+    return;
 }
 
 // get affiliates and listing info
-$affiliates = get_affiliates( $listing );
-foreach( $affiliates as $aff )
-   echo parse_affiliates_template( $aff['affiliateid'], $listing );
+$affiliates = get_affiliates($listing);
+foreach ($affiliates as $aff) {
+    echo parse_affiliates_template($aff['affiliateid'], $listing);
+}

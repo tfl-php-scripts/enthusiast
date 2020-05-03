@@ -26,7 +26,7 @@
 
 namespace {
 
-    require_once('mod_version.php');
+    require_once('Robotess/Autoloader.php');
 
     /*___________________________________________________________________________*/
     function get_setting($setting)
@@ -80,10 +80,11 @@ namespace {
                 '</i>; Query is: <code>' . $query . '</code>');
             die(STANDARD_ERROR);
         }
-        if ($result->rowCount() > 0)
+        if ($result->rowCount() > 0) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
 
@@ -165,10 +166,11 @@ namespace {
             die(STANDARD_ERROR);
         }
 
-        $settings = array();
+        $settings = [];
         $result->setFetchMode(PDO::FETCH_ASSOC);
-        while ($row = $result->fetch())
+        while ($row = $result->fetch()) {
             $settings[] = $row;
+        }
         return $settings;
 
     } // end of get_all_settings
@@ -194,10 +196,11 @@ namespace {
                 '</i>; Query is: <code>' . $query . '</code>');
             die(STANDARD_ERROR);
         }
-        $templates = array();
+        $templates = [];
         $result->setFetchMode(PDO::FETCH_ASSOC);
-        while ($row = $result->fetch())
+        while ($row = $result->fetch()) {
             $templates[] = $row;
+        }
         return $templates;
 
     } // end of get_all_settings
@@ -266,12 +269,13 @@ namespace {
                     $value == $settings['passwordv']) {
                     $query = "UPDATE `$db_settings` SET `value` = MD5( :value ) " .
                         "WHERE `setting` = 'password'";
-                } else
+                } else {
                     $query = '';
+                }
             }
             if ($query != '') {
                 $result = $db_link->prepare($query);
-                $result->bindParam(':value', $value, PDO::PARAM_STR);
+                $result->bindParam(':value', $value);
                 $result->execute();
                 if (!$result) {
                     log_error(__FILE__ . ':' . __LINE__,
@@ -281,74 +285,5 @@ namespace {
                 }
             }
         }
-    }
-}
-
-namespace RobotessNet {
-
-    use PDOStatement;
-    const DUPLICATE_ENTRY_SQL_ERROR_CODE = 1062;
-
-    /**
-     * @param PDOStatement $result
-     * @return bool
-     */
-    function isDuplicateSqlError(PDOStatement $result)
-    {
-        $errorInfo = $result->errorInfo() ?? [];
-        return isset($errorInfo[1]) && $errorInfo[1] === DUPLICATE_ENTRY_SQL_ERROR_CODE;
-    }
-
-    /**
-     * @param $data
-     * @return string
-     */
-    function clean(string $data): string
-    {
-        $data = trim(htmlentities(strip_tags($data), ENT_QUOTES));
-
-        if (get_magic_quotes_gpc()) {
-            $data = stripslashes($data);
-        }
-
-        $data = addslashes($data);
-
-        return $data;
-    }
-
-    /**
-     * @param $data
-     * @return string
-     */
-    function cleanNormalize(string $data): string
-    {
-        return strtolower(clean($data));
-    }
-
-    /**
-     * @param int $numberOfPages
-     * @param string $url
-     * @param string $connector
-     * @return string
-     */
-    function getPaginatorHTML(int $numberOfPages, string $url, string $connector)
-    {
-        if ($numberOfPages <= 1) {
-            return '';
-        }
-
-        $result = '<p class="center">Go to page: ';
-
-        $i = 1;
-        while (($i <= $numberOfPages + 1) && $numberOfPages > 1) {
-            $start_link = ($i - 1) * get_setting('per_page');
-            $result .= '<a href="' . $url . $connector . 'start=' . $start_link . '">' .
-                $i . '</a> ';
-            $i++;
-        }
-
-        $result .= '</p>';
-
-        return $result;
     }
 }

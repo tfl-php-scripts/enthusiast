@@ -3,6 +3,7 @@
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
  * Copyright (c) 2018 by Lysianthus (contributor) <she@lysianth.us>
+ * Copyright (c) 2020 by Ekaterina http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -27,10 +28,12 @@ require_once('logincheck.inc.php');
 if (!isset($logged_in) || !$logged_in) {
     $_SESSION['message'] = 'You are not logged in. Please log in to continue.';
     $next = '';
-    if (isset($_SERVER['REQUEST_URI']))
+    if (isset($_SERVER['REQUEST_URI'])) {
         $next = $_SERVER['REQUEST_URI'];
-    else if (isset($_SERVER['PATH_INFO']))
+    }
+    else if (isset($_SERVER['PATH_INFO'])) {
         $next = $_SERVER['PATH_INFO'];
+    }
     $_SESSION['next'] = $next;
     header('location: index.php');
     die('Redirecting you...');
@@ -54,15 +57,17 @@ if ($action == 'add' || $action == 'Add') {
     $show_add_form = true;
 
     if (isset($_POST['done'])) { // form has been submitted
-        if (!$_POST['url'] || !$_POST['title'] || !$_POST['email'])
+        if (!$_POST['url'] || !$_POST['title'] || !$_POST['email']) {
             echo '<p class="error">You have left out some required fields.' .
                 '</p>';
+        }
 
         else { // go ahead and add
             $success = add_affiliate($_POST['url'], $_POST['title'],
                 $_POST['email'], $listing);
-            if (!$success)
+            if (!$success) {
                 echo '<p class="error">Error adding the affiliate.</p>';
+            }
             else {
                 $show_add_form = false;
                 $show_default = true;
@@ -99,9 +104,10 @@ if ($action == 'add' || $action == 'Add') {
                         @chmod($dir . $filename, 0644);
 
                         $edited = edit_affiliate($success, $listing, $filename);
-                        if ($edited)
+                        if ($edited) {
                             echo '<p class="success">Affiliate added ' .
                                 'successfully.</p>';
+                        }
                     } else if (!$upload_success || !$edited) {
                         echo '<p class="error">Affiliate added ' .
                             'successfully, but there was an error ' .
@@ -121,8 +127,9 @@ if ($action == 'add' || $action == 'Add') {
                     $to = $_POST['email'];
                     $email = parse_affiliate_add_email($success, $listing);
                     $from = '"' . get_setting('owner_name') . '"';
-                    if ($listing == 'collective')
+                    if ($listing == 'collective') {
                         $from .= ' <' . get_setting('owner_email') . '>';
+                    }
                     else {
                         $info = get_listing_info($listing);
                         $from .= ' <' . $info['email'] . '>';
@@ -151,27 +158,31 @@ if ($action == 'add' || $action == 'Add') {
         $id = $listing;
         $to = 'Collective';
 
-        if (isset($_POST['url']))
+        if (isset($_POST['url'])) {
             $url = $_POST['url'];
-        if (isset($_POST['title']))
+        }
+        if (isset($_POST['title'])) {
             $title = $_POST['title'];
-        if (isset($_POST['email']))
+        }
+        if (isset($_POST['email'])) {
             $email = $_POST['email'];
+        }
         if (is_numeric($id)) {
             $info = get_listing_info($id);
             $to = $info['title'] . ': ' . $info['subject'] . ' ' .
                 $info['listingtype'];
-        } else
+        } else {
             $to = get_setting('collective_title');
+        }
         ?>
-        <p>This page allows you to add an affiliate to <i><?php echo $to ?></i>.
+        <p>This page allows you to add an affiliate to <i><?= $to ?></i>.
             Fill out the form below and click on "Add this affiliate".</p>
 
         <form action="affiliates.php" method="post"
               enctype="multipart/form-data">
             <input type="hidden" name="action" value="add"/>
             <input type="hidden" name="done" value="yes"/>
-            <input type="hidden" name="listing" value="<?php echo $listing ?>"/>
+            <input type="hidden" name="listing" value="<?= $listing ?>"/>
 
             <table>
 
@@ -193,7 +204,7 @@ if ($action == 'add' || $action == 'Add') {
                         Site title
                     </td>
                     <td>
-                        <input type="text" name="title" value="<?php echo $title ?>"/>
+                        <input type="text" name="title" value="<?= $title ?>"/>
                     </td>
                 </tr>
 
@@ -202,7 +213,7 @@ if ($action == 'add' || $action == 'Add') {
                         Owner email
                     </td>
                     <td>
-                        <input type="text" name="email" value="<?php echo $email ?>"/>
+                        <input type="text" name="email" value="<?= $email ?>"/>
                     </td>
                 </tr>
 
@@ -229,7 +240,7 @@ if ($action == 'add' || $action == 'Add') {
                     <td colspan="2" class="right">
                         <input type="submit" value="Add this affiliate"/>
                         <input type="button" value="Cancel"
-                               onclick="javascript:window.location='affiliates.php?listing=<?php echo $id ?>';"/>
+                               onclick="javascript:window.location='affiliates.php?listing=<?= $id ?>';"/>
                     </td>
                 </tr>
 
@@ -278,36 +289,36 @@ if ($action == 'template') {
                 <tr>
                     <td>
                         Header<br/>
-                        <a href="#" onclick="alert( '<?php echo addslashes($header_help) ?>' );"><img
+                        <a href="#" onclick="alert( '<?= addslashes($header_help) ?>' );"><img
                                     src="help.gif" width="42" height="19" border="0"
                                     alt=" click for help on this setting"/></a>
                     </td>
                     <td>
-                        <textarea name="header" rows="5" cols="65"><?php echo $header ?></textarea>
+                        <textarea name="header" rows="5" cols="65"><?= $header ?></textarea>
                     </td>
                 </tr>
 
                 <tr class="rowshade">
                     <td>
                         Template<br/>
-                        <a href="#" onclick="alert('<?php echo addslashes($template_help) ?>');"><img
+                        <a href="#" onclick="alert('<?= addslashes($template_help) ?>');"><img
                                     src="help.gif" width="42" height="19" border="0"
                                     alt=" click for help on this setting"/></a>
                     </td>
                     <td>
-                        <textarea name="template" rows="5" cols="65"><?php echo $template ?></textarea>
+                        <textarea name="template" rows="5" cols="65"><?= $template ?></textarea>
                     </td>
                 </tr>
 
                 <tr>
                     <td>
                         Footer<br/>
-                        <a href="#" onclick="alert( '<?php echo addslashes($footer_help) ?>' );"><img
+                        <a href="#" onclick="alert( '<?= addslashes($footer_help) ?>' );"><img
                                     src="help.gif" width="42" height="19" border="0"
                                     alt=" click for help on this setting"/></a>
                     </td>
                     <td>
-                        <textarea name="footer" rows="5" cols="65"><?php echo $footer ?></textarea>
+                        <textarea name="footer" rows="5" cols="65"><?= $footer ?></textarea>
                     </td>
                 </tr>
 
@@ -343,12 +354,14 @@ if ($action == 'delete') {
     @unlink($dir . $aff['imagefile']);
 
     $success = delete_affiliate($_GET['id'], $listing);
-    if ($success)
+    if ($success) {
         echo '<p class="success">Affiliate <i>' . $aff['title'] . '</i>' .
             ' deleted.</p>';
-    else
+    }
+    else {
         echo '<p class="error">Error deleting affiliate <i>' .
             $aff['title'] . '</i>.</p>';
+    }
 }
 
 
@@ -359,9 +372,10 @@ if ($action == 'edit') {
 
     if (isset($_POST['done'])) {
         if ($_POST['email'] == '' || $_POST['url'] == '' ||
-            $_POST['title'] == '')
+            $_POST['title'] == '') {
             echo '<p class="error">You cannot leave the url, title and ' .
                 'email fields blank.</p>';
+        }
         else {
             if ($_POST['image_change'] == 'delete') {
                 $info = get_affiliate_info($_POST['id']);
@@ -412,22 +426,27 @@ if ($action == 'edit') {
 
                     $image_changed = edit_affiliate($_POST['id'],
                         $_POST['listing'], $filename);
-                } else
+                } else {
                     $image_changed_error = edit_affiliate($_POST['id'],
                         $_POST['listing'], 'null');
+                }
             }
 
             $changed = edit_affiliate($_POST['id'], $_POST['listing'], '',
                 $_POST['url'], $_POST['title'], $_POST['email']);
-            if (isset($image_deleted) && $image_deleted)
+            if (isset($image_deleted) && $image_deleted) {
                 echo '<p class="success">Image successfully deleted ';
-            if (isset($image_changed) && $image_changed)
+            }
+            if (isset($image_changed) && $image_changed) {
                 echo '<p class="success">Image successfully changed ';
-            if (isset($image_changed_error) && $image_changed_error)
+            }
+            if (isset($image_changed_error) && $image_changed_error) {
                 echo '<p class="error">There was an error changing the image ';
+            }
             if (!isset($image_deleted) && !isset($image_changed) &&
-                !isset($image_changed_error))
+                !isset($image_changed_error)) {
                 echo '<p class="success">No image changes were made ';
+            }
             if ($changed) {
                 $show_default = true;
                 $show_edit_form = false;
@@ -438,16 +457,17 @@ if ($action == 'edit') {
                 echo 'but there were errors updating other information. Please ' .
                     'try again.';
             }
-            if (isset($image_changed_error) && $image_changed_error)
+            if (isset($image_changed_error) && $image_changed_error) {
                 echo ' Please make sure that your affiliate folder path is correct (<code>' .
                     $dir . '</code>) and it is CHMODed to 755.';
+            }
             echo '</p>';
         }
     }
 
     if ($show_edit_form) {
         $info = get_affiliate_info($_REQUEST['id']);
-        $listing = array();
+        $listing = [];
         if (isset($_REQUEST['listing']) && $_REQUEST['listing'] != '' &&
             $_REQUEST['listing'] != 'collective') {
             $listing = get_listing_info($_REQUEST['listing']);
@@ -462,10 +482,10 @@ if ($action == 'edit') {
               enctype="multipart/form-data">
             <input type="hidden" name="action" value="edit"/>
             <input type="hidden" name="done" value="yes"/>
-            <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>"/>
+            <input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>"/>
             <input type="hidden" name="listing"
-                   value="<?php echo ($_REQUEST['listing'])
-                       ? $_REQUEST['listing'] : 'collective' ?>"/>
+                   value="<?= ($_REQUEST['listing'])
+                       ?: 'collective' ?>"/>
 
             <table>
 
@@ -474,7 +494,7 @@ if ($action == 'edit') {
                         Affiliate URL
                     </td>
                     <td>
-                        <input type="text" name="url" value="<?php echo $info['url'] ?>"/>
+                        <input type="text" name="url" value="<?= $info['url'] ?>"/>
                     </td>
                 </tr>
 
@@ -483,7 +503,7 @@ if ($action == 'edit') {
                         Site title
                     </td>
                     <td>
-                        <input type="text" name="title" value="<?php echo $info['title'] ?>"/>
+                        <input type="text" name="title" value="<?= $info['title'] ?>"/>
                     </td>
                 </tr>
 
@@ -492,7 +512,7 @@ if ($action == 'edit') {
                         Owner email
                     </td>
                     <td>
-                        <input type="text" name="email" value="<?php echo $info['email'] ?>"/>
+                        <input type="text" name="email" value="<?= $info['email'] ?>"/>
                     </td>
                 </tr>
 
@@ -502,12 +522,14 @@ if ($action == 'edit') {
                     </td>
                     <td>
                         <?php
-                        if ($info['imagefile'] == '')
+                        if ($info['imagefile'] == '') {
                             echo 'No image specified.';
+                        }
                         else {
                             $dir = get_setting('affiliates_dir');
-                            if (count($listing) > 0)
+                            if (count($listing) > 0) {
                                 $dir = $listing['affiliatesdir'];
+                            }
                             if (is_file($dir . $info['imagefile'])) {
                                 $image = @getimagesize($dir . $info['imagefile']);
                                 // make sure $image is an array, in case getimagesize() failed
@@ -546,7 +568,7 @@ if ($action == 'edit') {
                         <input type="submit" value="Edit this affiliate"/>
                         <input type="reset" value="Reset original values"/>
                         <input type="button" value="Cancel"
-                               onclick="javascript:window.location='affiliates.php?listing=<?php echo ($_REQUEST['listing']) ? $_REQUEST['listing'] : 'collective'
+                               onclick="javascript:window.location='affiliates.php?listing=<?= ($_REQUEST['listing']) ?: 'collective'
                                ?>';"/>
                     </td>
                 </tr>
@@ -560,7 +582,7 @@ if ($action == 'edit') {
 
 /*__________________________________________________________________DEFAULT__*/
 if ($show_default) {
-    $info = array();
+    $info = [];
     if ($listing == 'collective') {
         $info['title'] = get_setting('collective_title');
     } else {
@@ -568,11 +590,11 @@ if ($show_default) {
     }
     ?>
     <div class="submenu">
-        <a href="affiliates.php?action=add&listing=<?php echo $listing ?>">Add</a>
-        <a href="<?php echo ($listing == 'collective')
+        <a href="affiliates.php?action=add&listing=<?= $listing ?>">Add</a>
+        <a href="<?= ($listing == 'collective')
             ? 'affiliates.php?action=template'
-            : "owned.php?action=edit&id=$listing&type=templates"; ?>">Template</a>
-        <a href="emails.php?action=affiliates&id=<?php echo $listing ?>">Email</a>
+            : "owned.php?action=edit&id=$listing&type=templates" ?>">Template</a>
+        <a href="emails.php?action=affiliates&id=<?= $listing ?>">Email</a>
     </div>
 
     <form action="affiliates.php" method="get">
@@ -586,8 +608,9 @@ if ($show_default) {
                     $own = get_listing_info($id);
                     if ($own['affiliates'] == 1) {
                         echo '<option value="' . $id;
-                        if (isset($_REQUEST['listing']) && $_REQUEST['listing'] == $id)
+                        if (isset($_REQUEST['listing']) && $_REQUEST['listing'] == $id) {
                             echo '" selected="selected';
+                        }
                         echo '">' . $own['subject'] . ' ' . $own['listingtype'] .
                             ' affiliates </option>';
                     }
@@ -600,7 +623,7 @@ if ($show_default) {
     </form>
 
     <p>
-        The existing affiliates for <i><?php echo $info['title'] ?></i> are listed below.
+        The existing affiliates for <i><?= $info['title'] ?></i> are listed below.
         To add an affiliate, click on the "Add" submenu item; if you wish to modify
         your affiliates' template; click on the "Template" submenu item; if you wish
         to email all affiliates, click on the "Email" submenu item.</p>
@@ -627,8 +650,9 @@ if ($show_default) {
         $affiliates = get_affiliates($listing, $start);
         $total = count(get_affiliates($listing));
 
-        if (count($affiliates) == 0)
+        if (count($affiliates) == 0) {
             echo '<tr><td colspan="3">No affiliates yet.</td></tr>';
+        }
 
         $shade = false;
         foreach ($affiliates as $aff) {
@@ -637,35 +661,40 @@ if ($show_default) {
             echo "<tr$class><td>";
             echo '<a href="' . $aff['url'] . '">' . $aff['title'] . '</a>';
             echo '</td><td>';
-            if ($aff['imagefile'] == '')
+            if ($aff['imagefile'] == '') {
                 echo 'x</td><td>';
+            }
             else {
                 $dir = get_setting('affiliates_dir');
-                if ($listing != '' && ctype_digit($listing))
+                if ($listing != '' && ctype_digit($listing)) {
                     $dir = $info['affiliatesdir'];
+                }
                 $root_web = get_setting('root_path_web');
                 $root_abs = get_setting('root_path_absolute');
                 if (is_file($dir . $aff['imagefile'])) {
                     $image = @getimagesize($dir . $aff['imagefile']);
                     $dir = str_replace($root_abs, $root_web, $dir);
                     $dir = str_replace('\\', '/', $dir);
-                    if (!is_array($image))
+                    if (!is_array($image)) {
                         echo 'x</td></tr>';
-                    else
+                    }
+                    else {
                         echo '<img src="' . $dir . $aff['imagefile'] . '" ' . $image[3] .
                             ' border="0" alt="" /></td><td>';
-                } else
+                    }
+                } else {
                     echo 'x</td><td>';
+                }
             }
             ?>
-            <a href="affiliates.php?action=edit&listing=<?php echo $listing
-            ?>&id=<?php echo $aff['affiliateid'] ?>"><img src="edit.gif"
-                                                          width="42" height="19" alt=" edit"/></a>
-            <a href="emails.php?action=directemail&address=<?= urlencode($aff['email']); ?>&listing=<?php echo $listing ?>&id=<?php echo $aff['affiliateid']
+            <a href="affiliates.php?action=edit&listing=<?= $listing
+            ?>&id=<?= $aff['affiliateid'] ?>"><img src="edit.gif"
+                                                   width="42" height="19" alt=" edit"/></a>
+            <a href="emails.php?action=directemail&address=<?= urlencode($aff['email']) ?>&listing=<?= $listing ?>&id=<?= $aff['affiliateid']
             ?>"><img src="email.gif" width="42" height="19" alt=" email"/></a>
-            <a href="affiliates.php?action=delete&listing=<?php echo $listing
-            ?>&id=<?php echo $aff['affiliateid'] ?>"
-               onclick="go = confirm( 'Are you sure you want to delete <?php echo addslashes($aff['title']) ?>?' ); return go;"><img
+            <a href="affiliates.php?action=delete&listing=<?= $listing
+            ?>&id=<?= $aff['affiliateid'] ?>"
+               onclick="go = confirm( 'Are you sure you want to delete <?= addslashes($aff['title']) ?>?' ); return go;"><img
                         src="delete.gif" width="42" height="19" alt=" delete"/></a>
             <?php
             echo '</td></tr>';
@@ -677,13 +706,15 @@ if ($show_default) {
     $url = $_SERVER['REQUEST_URI'];
 
     $url = "affiliates.php?listing=$listing";
-    foreach ($_GET as $key => $value)
+    foreach ($_GET as $key => $value) {
         if ($key != 'start' && $key != 'PHPSESSID' && $key != 'listing') {
             $url .= "&amp;$key=$value";
         }
+    }
 
-    if ($page_qty > 1)
+    if ($page_qty > 1) {
         echo '<p class="center">Go to page: ';
+    }
 
     $i = 1;
     while (($i <= $page_qty + 1) && $page_qty > 1) {

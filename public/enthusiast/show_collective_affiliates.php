@@ -2,6 +2,7 @@
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
+ * Copyright (c) 2020 by Ekaterina http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -23,14 +24,15 @@
  ******************************************************************************/
 require 'config.php';
 
-require_once( 'mod_errorlogs.php' );
-require_once( 'mod_affiliates.php' );
-require_once( 'mod_settings.php' );
+require_once('mod_errorlogs.php');
+require_once('mod_affiliates.php');
+require_once('mod_settings.php');
 
 // get all affiliates
 $affiliates = get_affiliates();
 
-echo get_setting( 'affiliates_template_header' );
-foreach( $affiliates as $aff )
-   echo parse_affiliates_template( $aff['affiliateid'] );
-echo get_setting( 'affiliates_template_footer' );
+echo get_setting('affiliates_template_header');
+foreach ($affiliates as $aff) {
+    echo parse_affiliates_template($aff['affiliateid']);
+}
+echo get_setting('affiliates_template_footer');

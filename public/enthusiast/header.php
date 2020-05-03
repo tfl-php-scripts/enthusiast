@@ -22,29 +22,11 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
-require_once ('mod_version.php');
-
-// clean function
-function clean($data, $leavehtml = false)
-{
-    if ($leavehtml) {
-        $data = trim($data);
-    } else {
-        $data = trim(htmlentities(strip_tags($data), ENT_QUOTES));
-    }
-
-    if (get_magic_quotes_gpc()) {
-        $data = stripslashes($data);
-    }
-
-    $data = addslashes($data);
-
-    return $data;
-}
+require_once ('Robotess/Autoloader.php');
 
 // automatically clean inputs
 foreach ($_GET as $index => $value) {
-    $_GET[$index] = clean($value);
+    $_GET[$index] = RobotessNet\StringUtils::instance()->clean($value);
 }
 foreach ($_POST as $index => $value) {
     // if the index has "template" or "desc" in it, leave it be!
@@ -59,15 +41,15 @@ foreach ($_POST as $index => $value) {
     }
     if (is_array($value)) {
         foreach ($value as $i => $v) {
-            $value[$i] = clean($v, $leavehtml);
+            $value[$i] = RobotessNet\StringUtils::instance()->clean($v, $leavehtml);
         }
         $_POST[$index] = $value;
     } else {
-        $_POST[$index] = clean($value, $leavehtml);
+        $_POST[$index] = RobotessNet\StringUtils::instance()->clean($value, $leavehtml);
     }
 }
 foreach ($_COOKIE as $index => $value) {
-    $_COOKIE[$index] = clean($value);
+    $_COOKIE[$index] = RobotessNet\StringUtils::instance()->clean($value);
 }
 ?>
 <!DOCTYPE html>
@@ -75,7 +57,7 @@ foreach ($_COOKIE as $index => $value) {
 <head>
     <meta name="language" content="en"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title> Enthusiast <?= RobotessNet\getVersion() ?> ~ Listing Collective Management System </title>
+    <title> Enthusiast <?= RobotessNet\App::getVersion() ?> ~ Listing Collective Management System </title>
     <meta name="author" content="Angela Maria Protacia M. Sabas, Lysianthus <she@lysianth.us>, Ekaterina [http://robotess.net]"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -89,7 +71,7 @@ foreach ($_COOKIE as $index => $value) {
     <div class="topmenu">
         <a href="dashboard.php">Dashboard</a>
         <a href="settings.php">Settings</a>
-        <?php echo (isset($_COOKIE['e3login'], $_SESSION['logerrors']) && $_SESSION['logerrors'] == 'yes')
+        <?= (isset($_COOKIE['e3login'], $_SESSION['logerrors']) && $_SESSION['logerrors'] == 'yes')
             ? '<a href="errorlog.php">Error Log</a> ' : '' ?>
         <a href="logout.php">Logout</a>
     </div>

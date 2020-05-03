@@ -28,10 +28,12 @@ require_once('logincheck.inc.php');
 if (!isset($logged_in) || !$logged_in) {
     $_SESSION['message'] = 'You are not logged in. Please log in to continue.';
     $next = '';
-    if (isset($_SERVER['REQUEST_URI']))
+    if (isset($_SERVER['REQUEST_URI'])) {
         $next = $_SERVER['REQUEST_URI'];
-    else if (isset($_SERVER['PATH_INFO']))
+    }
+    else if (isset($_SERVER['PATH_INFO'])) {
         $next = $_SERVER['PATH_INFO'];
+    }
     $_SESSION['next'] = $next;
     header('location: index.php');
     die('Redirecting you...');
@@ -49,17 +51,17 @@ require_once('mod_errorlogs.php');
 ?>
     <h1>Enthusiast version and server info</h1>
 
-    <p>You are currently using Enthusiast <?= RobotessNet\getVersion() ?>. Please make sure you
+    <p>You are currently using Enthusiast <?= RobotessNet\App::getVersion() ?>. Please make sure you
         always keep your script up-to-date. Link to the latest version is available on
         <a href="https://scripts.robotess.net/projects/enthusiast" target="_blank"
            title="PHP Script Enthusiast ported to PHP7">project's page</a>.</p>
 
     <h2>Server info (useful for debugging and reporting issues)</h2>
     <p>When you're asking for help with the script, please share the following information:</p>
-    <p class="enth-version">Enthusiast: <?= RobotessNet\getVersion() ?></p>
+    <p class="enth-version">Enthusiast: <?= RobotessNet\App::getVersion() ?></p>
     <p>PHP: <?= PHP_VERSION ?></p>
 
-    <h1>You are managing: <?php echo get_setting('collective_title') ?></h1>
+    <h1>You are managing: <?= get_setting('collective_title') ?></h1>
 <?php
 $today = date('F j, Y (l)');
 if (date('a') === 'am') {
@@ -70,7 +72,7 @@ if (date('a') === 'am') {
     $greeting = 'Good evening';
 }
 ?>
-    <p><?php echo $greeting ?>! Today is <?php echo $today ?>.</p>
+    <p><?= $greeting ?>! Today is <?= $today ?>.</p>
 
     <h2>Collective statistics:</h2>
 
@@ -84,7 +86,7 @@ require_once('show_collective_stats.php');
                 Number of categories:
             </td>
             <td>
-                <?php echo $total_cats ?>
+                <?= $total_cats ?>
             </td>
         </tr>
 
@@ -93,7 +95,7 @@ require_once('show_collective_stats.php');
                 Number of joined listings:
             </td>
             <td>
-                <?php echo $joined_approved ?> approved, <?php echo $joined_pending ?> pending
+                <?= $joined_approved ?> approved, <?= $joined_pending ?> pending
             </td>
         </tr>
 
@@ -102,8 +104,8 @@ require_once('show_collective_stats.php');
                 Number of owned listings:
             </td>
             <td>
-                <?php echo $owned_current ?> current, <?php echo $owned_upcoming ?>
-                upcoming, <?php echo $owned_pending ?> pending
+                <?= $owned_current ?> current, <?= $owned_upcoming ?>
+                upcoming, <?= $owned_pending ?> pending
             </td>
         </tr>
 
@@ -112,7 +114,7 @@ require_once('show_collective_stats.php');
                 Number of collective affiliates:
             </td>
             <td>
-                <?php echo $affiliates_collective ?> affiliates
+                <?= $affiliates_collective ?> affiliates
             </td>
         </tr>
 
@@ -124,11 +126,13 @@ require_once('show_collective_stats.php');
                 <?php
                 if (count($owned_newest) > 0) {
                     ?>
-                    <a href="<?php echo $owned_newest['url'] ?>"><?php echo $owned_newest['title']
-                        ?>: the <?php echo $owned_newest['subject'] ?> <?php echo $owned_newest['listingtype']
+                    <a href="<?= $owned_newest['url'] ?>"><?= $owned_newest['title']
+                        ?>: the <?= $owned_newest['subject'] ?> <?= $owned_newest['listingtype']
                         ?></a>
                     <?php
-                } else echo 'None';
+                } else {
+                    echo 'None';
+                }
                 ?>
             </td>
         </tr>
@@ -141,9 +145,11 @@ require_once('show_collective_stats.php');
                 <?php
                 if (count($joined_newest) > 0) {
                     ?>
-                    <a href="<?php echo $joined_newest['url'] ?>"><?php echo $joined_newest['subject'] ?></a>
+                    <a href="<?= $joined_newest['url'] ?>"><?= $joined_newest['subject'] ?></a>
                     <?php
-                } else echo 'None';
+                } else {
+                    echo 'None';
+                }
                 ?>
             </td>
         </tr>
@@ -153,7 +159,7 @@ require_once('show_collective_stats.php');
                 Total members in collective:
             </td>
             <td>
-                <?php echo $collective_total_fans_approved ?> (<?php echo $collective_total_fans_pending ?> pending)
+                <?= $collective_total_fans_approved ?> (<?= $collective_total_fans_pending ?> pending)
             </td>
         </tr>
 
@@ -162,7 +168,7 @@ require_once('show_collective_stats.php');
                 Collective members growth rate:
             </td>
             <td>
-                <?php echo $collective_fans_growth_rate ?> members/day
+                <?= $collective_fans_growth_rate ?> members/day
             </td>
         </tr>
 
@@ -198,16 +204,20 @@ foreach ($owned as $id) {
         $readable = @date(get_setting('date_format'),
             strtotime($stats['lastupdated']));
         echo '<li> ';
-        if ($info['title'])
+        if ($info['title']) {
             echo $info['title'];
-        else
+        }
+        else {
             echo $info['subject'];
+        }
         echo ", last updated $readable;<br />manage ";
         echo '<a href="members.php?id=' . $info['listingid'] .
             '">members</a>';
         if ($info['affiliates'] == 1) // don't show if affiliates aren't enabled
+        {
             echo ' or <a href="affiliates.php?listing=' .
                 $info['listingid'] . '">affiliates</a>';
+        }
         echo '?</li>';
     }
 }

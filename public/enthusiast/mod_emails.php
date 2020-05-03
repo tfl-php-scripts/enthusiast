@@ -3,6 +3,7 @@
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
  * Copyright (c) 2018 by Lysianthus (contributor) <she@lysianth.us>
+ * Copyright (c) 2020 by Ekaterina http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -45,7 +46,7 @@ function get_email_templates()
         die(STANDARD_ERROR);
     }
 
-    $templates = array();
+    $templates = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
     while ($row = $result->fetch()) {
         $templates[] = $row['templateid'];
@@ -98,9 +99,9 @@ function add_template($name, $subject, $content)
         'null, :name, :subject, :content, 1 )';
 
     $result = $db_link->prepare($query);
-    $result->bindParam(':name', $name, PDO::PARAM_STR);
-    $result->bindParam(':subject', $subject, PDO::PARAM_STR);
-    $result->bindParam(':content', $content, PDO::PARAM_STR);
+    $result->bindParam(':name', $name);
+    $result->bindParam(':subject', $subject);
+    $result->bindParam(':content', $content);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
@@ -129,9 +130,9 @@ function edit_template($id, $name, $subject, $content)
         '`templateid` = :id';
 
     $result = $db_link->prepare($query);
-    $result->bindParam(':name', $name, PDO::PARAM_STR);
-    $result->bindParam(':subject', $subject, PDO::PARAM_STR);
-    $result->bindParam(':content', $content, PDO::PARAM_STR);
+    $result->bindParam(':name', $name);
+    $result->bindParam(':subject', $subject);
+    $result->bindParam(':content', $content);
     $result->bindParam(':id', $id, PDO::PARAM_INT);
     $result->execute();
     if (!$result) {
@@ -278,7 +279,7 @@ function parse_template($templateid, $email, $listing, $affid = 0)
             // its a member being emailed, get member info
             $query = "SELECT * FROM `$table` WHERE `email` = :email";
             $result = $db_link->prepare($query);
-            $result->bindParam(':email', $email, PDO::PARAM_STR);
+            $result->bindParam(':email', $email);
             $result->execute();
             if (!$result) {
                 log_error(__FILE__ . ':' . __LINE__,
@@ -406,7 +407,7 @@ function parse_template($templateid, $email, $listing, $affid = 0)
             html_entity_decode($info['title'], ENT_QUOTES), $body);
     }
 
-    $sendthis = array();
+    $sendthis = [];
     $sendthis['subject'] = $subject;
     $sendthis['body'] = $body;
     return $sendthis;
@@ -504,7 +505,7 @@ function parse_email_text($subject, $body, $email, $listing, $affid = 0)
             // its a member being emailed, get member info
             $query = "SELECT * FROM `$table` WHERE `email` = :email";
             $result = $db_link->prepare($query);
-            $result->bindParam(':email', $email, PDO::PARAM_STR);
+            $result->bindParam(':email', $email);
             $result->execute();
             if (!$result) {
                 log_error(__FILE__ . ':' . __LINE__,
@@ -636,7 +637,7 @@ function parse_email_text($subject, $body, $email, $listing, $affid = 0)
             html_entity_decode($info['title'], ENT_QUOTES), $body);
     }
 
-    $sendthis = array();
+    $sendthis = [];
     $sendthis['subject'] = $subject;
     $sendthis['body'] = $body;
     return $sendthis;
@@ -681,11 +682,11 @@ function send_email($to, $from, $subject, $body)
         $sendmail_path = (count($row)) ? $row['value'] : '/usr/bin/sendmail';
 
         // setup pear mail
-        $headers = array('From' => $from,
+        $headers = ['From' => $from,
             'To' => $to,
             'Subject' => $subject,
             'X-Mailer' => 'Enthusiast [Robotess Fork]',
-            'Content-type' => 'text/plain; charset=utf-8');
+            'Content-type' => 'text/plain; charset=utf-8'];
         $mailparams['sendmail_path'] = $sendmail_path;
         $mail = Mail::factory('sendmail', $mailparams);
 
@@ -716,14 +717,14 @@ function send_email($to, $from, $subject, $body)
         }
 
         // setup pear mail
-        $headers = array('From' => $from,
+        $headers = ['From' => $from,
             'To' => $to,
             'Subject' => $subject,
             'X-Mailer' => 'Enthusiast [Robotess Fork]',
-            'Content-type' => 'text/plain; charset=utf-8');
+            'Content-type' => 'text/plain; charset=utf-8'];
         $mailparams['host'] = $smtp_host;
         $mailparams['post'] = $smtp_port;
-        $mailparams['auth'] = ($smtp_auth == 'yes') ? true : false;
+        $mailparams['auth'] = $smtp_auth == 'yes';
         $mailparams['username'] = $smtp_username;
         $mailparams['password'] = $smtp_password;
         $mail = Mail::factory('smtp', $mailparams);

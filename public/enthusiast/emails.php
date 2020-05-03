@@ -2,6 +2,7 @@
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
+ * Copyright (c) 2020 by Ekaterina http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -26,10 +27,11 @@ require_once('logincheck.inc.php');
 if (!isset($logged_in) || !$logged_in) {
     $_SESSION['message'] = 'You are not logged in. Please log in to continue.';
     $next = '';
-    if (isset($_SERVER['REQUEST_URI']))
+    if (isset($_SERVER['REQUEST_URI'])) {
         $next = $_SERVER['REQUEST_URI'];
-    else if (isset($_SERVER['PATH_INFO']))
+    } else if (isset($_SERVER['PATH_INFO'])) {
         $next = $_SERVER['PATH_INFO'];
+    }
     $_SESSION['next'] = $next;
     header('location: index.php');
     die('Redirecting you...');
@@ -58,7 +60,7 @@ if ($action == 'add') {
     $show_form = true;
 
     if (isset($_POST['done']) && $_POST['done'] == 'yes') {
-        if ($_POST['templatename'] && $_POST['subject'] && $_POST['content']) {
+        if (isset($_POST['templatename'], $_POST['subject'],$_POST['content'])) {
             $success = add_template($_POST['templatename'], $_POST['subject'],
                 $_POST['content']);
             if ($success) {
@@ -68,9 +70,10 @@ if ($action == 'add') {
                         $_POST['templatename']) . '</i> added successfully.</p>';
             }
 
-        } else
+        } else {
             echo '<p class="error">All fields are required for adding a ' .
                 'template.</p>';
+        }
     } // end if form has been submitted
 
     if ($show_form) {
@@ -144,21 +147,22 @@ if ($action == 'edit') {
                 echo '<p class="success">Template <i>' . $_POST['templatename'] .
                     '</i> edited successfully.</p>';
             }
-        } else
+        } else {
             echo '<p class="error">All fields are required for email ' .
                 'templates.</p>';
+        }
     }
 
     if ($show_form) {
         $info = get_template_info($_REQUEST['id']);
         ?>
-        <p>You can edit the <i><?php echo $info['templatename'] ?></i> template on
+        <p>You can edit the <i><?= $info['templatename'] ?></i> template on
             this page. Its current values are shown below; when you're done
             modifying them, click on "Edit this template".</p>
 
         <form action="emails.php" method="post">
             <input type="hidden" name="action" value="edit"/>
-            <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>"/>
+            <input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>"/>
             <input type="hidden" name="done" value="yes"/>
 
             <table>
@@ -168,7 +172,7 @@ if ($action == 'edit') {
                         Template name
                     </td>
                     <td>
-                        <input type="text" name="templatename" value="<?php echo $info['templatename']
+                        <input type="text" name="templatename" value="<?= $info['templatename']
                         ?>"/>
                     </td>
                 </tr>
@@ -178,7 +182,7 @@ if ($action == 'edit') {
                         Subject
                     </td>
                     <td>
-                        <input type="text" name="subject" value="<?php echo $info['subject'] ?>"/>
+                        <input type="text" name="subject" value="<?= $info['subject'] ?>"/>
                     </td>
                 </tr>
 
@@ -187,7 +191,7 @@ if ($action == 'edit') {
                         Content
                     </td>
                     <td>
-      <textarea name="content" rows="7" cols="60"><?php echo $info['content']
+      <textarea name="content" rows="7" cols="60"><?= $info['content']
           ?></textarea>
                     </td>
                 </tr>
@@ -213,18 +217,19 @@ if ($action == 'delete') {
     $info = get_template_info($_REQUEST['id']);
     if ($info['deletable'] == 0) {
         ?>
-        <p class="error">The <i><?php echo $info['templatename'] ?></i> template is
+        <p class="error">The <i><?= $info['templatename'] ?></i> template is
             a system template and cannot be deleted.</p>
         <?php
     } else {
         $success = delete_template($_REQUEST['id']);
         if ($success) {
             ?>
-            <p class="success">Template <i><?php echo $info['templatename'] ?></i>
+            <p class="success">Template <i><?= $info['templatename'] ?></i>
                 deleted successfully.</p>
             <?php
-        } else
+        } else {
             echo '<p class="error">Error deleting template.</p>';
+        }
     }
 }
 
@@ -238,8 +243,9 @@ if ($action == 'directemail') {
     $from = '';
     $subject = '';
     $body = '';
-    if (!isset($_REQUEST['listing']))
+    if (!isset($_REQUEST['listing'])) {
         $_REQUEST['listing'] = 'collective';
+    }
 
     if ($_REQUEST['listing'] == 'collective') {
         $from = '"' . html_entity_decode(get_setting('collective_name'),
@@ -287,31 +293,32 @@ if ($action == 'directemail') {
     }
 
     if ($show_form) {
-        $info = array();
+        $info = [];
         $listing = 'collective';
         $email = $_REQUEST['address'];
         if (isset($_REQUEST['listing']) && $_REQUEST['listing'] != '' &&
             $_REQUEST['listing'] != 'collective') {
             $info = get_listing_info($_REQUEST['listing']);
             $listing = $_REQUEST['listing'];
-        } else
+        } else {
             $info['title'] = get_setting('collective_title');
+        }
         ?>
-        <p>You can send an email to <i><?php echo $_REQUEST['address'] ?></i> via this
+        <p>You can send an email to <i><?= $_REQUEST['address'] ?></i> via this
             page. Enter the email or the template below, and click "Send email".</p>
 
         <form action="emails.php" method="post">
             <input type="hidden" name="action" value="directemail"/>
-            <input type="hidden" name="listing" value="<?php echo $listing ?>"/>
-            <input type="hidden" name="address" value="<?php echo $email ?>"/>
+            <input type="hidden" name="listing" value="<?= $listing ?>"/>
+            <input type="hidden" name="address" value="<?= $email ?>"/>
             <input type="hidden" name="send" value="yes"/>
-            <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>"/>
+            <input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>"/>
 
             <table>
 
                 <tr>
                     <th colspan="2">
-                        For <?php echo $info['title'] ?>
+                        For <?= $info['title'] ?>
                     </th>
                 </tr>
 
@@ -320,7 +327,7 @@ if ($action == 'directemail') {
                         From
                     </td>
                     <td>
-                        <?php echo str_replace('<', '&lt;',
+                        <?= str_replace('<', '&lt;',
                             str_replace('>', '&gt;', $from)) ?>
                     </td>
                 </tr>
@@ -330,7 +337,7 @@ if ($action == 'directemail') {
                         Email
                     </td>
                     <td>
-                        <i><?php echo $email ?></i>
+                        <i><?= $email ?></i>
                     </td>
                 </tr>
 
@@ -339,7 +346,7 @@ if ($action == 'directemail') {
                         Subject and Body
                     </td>
                     <td style="text-align: left;">
-                        <?php echo $info['title'] ?>: <input type="text" name="emailsubject"/><br/>
+                        <?= $info['title'] ?>: <input type="text" name="emailsubject"/><br/>
                         <textarea name="emailbody" rows="7" cols="50"></textarea>
                     </td>
                 </tr>
@@ -436,13 +443,13 @@ if ($action == 'affiliates') {
                 $info['subject'] . ' ' . $info['listingtype'];
         }
         ?>
-        <p>You can send an email to all affiliates of <i><?php echo $title ?></i> via
+        <p>You can send an email to all affiliates of <i><?= $title ?></i> via
             this page. Enter the email body or the template below, and click "Send
             email".</p>
 
         <form action="emails.php" method="post">
             <input type="hidden" name="action" value="affiliates"/>
-            <input type="hidden" name="id" value="<?php echo $id ?>"/>
+            <input type="hidden" name="id" value="<?= $id ?>"/>
             <input type="hidden" name="send" value="yes"/>
 
             <table>
@@ -452,7 +459,7 @@ if ($action == 'affiliates') {
                         From
                     </td>
                     <td>
-                        <?php echo str_replace('<', '&lt;', str_replace('>', '&gt;', $from)) ?>
+                        <?= str_replace('<', '&lt;', str_replace('>', '&gt;', $from)) ?>
                     </td>
                 </tr>
 
@@ -541,14 +548,14 @@ if ($action == 'members') {
     if ($show_form) {
         $id = $_REQUEST['id'];
         ?>
-        <p>You can send an email to all members of <i><?php echo (($info['title'])
-                        ? $info['title'] . ': ' : '') . $info['subject'] . ' ' .
-                    $info['listingtype'] ?></i> via this page. Enter the email body or
+        <p>You can send an email to all members of <i><?= (($info['title'])
+                    ? $info['title'] . ': ' : '') . $info['subject'] . ' ' .
+                $info['listingtype'] ?></i> via this page. Enter the email body or
             the template below, and click "Send email".</p>
 
         <form action="emails.php" method="post">
             <input type="hidden" name="action" value="members"/>
-            <input type="hidden" name="id" value="<?php echo $id ?>"/>
+            <input type="hidden" name="id" value="<?= $id ?>"/>
             <input type="hidden" name="send" value="yes"/>
 
             <table>
@@ -558,7 +565,7 @@ if ($action == 'members') {
                         From
                     </td>
                     <td>
-                        <?php echo $info['title'] ?> <code>&lt;<?php echo $info['email'] ?>&gt;</code>
+                        <?= $info['title'] ?> <code>&lt;<?= $info['email'] ?>&gt;</code>
                     </td>
                 </tr>
 
@@ -632,28 +639,30 @@ if ($show_default) {
             if ($shade) {
                 $class = ' class="rowshade"';
                 $shade = false;
-            } else $shade = true;
+            } else {
+                $shade = true;
+            }
             $info = get_template_info($t);
             ?>
-            <tr<?php echo $class ?>>
+            <tr<?= $class ?>>
                 <td>
-                    <?php echo $info['templatename'] ?>
+                    <?= $info['templatename'] ?>
                 </td>
                 <td>
-                    <?php echo $info['subject'] ?>
+                    <?= $info['subject'] ?>
                 </td>
                 <td>
-                    <?php echo substr_replace($info['content'], '...', 125) ?>
+                    <?= substr_replace($info['content'], '...', 125) ?>
                 </td>
                 <td>
-                    <a href="emails.php?action=edit&id=<?php echo $t ?>"><img src="edit.gif"
-                                                                              width="42" height="19" border="0"
-                                                                              alt=" edit"/></a>
+                    <a href="emails.php?action=edit&id=<?= $t ?>"><img src="edit.gif"
+                                                                       width="42" height="19" border="0"
+                                                                       alt=" edit"/></a>
                     <?php
                     if ($info['deletable'] == 1) {
                         ?>
-                        <a href="emails.php?action=delete&id=<?php echo $t ?>"
-                           onclick="go = confirm('Are you sure you want to delete the <?php echo addslashes($info['templatename']) ?> template?');
+                        <a href="emails.php?action=delete&id=<?= $t ?>"
+                           onclick="go = confirm('Are you sure you want to delete the <?= addslashes($info['templatename']) ?> template?');
                                    return go;"> <img src="delete.gif" width="42" height="19"
                                                      border="0" alt=" delete"/></a>
                         <?php

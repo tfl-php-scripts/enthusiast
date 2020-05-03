@@ -22,7 +22,7 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
-require_once ('mod_version.php');
+require_once ('Robotess/Autoloader.php');
 
 ?>
 </div></div>
@@ -41,7 +41,7 @@ require_once ('mod_version.php');
     } else {
         ?>
         <p class="important">
-            <?php echo (isset($login_message)) ? $login_message : '' ?>
+            <?= (isset($login_message)) ? $login_message : '' ?>
         </p>
         <form action="login.php" method="post">
             <?php
@@ -76,11 +76,11 @@ require_once ('mod_version.php');
 </div>
 
 <div class="footer">
-    Enthusiast 3 copyright &copy; 2004 - <?php echo date('Y'); ?> by Angela Sabas.<br/>
+    Enthusiast 3 copyright &copy; 2004 - <?= date('Y') ?> by Angela Sabas.<br/>
     <a href="http://indisguise.org/" target="_blank">Indisguise</a> |
     <a href="http://scripts.indisguise.org/" target="_blank">Indiscripts</a>
     <br/><br/><a href="https://scripts.robotess.net" target="_blank"
-                 title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">Enthusiast <?= RobotessNet\getVersion() ?> for PHP 7</a>
+                 title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">Enthusiast <?= RobotessNet\App::getVersion() ?> for PHP 7</a>
     - support since 2019 by <a href="https://robotess.net" target="_blank" title="PHP Developer">Ekaterina</a>
 </div>
 

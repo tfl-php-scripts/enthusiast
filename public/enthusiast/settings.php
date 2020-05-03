@@ -27,10 +27,12 @@ require_once( 'logincheck.inc.php' );
 if( !isset( $logged_in ) || !$logged_in ) {
    $_SESSION['message'] = 'You are not logged in. Please log in to continue.';
    $next = '';
-   if( isset( $_SERVER['REQUEST_URI'] ) )
-      $next = $_SERVER['REQUEST_URI'];
-   else if( isset( $_SERVER['PATH_INFO'] ) )
-      $next = $_SERVER['PATH_INFO'];
+   if( isset( $_SERVER['REQUEST_URI'] ) ) {
+       $next = $_SERVER['REQUEST_URI'];
+   }
+   else if( isset( $_SERVER['PATH_INFO'] ) ) {
+       $next = $_SERVER['PATH_INFO'];
+   }
    $_SESSION['next'] = $next;
    header( 'location: index.php' );
    die( 'Redirecting you...' );
@@ -41,7 +43,7 @@ require_once( 'mod_errorlogs.php' );
 require_once( 'mod_settings.php' );
 
 $show_default = true;
-echo '<h1>Enthusiast '. RobotessNet\getVersion(). ' Settings</h1>';
+echo '<h1>Enthusiast '. RobotessNet\App::getVersion(). ' Settings</h1>';
 $action = ( isset( $_REQUEST["action"] ) ) ? $_REQUEST['action'] : '';
 
 /*______________________________________________________________________EDIT_*/
@@ -71,25 +73,25 @@ if( $show_default ) {
    <tr><td>
    Owner name
    </td><td>
-   <input type="text" name="owner_name" value="<?php echo get_setting( 'owner_name' ) ?>" />
+   <input type="text" name="owner_name" value="<?= get_setting('owner_name') ?>" />
    </td></tr>
 
    <tr class="rowshade"><td>
    Owner email
    </td><td>
-   <input type="text" name="owner_email" value="<?php echo get_setting( 'owner_email' ) ?>" />
+   <input type="text" name="owner_email" value="<?= get_setting('owner_email') ?>" />
    </td></tr>
 
    <tr><td>
    Collective Title
    </td><td>
-   <input type="text" name="collective_title" value="<?php echo get_setting( 'collective_title' ) ?>" />
+   <input type="text" name="collective_title" value="<?= get_setting('collective_title') ?>" />
    </td></tr>
 
    <tr class="rowshade"><td>
    Collective URL
    </td><td>
-   <input type="text" name="collective_url" value="<?php echo get_setting( 'collective_url' ) ?>" />
+   <input type="text" name="collective_url" value="<?= get_setting('collective_url') ?>" />
    </td></tr>
 
    <tr><td>
@@ -107,40 +109,40 @@ if( $show_default ) {
    <tr><td>
    Enable error logging
    </td><td>
-   <input type="radio" name="log_errors" value="yes" <?php echo ( get_setting( 'log_errors' ) == 'yes' ) ? 'checked="checked" ' : '' ?>/>
+   <input type="radio" name="log_errors" value="yes" <?= (get_setting('log_errors') == 'yes') ? 'checked="checked" ' : '' ?>/>
    Yes<br />
-   <input type="radio" name="log_errors" value="no" <?php echo ( get_setting( 'log_errors' ) != 'yes' ) ? 'checked="checked" ' : '' ?>/>
+   <input type="radio" name="log_errors" value="no" <?= (get_setting('log_errors') != 'yes') ? 'checked="checked" ' : '' ?>/>
    No
    </td></tr>
 
    <tr class="rowshade"><td>
    Installation path
    </td><td>
-   <input type="text" name="installation_path" value="<?php echo get_setting( 'installation_path' ) ?>" />
+   <input type="text" name="installation_path" value="<?= get_setting('installation_path') ?>" />
    </td></tr>
 
    <tr><td>
    Root path (absolute)
    </td><td>
-   <input type="text" name="root_path_absolute" value="<?php echo get_setting( 'root_path_absolute' ) ?>" />
+   <input type="text" name="root_path_absolute" value="<?= get_setting('root_path_absolute') ?>" />
    </td></tr>
 
    <tr class="rowshade"><td>
    Root path (Web)
    </td><td>
-   <input type="text" name="root_path_web" value="<?php echo get_setting( 'root_path_web' ) ?>" />
+   <input type="text" name="root_path_web" value="<?= get_setting('root_path_web') ?>" />
    </td></tr>
 
    <tr><td>
    Date format
    </td><td>
-   <input type="text" name="date_format" value="<?php echo get_setting( 'date_format' ) ?>" />
+   <input type="text" name="date_format" value="<?= get_setting('date_format') ?>" />
    </td></tr>
 
    <tr class="rowshade"><td>
    Items per page in the panel
    </td><td>
-   <input type="text" name="per_page" value="<?php echo get_setting( 'per_page' ) ?>" />
+   <input type="text" name="per_page" value="<?= get_setting('per_page') ?>" />
    </td></tr>
 
    <tr><th colspan="2">
@@ -151,42 +153,41 @@ if( $show_default ) {
    Mailer to use
    </td><td>
    <select name="mail_settings">
-   <option value="mail" <?php echo ( $mail_settings == 'mail' )
-      ? 'selected="selected"' : '' ?>>PHP's native mail() function</option>
-   <option value="sendmail" <?php echo ( $mail_settings == 'sendmail' )
-      ? 'selected="selected"' : '' ?>>Sendmail</option>
-   <option value="smtp" <?php echo ( $mail_settings == 'smtp' )
-      ? 'selected="selected"' : '' ?>>SMTP</option>
+   <option value="mail" <?= ($mail_settings == 'mail')
+       ? 'selected="selected"' : '' ?>>PHP's native mail() function</option>
+   <option value="sendmail" <?= ($mail_settings == 'sendmail')
+       ? 'selected="selected"' : '' ?>>Sendmail</option>
+   <option value="smtp" <?= ($mail_settings == 'smtp')
+       ? 'selected="selected"' : '' ?>>SMTP</option>
    </select>
 
    <tr class="rowshade"><td>
    Sendmail path
    </td><td>
    <input type="text" size="50" name="sendmail_path"
-   value="<?php echo get_setting( 'sendmail_path' ); ?>" />
+   value="<?= get_setting('sendmail_path') ?>" />
    </td></tr>
 
    <tr><td>
    SMTP settings: host and port
    </td><td>
    <input type="text" size="50" name="smtp_host"
-   value="<?php echo get_setting( 'smtp_host' );
+   value="<?= get_setting('smtp_host')
    ?>" />:<input type="text" size="5" name="smtp_port"
-   value="<?php echo get_setting( 'smtp_port' ); ?>" />
+   value="<?= get_setting('smtp_port') ?>" />
    </td></tr>
 
    <tr class="rowshade"><td>
    SMTP authentication settings
    </td><td>
-   <input type="checkbox" name="smtp_auth" value="yes" <?php echo
-      ( get_setting( 'smtp_auth' ) == 'yes' )
-      ? 'checked="checked"' : ''; ?>/> Yes, SMTP server requires authentication<br />
+   <input type="checkbox" name="smtp_auth" value="yes" <?= (get_setting('smtp_auth') == 'yes')
+       ? 'checked="checked"' : '' ?>/> Yes, SMTP server requires authentication<br />
 
    Username: <input type="text" name="smtp_username" size="50"
-   value="<?php echo get_setting( 'smtp_username' ); ?>" />
+   value="<?= get_setting('smtp_username') ?>" />
    <br />
    Password: <input type="password" size="25" name="smtp_password"
-   value="<?php echo get_setting( 'smtp_password' ); ?>" />
+   value="<?= get_setting('smtp_password') ?>" />
    </td></tr>
 
    <tr><th colspan="2">
@@ -196,19 +197,19 @@ if( $show_default ) {
    <tr><td>
    Affiliates images directory (collective)
    </td><td>
-   <input type="text" name="affiliates_dir" value="<?php echo get_setting( 'affiliates_dir' ) ?>" />
+   <input type="text" name="affiliates_dir" value="<?= get_setting('affiliates_dir') ?>" />
    </td></tr>
 
    <tr class="rowshade"><td>
    Joined images directory
    </td><td>
-   <input type="text" name="joined_images_dir" value="<?php echo get_setting( 'joined_images_dir' ) ?>" />
+   <input type="text" name="joined_images_dir" value="<?= get_setting('joined_images_dir') ?>" />
    </td></tr>
 
    <tr><td>
    Owned images directory
    </td><td>
-   <input type="text" name="owned_images_dir" value="<?php echo get_setting( 'owned_images_dir' ) ?>" />
+   <input type="text" name="owned_images_dir" value="<?= get_setting('owned_images_dir') ?>" />
    </td></tr>
 
    <tr class="rowshade"><td colspan="2" class="right">
