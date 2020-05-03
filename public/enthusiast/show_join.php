@@ -24,9 +24,7 @@
  * For more information please view the readme.txt file.
  ******************************************************************************/
 
-use function RobotessNet\clean;
-use function RobotessNet\cleanNormalize;
-use function RobotessNet\isDuplicateSqlError;
+use RobotessNet\StringUtils;
 
 require 'config.php';
 
@@ -44,7 +42,7 @@ $info = get_listing_info($listing);
 
 // initialize variables
 $show_form = true;
-$messages = array();
+$messages = [];
 $errorstyle = ' style="font-weight: bold; display: block;" ' .
     'class="show_join_error"';
 $name = '';
@@ -61,21 +59,25 @@ $fields = explode(',', $additional);
 if ($fields[0] == '') {
     array_pop($fields);
 }
-$values = array();
+$values = [];
 if (count($fields) > 0) {
     foreach ($fields as $field) {
         $values[$field] = '';
         if (isset($_POST["enth_$field"])) {
-            $values[$field] = clean($_POST["enth_$field"]);
+            $values[$field] = StringUtils::instance()->clean($_POST["enth_$field"]);
+        } else if(isset($_POST[$field])) {
+            $values[$field] = StringUtils::instance()->clean($_POST[$field]);
         }
     }
 }
+
+const DUPLICATE_ENTRY_SQL_ERROR_CODE = 1062;
 
 // process the join form
 if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
     // do some spam/bot checking first
     $goahead = false;
-    $badStrings = array('Content-Type:',
+    $badStrings = ['Content-Type:',
         'MIME-Version:',
         'Content-Transfer-Encoding:',
         'bcc:',
@@ -83,7 +85,7 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
         'content-type',
         'onload',
         'onclick',
-        'javascript');
+        'javascript'];
     // 1. check that user is submitting from browser
     // 2. check the POST was indeed used
     // 3. no bad strings in any of the form fields
@@ -105,7 +107,7 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
     }
 
     // check nonce field
-    $nonce = explode(':', clean($_POST['enth_nonce']));
+    $nonce = explode(':', StringUtils::instance()->clean($_POST['enth_nonce']));
     $mdfived = substr($nonce[2], 0, (strlen($nonce[2]) - 3));
     $appended = substr($nonce[2], -3);
     // check the timestamp; must be more than three seconds after
@@ -131,21 +133,18 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
 
     // go on
     if ($_POST['enth_name']) {
-        $name = ucwords(clean($_POST['enth_name']));
+        $name = ucwords(StringUtils::instance()->clean($_POST['enth_name']));
     } else {
         $messages['name'] = 'You must enter your name.';
     }
 
-    $matchstring = '/^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+' .
-        '@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/';
-    if ($_POST['enth_email'] && preg_match($matchstring, $_POST['enth_email'])) {
-        $email = cleanNormalize($_POST['enth_email']);
-    } else {
+    $email = StringUtils::instance()->cleanNormalize($_POST['enth_email']);
+    if (!StringUtils::instance()->isEmailValid($_POST['enth_email'])) {
         $messages['email'] = 'You must enter a valid email address.';
     }
 
     if (isset($_POST['enth_country']) && $_POST['enth_country'] !== '') {
-        $countryId = (int)(cleanNormalize($_POST['enth_country']));
+        $countryId = (int)(StringUtils::instance()->cleanNormalize($_POST['enth_country']));
         if (isset($countriesValues[$countryId])) {
             $country = $countriesValues[$countryId];
         } else {
@@ -158,7 +157,7 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
     if ($_POST['enth_password'] && $_POST['enth_vpassword'] &&
         $_POST['enth_vpassword'] == $_POST['enth_password']) {
         // has password and validates
-        $password = clean($_POST['enth_password']);
+        $password = StringUtils::instance()->clean($_POST['enth_password']);
     } else if ($_POST['enth_password'] == '' && $_POST['enth_vpassword'] == '') {
         // no password, must generate
         $password = '';
@@ -173,23 +172,23 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
     }
 
     if (isset($_POST['enth_url'])) {
-        $url = cleanNormalize($_POST['enth_url']);
+        $url = StringUtils::instance()->cleanNormalize($_POST['enth_url']);
         if (preg_match('@^https?://@', $url) === false) {
             $url = 'http://' . $url;
         }
     }
 
     foreach ($fields as $field) {
-        $values[$field] = clean($_POST["enth_$field"]);
+        $values[$field] = isset($_POST["enth_$field"]) ? StringUtils::instance()->clean($_POST["enth_$field"]) : StringUtils::instance()->clean($_POST[$field]);
     }
 
     if (isset($_POST['enth_comments'])) {
-        $comments = clean($_POST['enth_comments']);
+        $comments = StringUtils::instance()->clean($_POST['enth_comments']);
     }
 
     if (count($messages) == 0) {
         $show_form = false;
-        $show_email = clean($_POST['enth_show_email']);
+        $show_email = StringUtils::instance()->clean($_POST['enth_show_email']);
         $send_account_info = (isset($_POST['enth_send_account_info']) &&
             $_POST['enth_send_account_info'] == 'yes');
         $table = $info['dbtable'];
@@ -221,15 +220,15 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
             die(DATABASE_CONNECT_ERROR . $e->getMessage());
         }
 
-        // we will retrieve info themselves, that's why mode = silent
+        // we will retrieve info ourselves, that's why mode = silent
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 
         $pdoStatement = $db_link->prepare($query);
-        $pdoStatement->bindParam(':email', $email, PDO::PARAM_STR);
-        $pdoStatement->bindParam(':name', $name, PDO::PARAM_STR);
-        $pdoStatement->bindParam(':url', $url, PDO::PARAM_STR);
-        $pdoStatement->bindParam(':password', $password, PDO::PARAM_STR);
-        $pdoStatement->bindParam(':show_email', $show_email, PDO::PARAM_STR);
+        $pdoStatement->bindParam(':email', $email);
+        $pdoStatement->bindParam(':name', $name);
+        $pdoStatement->bindParam(':url', $url);
+        $pdoStatement->bindParam(':password', $password);
+        $pdoStatement->bindParam(':show_email', $show_email);
 
         $result = $pdoStatement->execute();
 
@@ -268,11 +267,11 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
             if (!$send_account_info) {
                 ?>
                 <p class="show_join_processed_noemail">The application form
-                    for the <?php echo $info['subject'] ?> <?php echo $info['listingtype'] ?> has
+                    for the <?= $info['subject'] ?> <?= $info['listingtype'] ?> has
                     been sent. You will be notified when you have been added into
                     the actual members list. If two weeks have passed and you have
-                    received no email, please <a href="mailto:<?php echo
-                    str_replace('@', '&#' . ord('@') . ';', $info['email'])
+                    received no email, please <a
+                            href="mailto:<?= str_replace('@', '&#' . ord('@') . ';', $info['email'])
                     ?>">email me</a> if you wish to check up on your form.</p>
                 <?php
             } else { // email!
@@ -294,8 +293,7 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
                         processed correctly, but unfortunately there was an error
                         sending your application information to you. If you
                         wish to receive information about your application, please feel
-                        free to <a href="mailto:<?php echo
-                        str_replace('@', '&#' . ord('@') . ';', $info['email'])
+                        free to <a href="mailto:<?= str_replace('@', '&#' . ord('@') . ';', $info['email'])
                         ?>">email me</a> and I will personally
                         look into it. Please note I cannot send your password to you.</p>
 
@@ -306,11 +304,11 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
                 } else {
                     ?>
                     <p class="show_join_processed_emailsent">The application form
-                        for the <?php echo $info['subject'] ?> <?php echo $info['listingtype'] ?> has
+                        for the <?= $info['subject'] ?> <?= $info['listingtype'] ?> has
                         been sent. You will be notified when you have been added into
                         the actual members list. If two weeks have passed and you have
-                        received no email, please <a href="mailto:<?php echo
-                        str_replace('@', '&#' . ord('@') . ';', $info['email'])
+                        received no email, please <a
+                                href="mailto:<?= str_replace('@', '&#' . ord('@') . ';', $info['email'])
                         ?>">email me</a> if you wish to check up on your form.</p>
 
                     <p class="show_join_processed_emailsent">An email has also
@@ -319,28 +317,30 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
                     <?php
                 }
             }
-        } else if (isDuplicateSqlError($pdoStatement)) {
-            $messages['form'] = 'An error occured while attempting to add ' .
-                'you to the pending members queue. This is because you are ' .
-                'possibly already a member (approved or unapproved) or ' .
-                'someone used your email address to join this ' .
-                $info['listingtype'] . ' before. If you wish to update ' .
-                'your information, please go <a href="' . $info['updatepage'] .
-                '">here</a>.';
-            $show_form = true;
         } else {
-            log_error(__FILE__ . ':' . __LINE__,
-                'Error executing query: <i>' . $pdoStatement->errorInfo()[2] .
-                '</i>; Query is: <code>' . $query . '</code>');
-            ?>
-            <p<?php echo $errorstyle ?>>An error occured while attempting to add you to the pending
-                members queue. Unfortunately, this was caused by a database error
-                on this <?php echo $info['listingtype'] ?>. The error has been logged, but
-                feel free to <a href="mailto:<?php echo
-                str_replace('@', '&#' . ord('@') . ';', $info['email'])
-                ?>">contact me</a>
-                about it and I will try to fix the problem as soon as possible.</p>
-            <?php
+            $errorInfo = $pdoStatement->errorInfo() ?? [];
+            if (isset($errorInfo[1]) && $errorInfo[1] === DUPLICATE_ENTRY_SQL_ERROR_CODE) {
+                $messages['form'] = 'An error occured while attempting to add ' .
+                    'you to the pending members queue. This is because you are ' .
+                    'possibly already a member (approved or unapproved) or ' .
+                    'someone used your email address to join this ' .
+                    $info['listingtype'] . ' before. If you wish to update ' .
+                    'your information, please go <a href="' . $info['updatepage'] .
+                    '">here</a>.';
+                $show_form = true;
+            } else {
+                log_error(__FILE__ . ':' . __LINE__,
+                    'Error executing query: <i>' . $pdoStatement->errorInfo()[2] .
+                    '</i>; Query is: <code>' . $query . '</code>');
+                ?>
+                <p<?= $errorstyle ?>>An error occured while attempting to add you to the pending
+                    members queue. Unfortunately, this was caused by a database error
+                    on this <?= $info['listingtype'] ?>. The error has been logged, but
+                    feel free to <a href="mailto:<?= str_replace('@', '&#' . ord('@') . ';', $info['email'])
+                    ?>">contact me</a>
+                    about it and I will try to fix the problem as soon as possible.</p>
+                <?php
+            }
         } // end if there is no result
     } // end if there is no error
 } // end process the form
@@ -365,16 +365,16 @@ if ($show_form) {
         $fields[$ind] = stripslashes($val);
     }
     ?>
-    <!-- Enthusiast <?= RobotessNet\getVersion() ?> Join Form -->
+    <!-- Enthusiast <?= RobotessNet\App::getVersion() ?> Join Form -->
     <p class="show_join_intro">Please use the form below for joining the
-        <?php echo $info['listingtype'] ?>. <b>Please hit the submit button only once.</b>
+        <?= $info['listingtype'] ?>. <b>Please hit the submit button only once.</b>
         Your entry is fed instantly into the database, and your email address is
         checked for duplicates. Passwords are encrypted into the database and will
         not be seen by anyone else other than you. If left blank, a password will
         be generated for you.</p>
 
     <p class="show_join_intro_problems">If you encounter problems, please
-        feel free to <?php echo $email_js ?>.</p>
+        feel free to <?= $email_js ?>.</p>
 
     <p class="show_join_intro_required">The fields with asterisks (*) are
         required fields.</p>
@@ -384,20 +384,20 @@ if ($show_form) {
         echo "<p$errorstyle>{$messages['form']}</p>";
     }
     ?>
-    <form method="post" action="<?php echo $info['joinpage'] ?>"
+    <form method="post" action="<?= $info['joinpage'] ?>"
           class="show_join_form">
 
         <p class="show_join_name">
             <input type="hidden" name="enth_join" value="yes"/>
-            <input type="hidden" name="enth_nonce" value="<?php echo $rand ?>:<?php echo
-            strtotime(date('r')) ?>:<?php echo md5($rand) . substr($rand, 2, 3) ?>"/>
+            <input type="hidden" name="enth_nonce"
+                   value="<?= $rand ?>:<?= strtotime(date('r')) ?>:<?= md5($rand) . substr($rand, 2, 3) ?>"/>
             <span style="display: block;" class="show_join_name_label">* Name: </span>
             <?php
             if (isset($messages['name'])) {
                 echo "<span$errorstyle>{$messages['name']}</span>";
             }
             ?>
-            <input type="text" name="enth_name" value="<?php echo $name ?>" required
+            <input type="text" name="enth_name" value="<?= $name ?>" required
                    class="show_join_name_field"/>
         </p>
 
@@ -409,7 +409,7 @@ if ($show_form) {
                 echo "<span$errorstyle>{$messages['email']}</span>";
             }
             ?>
-            <input type="email" name="enth_email" value="<?php echo $email ?>" required
+            <input type="email" name="enth_email" value="<?= $email ?>" required
                    class="show_join_email_field"/>
         </p>
 
@@ -440,7 +440,6 @@ if ($show_form) {
                 }
                 ?>
                 <select name="enth_country" class="show_join_country_field" required>
-                    <option value="">?</option>
                     <?php
                     foreach ($countriesValues as $key => $countryVal) {
                         $selected = '';
@@ -470,18 +469,18 @@ if ($show_form) {
         <p class="show_join_url">
    <span style="display: block;" class="show_join_url_label">Website
    URL:</span>
-            <input type="url" name="enth_url" value="<?php echo $url ?>"
+            <input type="url" name="enth_url" value="<?= $url ?>"
                    class="show_join_url_field"/>
         </p>
         <?php
         if (count($fields) > 0 && !(file_exists('addform.inc.php'))) {
             foreach ($fields as $field) {
                 ?>
-                <p class="show_join_<?php echo $field ?>">
-         <span style="display: block;" class="show_join_<?php echo $field ?>_label">
-         <?php echo ucwords(str_replace('_', ' ', $field)) ?>:</span>
-                    <input type="text" name="enth_<?php echo $field ?>" value="<?php echo $values[$field]
-                    ?>" class="show_join_<?php echo $field ?>_field"/>
+                <p class="show_join_<?= $field ?>">
+         <span style="display: block;" class="show_join_<?= $field ?>_label">
+         <?= ucwords(str_replace('_', ' ', $field)) ?>:</span>
+                    <input type="text" name="enth_<?= $field ?>" value="<?= $values[$field]
+                    ?>" class="show_join_<?= $field ?>_field"/>
                 </p>
                 <?php
             }
@@ -493,7 +492,7 @@ if ($show_form) {
    <span style="display: block;" class="show_join_comments_label">
    Comments: </span>
             <textarea name="enth_comments" rows="3" cols="40"
-                      class="show_join_comments_field"><?php echo $comments ?></textarea>
+                      class="show_join_comments_field"><?= $comments ?></textarea>
         </p>
 
         <p class="show_join_submit">
@@ -503,7 +502,7 @@ if ($show_form) {
    <span class="show_join_send_account_info_label">
    Yes, send me my account information!</span>
    </span>
-            <input type="submit" value="Join the <?php echo $info['listingtype'] ?>"
+            <input type="submit" value="Join the <?= $info['listingtype'] ?>"
                    class="show_join_submit_button"/>
             <input type="reset" value="Clear form" class="show_join_reset_button"/>
         </p>

@@ -1,9 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
-
 /******************************************************************************
  * DATABASE VARIABLES
  * These are the variables for your listing collective.
@@ -90,4 +86,4 @@ if (!defined('ENTH_PATH')) {
  * (must have '//' before the line). Otherwise, it MUST be uncommented (no
  * '//' before the line) and the proper listing ID should be set.
  ******************************************************************************/
-//$listing = 1;
+$listing = 1;

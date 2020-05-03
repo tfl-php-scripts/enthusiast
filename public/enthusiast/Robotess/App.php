@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Ekaterina http://scripts.robotess.net
@@ -22,13 +23,19 @@
  * For more information please view the readme.txt file.
  ******************************************************************************/
 
-namespace RobotessNet {
+namespace RobotessNet;
 
+/**
+ * Class App
+ * @package RobotessNet
+ */
+final class App
+{
     /**
      * @return string
      */
-    function getVersion()
+    public static function getVersion(): string
     {
-        return '[Robotess Fork] v. 1.0.2';
+        return '[Robotess Fork] v. 1.0.3';
     }
 }

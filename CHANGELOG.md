@@ -1,5 +1,14 @@
 # Changes:
 
+v.1.0.3
+
+* Fixed #36 - a bug with pagination in admin panel (affected pages: members of fanlisting, owned, joined, errorlog and categories) - thanks for reporting, [Jill](http://totallygirl.net)!
+* For backward compatibility, if you're using your own addform.inc.php, allowed names for inputs are not only "enth_$extraFieldName" but also "$extraFieldName". Though I'd recommend renaming inputs to "enth_$extraFieldName"
+
+There were also some code style fixes and fixes for EA inspections implemented.
+
+---
+
 v.1.0.2
 
 * Fixed #34 - a bug that didn't allow users to update their emails via form

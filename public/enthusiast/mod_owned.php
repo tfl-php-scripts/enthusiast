@@ -22,9 +22,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * For more information please view the readme.txt file.
- ******************************************************************************/
+ *****************************************************************************
+ */
 
-/*___________________________________________________________________________*/
+/**
+ * @param string $status
+ * @param string $start
+ * @param string $bydate
+ * @return array
+ */
 function get_owned($status = 'all', $start = 'none', $bydate = 'no')
 {
     require 'config.php';
@@ -38,17 +44,22 @@ function get_owned($status = 'all', $start = 'none', $bydate = 'no')
 
     $query = "SELECT `listingid` FROM `$db_owned`";
 
-    if ($status == 'pending')
+    if ($status == 'pending') {
         $query .= " WHERE `status` = 0";
-    else if ($status == 'upcoming')
+    }
+    else if ($status == 'upcoming') {
         $query .= " WHERE `status` = 1";
-    else if ($status == 'current')
+    }
+    else if ($status == 'current') {
         $query .= " WHERE `status` = 2";
+    }
 
-    if ($bydate == 'bydate')
+    if ($bydate == 'bydate') {
         $query .= " ORDER BY `opened` DESC";
-    else
+    }
+    else {
         $query .= " ORDER BY `subject` ASC";
+    }
 
     if ($start != 'none' && ctype_digit($start)) {
         $settingq = "SELECT `value` FROM `$db_settings` WHERE `setting` = " .
@@ -61,8 +72,7 @@ function get_owned($status = 'all', $start = 'none', $bydate = 'no')
         $query .= " LIMIT $start, $limit";
     }
 
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -70,10 +80,11 @@ function get_owned($status = 'all', $start = 'none', $bydate = 'no')
         die(STANDARD_ERROR);
     }
 
-    $ids = array();
+    $ids = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
-    while ($row = $result->fetch())
+    while ($row = $result->fetch()) {
         $ids[] = $row['listingid'];
+    }
     return $ids;
 }
 
@@ -91,8 +102,9 @@ function get_listing_info($id = '', $table = '')
     }
 
     $query = "SELECT * FROM `$db_owned` WHERE `listingid` = '$id'";
-    if ($table)
+    if ($table) {
         $query = "SELECT * FROM `$db_owned` WHERE `dbtable` = '$table'";
+    }
 
     $result = $db_link->prepare($query);
     $result->execute();
@@ -105,11 +117,13 @@ function get_listing_info($id = '', $table = '')
 
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    if (count($row) == 0 || !$row)
-        return array();
+    if (count($row) === 0 || !$row) {
+        return [];
+    }
 
-    foreach ($row as $key => $value)
-        $row[$key] = stripslashes($value);
+    foreach ($row as $key => $value) {
+        $row[$key] = stripslashes($value ?? '');
+    }
 
     return $row;
 }
@@ -122,25 +136,25 @@ function show_edit_forms()
     $info = get_listing_info($_REQUEST['id']);
     ?>
     <div class="submenu">
-        <a href="owned.php?action=edit&id=<?php echo $info['listingid']
+        <a href="owned.php?action=edit&id=<?= $info['listingid']
         ?>&type=database">Database</a>
-        <a href="owned.php?action=edit&id=<?php echo $info['listingid']
+        <a href="owned.php?action=edit&id=<?= $info['listingid']
         ?>&type=info">Info</a>
-        <a href="owned.php?action=edit&id=<?php echo $info['listingid']
+        <a href="owned.php?action=edit&id=<?= $info['listingid']
         ?>&type=settings">Settings</a>
-        <a href="owned.php?action=edit&id=<?php echo $info['listingid']
+        <a href="owned.php?action=edit&id=<?= $info['listingid']
         ?>&type=emails">Emails</a>
-        <a href="owned.php?action=edit&id=<?php echo $info['listingid']
+        <a href="owned.php?action=edit&id=<?= $info['listingid']
         ?>&type=templates">Templates</a>
     </div>
 
     <p>This page allows you to edit information and settings for the
-        <i><?php echo $info['title'] ?>: <?php echo $info['subject'] ?>
-            <?php echo $info['listingtype'] ?></i>. Click on one of the submenu items
-        to modify the <?php echo $info['listingtype'] ?>.
+        <i><?= $info['title'] ?>: <?= $info['subject'] ?>
+            <?= $info['listingtype'] ?></i>. Click on one of the submenu items
+        to modify the <?= $info['listingtype'] ?>.
     </p>
 
-    <h2>Quick <?php echo $info['listingtype'] ?> stats</h2>
+    <h2>Quick <?= $info['listingtype'] ?> stats</h2>
     <?php
     $stats = get_listing_stats($info['listingid']);
     // prepare date format
@@ -149,11 +163,11 @@ function show_edit_forms()
     $countries = $stats['countries'];
     $average = $stats['average'];
     ?>
-    <p><b>Last updated:</b> <?php echo $lastupdated ?><br/>
-        <b>Members:</b> <?php echo $stats['total'] ?><?php echo ($info['country'] == 1)
+    <p><b>Last updated:</b> <?= $lastupdated ?><br/>
+        <b>Members:</b> <?= $stats['total'] ?><?= ($info['country'] == 1)
             ? ' from ' . $countries . ' countries'
-            : '' ?>, <?php echo $stats['pending'] ?> pending<br/>
-        <b>Growth rate:</b> <?php echo $average ?> per day since opening
+            : '' ?>, <?= $stats['pending'] ?> pending<br/>
+        <b>Growth rate:</b> <?= $average ?> per day since opening
     </p>
     <?php
 
@@ -163,7 +177,7 @@ function show_edit_forms()
             <input type="hidden" name="action" value="edit"/>
             <input type="hidden" name="done" value="yes"/>
             <input type="hidden" name="type" value="database"/>
-            <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>"/>
+            <input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>"/>
 
             <table>
                 <tr>
@@ -175,7 +189,7 @@ function show_edit_forms()
                         Server
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="dbserver" value="<?php echo $info['dbserver'] ?>"/>
+                        <input type="text" name="dbserver" value="<?= $info['dbserver'] ?>"/>
                     </td>
                 </tr>
 
@@ -184,7 +198,7 @@ function show_edit_forms()
                         Name
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="dbdatabase" value="<?php echo $info['dbdatabase']
+                        <input type="text" name="dbdatabase" value="<?= $info['dbdatabase']
                         ?>"/>
                     </td>
                 </tr>
@@ -194,7 +208,7 @@ function show_edit_forms()
                         User
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="dbuser" value="<?php echo $info['dbuser'] ?>"/>
+                        <input type="text" name="dbuser" value="<?= $info['dbuser'] ?>"/>
                     </td>
                 </tr>
 
@@ -203,7 +217,7 @@ function show_edit_forms()
                         Table
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="dbtable" value="<?php echo $info['dbtable'] ?>"/>
+                        <input type="text" name="dbtable" value="<?= $info['dbtable'] ?>"/>
                     </td>
                 </tr>
 
@@ -331,7 +345,7 @@ function show_edit_forms()
             <input type="hidden" name="action" value="edit"/>
             <input type="hidden" name="done" value="yes"/>
             <input type="hidden" name="type" value="info"/>
-            <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>"/>
+            <input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>"/>
 
             <table>
                 <tr>
@@ -347,26 +361,28 @@ function show_edit_forms()
                         <select name="catid[]" multiple="multiple" size="5">
                             <?php
                             $cats = enth_get_categories();
-                            $options = array();
+                            $options = [];
                             foreach ($cats as $cat) {
                                 $optiontext = $cat['catname'];
                                 if (count($ancestors =
                                         array_reverse(get_ancestors($cat['catid']))) > 1) {
                                     // get ancestors
                                     $text = '';
-                                    foreach ($ancestors as $a)
+                                    foreach ($ancestors as $a) {
                                         $text .= get_category_name($a) . ' > ';
+                                    }
                                     $optiontext = rtrim($text, ' > ');
                                     $optiontext = str_replace('>', '&raquo;', $optiontext);
                                 }
-                                $options[] = array('text' => $optiontext, 'id' => $cat['catid']);
+                                $options[] = ['text' => $optiontext, 'id' => $cat['catid']];
                             }
                             usort($options, 'category_array_compare');
                             $selected = explode('|', $info['catid']);
                             foreach ($options as $o) {
                                 echo '<option value="' . $o['id'];
-                                if (in_array($o['id'], $selected))
+                                if (in_array($o['id'], $selected)) {
                                     echo '" selected="selected';
+                                }
                                 echo '">' . $o['text'] . '</option>';
                             }
                             ?>
@@ -379,7 +395,7 @@ function show_edit_forms()
                         Subject
                     </td>
                     <td>
-                        <input type="text" name="subject" value="<?php echo $info['subject'] ?>"/>
+                        <input type="text" name="subject" value="<?= $info['subject'] ?>"/>
                     </td>
                 </tr>
 
@@ -388,7 +404,7 @@ function show_edit_forms()
                         Email
                     </td>
                     <td>
-                        <input type="text" name="email" value="<?php echo $info['email'] ?>"/>
+                        <input type="text" name="email" value="<?= $info['email'] ?>"/>
                     </td>
                 </tr>
 
@@ -397,7 +413,7 @@ function show_edit_forms()
                         URL
                     </td>
                     <td>
-                        <input type="text" name="url" value="<?php echo $info['url'] ?>"/>
+                        <input type="text" name="url" value="<?= $info['url'] ?>"/>
                     </td>
                 </tr>
 
@@ -406,7 +422,7 @@ function show_edit_forms()
                         Title
                     </td>
                     <td>
-                        <input type="text" name="title" value="<?php echo $info['title'] ?>"/>
+                        <input type="text" name="title" value="<?= $info['title'] ?>"/>
                     </td>
                 </tr>
 
@@ -415,7 +431,7 @@ function show_edit_forms()
                         Listing type
                     </td>
                     <td>
-                        <input type="text" name="listingtype" value="<?php echo $info['listingtype']
+                        <input type="text" name="listingtype" value="<?= $info['listingtype']
                         ?>"/>
                     </td>
                 </tr>
@@ -425,7 +441,7 @@ function show_edit_forms()
                         Description
                     </td>
                     <td>
-      <textarea name="desc" rows="3" cols="30"><?php echo $info['desc']
+      <textarea name="desc" rows="3" cols="30"><?= $info['desc']
           ?></textarea>
                     </td>
                 </tr>
@@ -437,8 +453,9 @@ function show_edit_forms()
                     <td>
                         <?php
                         $dir = get_setting('owned_images_dir');
-                        if ($info['imagefile'] == '' || !is_file($dir . $info['imagefile']))
+                        if ($info['imagefile'] == '' || !is_file($dir . $info['imagefile'])) {
                             echo 'No image specified.';
+                        }
                         else {
                             $root_web = get_setting('root_path_web');
                             $root_abs = get_setting('root_path_absolute');
@@ -497,17 +514,19 @@ function show_edit_forms()
                     </td>
                     <td>
                         <select name="date_day">
-                            <option value="<?php echo @date('j', strtotime($info['opened']))
-                            ?>">Current (<?php echo @date('j', strtotime($info['opened'])) ?>)
+                            <option value="<?= @date('j', strtotime($info['opened']))
+                            ?>">Current (<?= @date('j', strtotime($info['opened'])) ?>)
                             </option>
                             <?php
-                            for ($i = 1; $i <= 31; $i++) echo '<option>' . $i . '</option>';
+                            for ($i = 1; $i <= 31; $i++) {
+                                echo '<option>' . $i . '</option>';
+                            }
                             ?>
                         </select>
 
                         <select name="date_month">
-                            <option value="<?php echo @date('n', strtotime($info['opened']))
-                            ?>">Current (<?php echo @date('F', strtotime($info['opened'])) ?>)
+                            <option value="<?= @date('n', strtotime($info['opened']))
+                            ?>">Current (<?= @date('F', strtotime($info['opened'])) ?>)
                             </option>
                             <option value="01">January</option>
                             <option value="02">February</option>
@@ -524,12 +543,13 @@ function show_edit_forms()
                         </select>
 
                         <select name="date_year">
-                            <option value="<?php echo @date('Y', strtotime($info['opened']))
-                            ?>">Current (<?php echo @date('Y', strtotime($info['opened'])) ?>)
+                            <option value="<?= @date('Y', strtotime($info['opened']))
+                            ?>">Current (<?= @date('Y', strtotime($info['opened'])) ?>)
                             </option>
                             <?php
-                            for ($year = date('Y'); $year >= 2000; $year--)
+                            for ($year = date('Y'); $year >= 2000; $year--) {
                                 echo '<option>' . $year . '</option>';
+                            }
                             ?>
                         </select>
 
@@ -554,7 +574,7 @@ function show_edit_forms()
             <input type="hidden" name="action" value="edit"/>
             <input type="hidden" name="done" value="yes"/>
             <input type="hidden" name="type" value="settings"/>
-            <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>"/>
+            <input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>"/>
 
             <table>
                 <tr>
@@ -639,7 +659,7 @@ function show_edit_forms()
                         Sort members by
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="sort" value="<?php echo $info['sort'] ?>"/><br/>
+                        <input type="text" name="sort" value="<?= $info['sort'] ?>"/><br/>
                         <small>This is the database field that will determine how your
                             members are sorted. This can be either any of your additional fields
                             or by 'country'. Sorting by multiple fields are allowed -- separate
@@ -652,7 +672,7 @@ function show_edit_forms()
                         Members per page
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="perpage" value="<?php echo $info['perpage']
+                        <input type="text" name="perpage" value="<?= $info['perpage']
                         ?>"/><br/>
                     </td>
                 </tr>
@@ -662,7 +682,7 @@ function show_edit_forms()
                         Link target
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="linktarget" value="<?php echo $info['linktarget']
+                        <input type="text" name="linktarget" value="<?= $info['linktarget']
                         ?>"/><br/>
                     </td>
                 </tr>
@@ -672,7 +692,7 @@ function show_edit_forms()
                         Join page
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="joinpage" value="<?php echo $info['joinpage']
+                        <input type="text" name="joinpage" value="<?= $info['joinpage']
                         ?>"/><br/>
                     </td>
                 </tr>
@@ -682,7 +702,7 @@ function show_edit_forms()
                         List page
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="listpage" value="<?php echo $info['listpage']
+                        <input type="text" name="listpage" value="<?= $info['listpage']
                         ?>"/><br/>
                     </td>
                 </tr>
@@ -692,7 +712,7 @@ function show_edit_forms()
                         Update page
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="updatepage" value="<?php echo $info['updatepage']
+                        <input type="text" name="updatepage" value="<?= $info['updatepage']
                         ?>"/><br/>
                     </td>
                 </tr>
@@ -702,7 +722,7 @@ function show_edit_forms()
                         Lostpass page
                     </td>
                     <td style="text-align: left;">
-                        <input type="text" name="lostpasspage" value="<?php echo $info['lostpasspage']
+                        <input type="text" name="lostpasspage" value="<?= $info['lostpasspage']
                         ?>"/><br/>
                     </td>
                 </tr>
@@ -725,7 +745,7 @@ function show_edit_forms()
             <input type="hidden" name="action" value="edit"/>
             <input type="hidden" name="done" value="yes"/>
             <input type="hidden" name="type" value="emails"/>
-            <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>"/>
+            <input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>"/>
 
             <table>
                 <tr>
@@ -737,7 +757,7 @@ function show_edit_forms()
                         Signup email
                     </td>
                     <td>
-      <textarea name="emailsignup" rows="10" cols="60"><?php echo $info['emailsignup']
+      <textarea name="emailsignup" rows="10" cols="60"><?= $info['emailsignup']
           ?></textarea>
                     </td>
                 </tr>
@@ -748,7 +768,7 @@ function show_edit_forms()
                     </td>
                     <td>
                         <textarea name="emailapproved" rows="10"
-                                  cols="60"><?php echo $info['emailapproved'] ?></textarea>
+                                  cols="60"><?= $info['emailapproved'] ?></textarea>
                     </td>
                 </tr>
 
@@ -757,7 +777,7 @@ function show_edit_forms()
                         Update info email
                     </td>
                     <td>
-      <textarea name="emailupdate" rows="10" cols="60"><?php echo $info['emailupdate']
+      <textarea name="emailupdate" rows="10" cols="60"><?= $info['emailupdate']
           ?></textarea>
                     </td>
                 </tr>
@@ -768,7 +788,7 @@ function show_edit_forms()
                     </td>
                     <td>
                         <textarea name="emaillostpass" rows="10"
-                                  cols="60"><?php echo $info['emaillostpass'] ?></textarea>
+                                  cols="60"><?= $info['emaillostpass'] ?></textarea>
                     </td>
                 </tr>
 
@@ -791,7 +811,7 @@ function show_edit_forms()
             <input type="hidden" name="action" value="edit"/>
             <input type="hidden" name="done" value="yes"/>
             <input type="hidden" name="type" value="templates"/>
-            <input type="hidden" name="id" value="<?php echo $_REQUEST['id'] ?>"/>
+            <input type="hidden" name="id" value="<?= $_REQUEST['id'] ?>"/>
 
             <table>
                 <tr>
@@ -803,7 +823,7 @@ function show_edit_forms()
                         Members List
                     </td>
                     <td>
-                        <textarea name="listtemplate" rows="10" cols="60"><?php echo $info['listtemplate'] ?></textarea>
+                        <textarea name="listtemplate" rows="10" cols="60"><?= $info['listtemplate'] ?></textarea>
                     </td>
                 </tr>
 
@@ -813,7 +833,7 @@ function show_edit_forms()
                     </td>
                     <td>
                         <textarea name="affiliatestemplate" rows="10"
-                                  cols="60"><?php echo $info['affiliatestemplate'] ?></textarea>
+                                  cols="60"><?= $info['affiliatestemplate'] ?></textarea>
                     </td>
                 </tr>
 
@@ -823,7 +843,7 @@ function show_edit_forms()
                     </td>
                     <td>
                         <textarea name="statstemplate" rows="10"
-                                  cols="60"><?php echo $info['statstemplate'] ?></textarea>
+                                  cols="60"><?= $info['statstemplate'] ?></textarea>
                     </td>
                 </tr>
 
@@ -847,7 +867,7 @@ function show_edit_forms()
 function edit_owned($id, $fields)
 {
     require 'config.php';
-    $changes = array();
+    $changes = [];
 
     // get listing info
     try {
@@ -882,13 +902,15 @@ function edit_owned($id, $fields)
             case 'dbdatabase' :
                 // should move table to appropriate database
                 // NOT YET IMPLEMENTED
-                if ($value == $dbdatabase)
-                    continue 2; // don't change
+                if ($value == $dbdatabase) {
+                    continue 2;
+                } // don't change
                 $query = "UPDATE `$db_owned` SET `$field` = '$value' WHERE " .
                     "`listingid` = :id";
-                if ($value == 'null')
+                if ($value == 'null') {
                     $query = "UPDATE `$db_owned` SET `$field` = null WHERE " .
                         "`listingid` = :id";
+                }
                 $result = $db_link->prepare($query);
                 $result->bindParam(':id', $id, PDO::PARAM_INT);
                 $result->execute();
@@ -942,8 +964,9 @@ function edit_owned($id, $fields)
 
             case 'country' :
                 // get info
-                if ($value == 'leave')
+                if ($value == 'leave') {
                     continue 2;
+                }
                 try {
                     $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8', $dbuser, $dbpassword);
                     $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -1032,8 +1055,9 @@ function edit_owned($id, $fields)
                 break;
 
             case 'affiliates' :
-                if ($value == 'leave')
+                if ($value == 'leave') {
                     continue 2;
+                }
 
                 // connect to remote table
                 try {
@@ -1180,7 +1204,7 @@ function edit_owned($id, $fields)
                     } catch (PDOException $e) {
                         die($e->getMessage());
                     }
-                    $current = array();
+                    $current = [];
                     $start = false;
                     $result->setFetchMode(PDO::FETCH_ASSOC);
                     while ($row = $result->fetch()) {
@@ -1191,8 +1215,9 @@ function edit_owned($id, $fields)
                             $start = false;
                             break;
                         }
-                        if ($start)
+                        if ($start) {
                             $current[] = $row['Field'];
+                        }
                     }
 
                     $prev = 'url';
@@ -1204,47 +1229,45 @@ function edit_owned($id, $fields)
                             continue;
                         } else if ($new == '' && $index == (count($value) - 1)) {
                             break;
-                        } else {
-                            if ($new == '') {
-                                // delete the field
-                                $query = "ALTER TABLE `$table` DROP `" .
-                                    $current[$index] . '`';
-                                $result = $db_link_list->prepare($query);
-                                $result->execute();
-                                if (!$result) {
-                                    log_error(__FILE__ . ':' . __LINE__,
-                                        'Error executing query: <i>' . $result->errorInfo()[2] .
-                                        '</i>; Query is: <code>' . $query . '</code>');
-                                    die(STANDARD_ERROR);
-                                }
-                            } else if (!isset($current[$index])) {
-                                // add after the previous column
-                                $query = "ALTER TABLE `$table` ADD COLUMN `$new` " .
-                                    "VARCHAR(255) DEFAULT NULL AFTER `$prev`";
-                                $result = $db_link_list->prepare($query);
-                                $result->execute();
-                                if (!$result) {
-                                    log_error(__FILE__ . ':' . __LINE__,
-                                        'Error executing query: <i>' . $result->errorInfo()[2] .
-                                        '</i>; Query is: <code>' . $query . '</code>');
-                                    die(STANDARD_ERROR);
-                                }
-                                $prev = $new;
-                            } else {
-                                // rename column
-                                $query = "ALTER TABLE `$table` CHANGE `" .
-                                    $current[$index] . "` `$new` " .
-                                    "VARCHAR(255) DEFAULT NULL";
-                                $result = $db_link_list->prepare($query);
-                                $result->execute();
-                                if (!$result) {
-                                    log_error(__FILE__ . ':' . __LINE__,
-                                        'Error executing query: <i>' . $result->errorInfo()[2] .
-                                        '</i>; Query is: <code>' . $query . '</code>');
-                                    die(STANDARD_ERROR);
-                                }
-                                $prev = $new;
+                        } else if ($new == '') {
+                            // delete the field
+                            $query = "ALTER TABLE `$table` DROP `" .
+                                $current[$index] . '`';
+                            $result = $db_link_list->prepare($query);
+                            $result->execute();
+                            if (!$result) {
+                                log_error(__FILE__ . ':' . __LINE__,
+                                    'Error executing query: <i>' . $result->errorInfo()[2] .
+                                    '</i>; Query is: <code>' . $query . '</code>');
+                                die(STANDARD_ERROR);
                             }
+                        } else if (!isset($current[$index])) {
+                            // add after the previous column
+                            $query = "ALTER TABLE `$table` ADD COLUMN `$new` " .
+                                "VARCHAR(255) DEFAULT NULL AFTER `$prev`";
+                            $result = $db_link_list->prepare($query);
+                            $result->execute();
+                            if (!$result) {
+                                log_error(__FILE__ . ':' . __LINE__,
+                                    'Error executing query: <i>' . $result->errorInfo()[2] .
+                                    '</i>; Query is: <code>' . $query . '</code>');
+                                die(STANDARD_ERROR);
+                            }
+                            $prev = $new;
+                        } else {
+                            // rename column
+                            $query = "ALTER TABLE `$table` CHANGE `" .
+                                $current[$index] . "` `$new` " .
+                                "VARCHAR(255) DEFAULT NULL";
+                            $result = $db_link_list->prepare($query);
+                            $result->execute();
+                            if (!$result) {
+                                log_error(__FILE__ . ':' . __LINE__,
+                                    'Error executing query: <i>' . $result->errorInfo()[2] .
+                                    '</i>; Query is: <code>' . $query . '</code>');
+                                die(STANDARD_ERROR);
+                            }
+                            $prev = $new;
                         } // end if field has been edited
 
                     } // end foreach value as index -> new
@@ -1274,14 +1297,17 @@ function edit_owned($id, $fields)
             case 'status' :
                 if (($value == 'current' && $info['status'] == 2) ||
                     ($value == 'upcoming' && $info['status'] == 1) ||
-                    ($value == 'pending' && $info['status'] == 0))
+                    ($value == 'pending' && $info['status'] == 0)) {
                     continue 2;
+                }
                 $query = "UPDATE `$db_owned` SET `status` = ";
                 $status = 0;
-                if ($value == 'upcoming')
+                if ($value == 'upcoming') {
                     $status = 1;
-                else if ($value == 'current')
+                }
+                else if ($value == 'current') {
                     $status = 2;
+                }
                 $query .= "$status WHERE `listingid` = :id";
                 $result = $db_link->prepare($query);
                 $result->bindParam(':id', $id, PDO::PARAM_INT);
@@ -1303,7 +1329,9 @@ function edit_owned($id, $fields)
                 $new = $fields['date_year'] . '-' .
                     str_pad($fields['date_month'], 2, '0', STR_PAD_LEFT) . '-' .
                     str_pad($fields['date_day'], 2, '0', STR_PAD_LEFT);
-                if ($new == $info['opened']) continue 2;
+                if ($new == $info['opened']) {
+                    continue 2;
+                }
                 $query = "UPDATE `$db_owned` SET `opened` = '$new' " .
                     "WHERE `listingid` = :id";
                 $result = $db_link->prepare($query);
@@ -1354,8 +1382,9 @@ function edit_owned($id, $fields)
 
                 } else if ($value == 'yes') {
                     if (!isset($fields['imagefile']) ||
-                        $fields['imagefile'] == '')
-                        continue 2; // there is no uploaded image ata eh
+                        $fields['imagefile'] == '') {
+                        continue 2;
+                    } // there is no uploaded image ata eh
                     // get absolute path
                     $query = "SELECT `value` FROM `$db_settings` WHERE " .
                         '`setting` = "owned_images_dir"';
@@ -1374,8 +1403,9 @@ function edit_owned($id, $fields)
                     // delete the old image file
                     $file = $info['imagefile'];
                     if ($file && is_file($dir . $file) &&
-                        $file != $fields['imagefile'])
+                        $file != $fields['imagefile']) {
                         @unlink($dir . $file);
+                    }
 
                     // if the new one is a valid file
                     if ($fields['imagefile'] &&
@@ -1407,8 +1437,9 @@ function edit_owned($id, $fields)
                 break;
 
             case 'dbpassword' :
-                if ($value == '')
+                if ($value == '') {
                     continue 2;
+                }
                 // verify
                 if ($value == $fields['dbpasswordv'] && $value != '') {
                     // update db_owned
@@ -1434,15 +1465,20 @@ function edit_owned($id, $fields)
             case 'dropdown' :
             case 'notifynew' :
             case 'holdupdate' :
-                if ($value == 'leave') continue 2;
+                if ($value == 'leave') {
+                    continue 2;
+                }
                 $query = "UPDATE `$db_owned` SET `$field` = ";
                 $set = 0;
-                if ($value == 'disable')
+                if ($value == 'disable') {
                     $set = 0;
-                else if ($value == 'enable')
+                }
+                else if ($value == 'enable') {
                     $set = 1;
-                else
+                }
+                else {
                     continue 2;
+                }
                 $query .= "$set WHERE `listingid` = :id";
                 $result = $db_link->prepare($query);
                 $result->bindParam(':id', $id, PDO::PARAM_INT);
@@ -1453,23 +1489,28 @@ function edit_owned($id, $fields)
                         '</i>; Query is: <code>' . $query . '</code>');
                     die(STANDARD_ERROR);
                 }
-                if ($field == 'dropdown')
+                if ($field == 'dropdown') {
                     $changes[] = 'Dropdown usage ' . $value . 'd.';
-                else if ($field == 'notifynew')
+                }
+                else if ($field == 'notifynew') {
                     $changes[] = 'Notify owner of pending members ' . $value .
                         'd.';
-                else if ($field == 'holdupdate')
+                }
+                else if ($field == 'holdupdate') {
                     $changes[] = 'Hold member updates ' . $value . 'd.';
+                }
                 break;
 
             case 'catid' :
-                if ($value == '' || !is_array($value))
+                if ($value == '' || !is_array($value)) {
                     continue 2;
+                }
                 $cats = implode('|', $value);
                 $cats = str_replace('||', '|', $cats);
                 $cats = '|' . trim($cats, '|') . '|';
-                if ($cats == $info['catid'])
+                if ($cats == $info['catid']) {
                     continue 2;
+                }
                 $query = "UPDATE `$db_owned` SET `catid` = :cats " .
                     "WHERE `listingid` = :id";
                 $result = $db_link->prepare($query);
@@ -1495,8 +1536,9 @@ function edit_owned($id, $fields)
             case 'listpage' :
             case 'updatepage' :
             case 'lostpasspage' :
-                if ($value == '')
-                    continue 2; // the above fields are required
+                if ($value == '') {
+                    continue 2;
+                } // the above fields are required
             case 'title' :
             case 'subject' :
             case 'url' :
@@ -1509,13 +1551,15 @@ function edit_owned($id, $fields)
             case 'listtemplate' :
             case 'affiliatestemplate' :
             case 'statstemplate' :
-                if (stripslashes($value) == $info[$field])
+                if (stripslashes($value) == $info[$field]) {
                     continue 2;
+                }
                 $query = "UPDATE `$db_owned` SET `$field` = '$value' " .
                     "WHERE `listingid` = :id";
-                if ($value == 'null')
+                if ($value == 'null') {
                     $query = "UPDATE `$db_owned` SET `$field` = null WHERE " .
                         "`listingid` = :id";
+                }
                 $result = $db_link->prepare($query);
                 $result->bindParam(':id', $id, PDO::PARAM_INT);
                 $result->execute();
@@ -1525,49 +1569,70 @@ function edit_owned($id, $fields)
                         '</i>; Query is: <code>' . $query . '</code>');
                     die(STANDARD_ERROR);
                 }
-                if ($field == 'dbserver')
+                if ($field == 'dbserver') {
                     $changes[] = 'Database server updated.';
-                else if ($field == 'dbuser')
+                }
+                else if ($field == 'dbuser') {
                     $changes[] = 'Database user updated.';
-                else if ($field == 'title')
+                }
+                else if ($field == 'title') {
                     $changes[] = 'Listing title updated.';
-                else if ($field == 'subject')
+                }
+                else if ($field == 'subject') {
                     $changes[] = 'Listing subject updated.';
-                else if ($field == 'email')
+                }
+                else if ($field == 'email') {
                     $changes[] = 'Email address updated.';
-                else if ($field == 'url')
+                }
+                else if ($field == 'url') {
                     $changes[] = 'Listing URL updated.';
-                else if ($field == 'desc')
+                }
+                else if ($field == 'desc') {
                     $changes[] = 'Description updated.';
-                else if ($field == 'listingtype')
+                }
+                else if ($field == 'listingtype') {
                     $changes[] = 'Listing type updated.';
-                else if ($field == 'sort')
+                }
+                else if ($field == 'sort') {
                     $changes[] = 'Member sorting field updated.';
-                else if ($field == 'perpage')
+                }
+                else if ($field == 'perpage') {
                     $changes[] = 'Items per page updated.';
-                else if ($field == 'linktarget')
+                }
+                else if ($field == 'linktarget') {
                     $changes[] = 'Link targets updated.';
-                else if ($field == 'joinpage')
+                }
+                else if ($field == 'joinpage') {
                     $changes[] = 'Join page file updated.';
-                else if ($field == 'updatepage')
+                }
+                else if ($field == 'updatepage') {
                     $changes[] = 'Update page file updated.';
-                else if ($field == 'lostpasspage')
+                }
+                else if ($field == 'lostpasspage') {
                     $changes[] = 'Lost password page file updated.';
-                else if ($field == 'emailsignup')
+                }
+                else if ($field == 'emailsignup') {
                     $changes[] = 'Signup email template updated.';
-                else if ($field == 'emailapproved')
+                }
+                else if ($field == 'emailapproved') {
                     $changes[] = 'Approved member email template updated.';
-                else if ($field == 'emailupdate')
+                }
+                else if ($field == 'emailupdate') {
                     $changes[] = 'Member update information email ' .
                         'template updated.';
-                else if ($field == 'emaillostpass')
+                }
+                else if ($field == 'emaillostpass') {
                     $changes[] = 'Lost password email template updated.';
-                else if ($field == 'listtemplate')
+                }
+                else if ($field == 'listtemplate') {
                     $changes[] = 'Members list template updated';
-                else if ($field == 'affiliatestemplate')
+                }
+                else if ($field == 'affiliatestemplate') {
                     $changes[] = 'Affiliates template updated.';
-                else if ($field == 'statstemplate')
+                }
+                else if ($field == 'statstemplate') {
                     $changes[] = 'Listing statistics template updated.';
+                }
                 break;
 
             case 'id' :
@@ -1672,8 +1737,9 @@ function delete_owned($id)
     }
 
     // unlink image if present
-    if ($dir . $image)
+    if ($dir . $image) {
         @unlink($dir . $file);
+    }
 
     return true;
 }
@@ -1692,12 +1758,15 @@ function get_owned_cats($status = 'all')
 
     $query = "SELECT DISTINCT( `catid` ) as `id` FROM `$db_owned`";
     if ($status && $status != 'all') {
-        if ($status == 'pending')
+        if ($status == 'pending') {
             $query .= " WHERE `status` = 0";
-        else if ($status == 'upcoming')
+        }
+        else if ($status == 'upcoming') {
             $query .= " WHERE `status` = 1";
-        else if ($status == 'current')
+        }
+        else if ($status == 'current') {
             $query .= " WHERE `status` = 2";
+        }
     }
 
     $result = $db_link->prepare($query);
@@ -1708,19 +1777,21 @@ function get_owned_cats($status = 'all')
             '</i>; Query is: <code>' . $query . '</code>');
         die(STANDARD_ERROR);
     }
-    if ($result->rowCount() == 0)
-        return array(); // return empty array, no cats
+    if ($result->rowCount() == 0) {
+        return [];
+    } // return empty array, no cats
 
     $query = "SELECT `catid` FROM `$db_category` WHERE ( ";
-    $allcats = array();
+    $allcats = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
     while ($row = $result->fetch()) {
         $cats = explode('|', $row['id']);
-        foreach ($cats as $cat)
+        foreach ($cats as $cat) {
             if ($cat != '' && !in_array($cat, $allcats)) {
                 $query .= "`catid` = '$cat' OR ";
                 $allcats[] = $cat;
             }
+        }
     }
     $query = rtrim($query, 'OR ') . ' ) ';
     $query .= ' ORDER BY `catname` ASC';
@@ -1733,10 +1804,11 @@ function get_owned_cats($status = 'all')
         die(STANDARD_ERROR);
     }
 
-    $ids = array();
+    $ids = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
-    while ($row = $result->fetch())
+    while ($row = $result->fetch()) {
         $ids[] = $row['catid'];
+    }
     return $ids;
 }
 
@@ -1791,12 +1863,14 @@ function parse_owned_template($id)
             $i++;
             continue;
         } // blank
-        if ($i == (count($catsarray) - 1) && count($catsarray) != 1)
+        if ($i == (count($catsarray) - 1) && count($catsarray) != 1) {
             $cats .= 'and ';
+        }
         $cat = '';
         $aline = get_ancestors($c);
-        foreach ($aline as $a)
+        foreach ($aline as $a) {
             $cat = get_category_name($a) . ' > ' . $cat;
+        }
         $cat = rtrim($cat, '> ');
         $cat = str_replace('>', '&raquo;', $cat);
         $cats .= "$cat, ";
@@ -1819,18 +1893,21 @@ function parse_owned_template($id)
     $root_web = '';
     $root_abs = '';
     $result->setFetchMode(PDO::FETCH_ASSOC);
-    while ($row = $result->fetch())
-        if ($row['setting'] == 'owned_images_dir')
+    while ($row = $result->fetch()) {
+        if ($row['setting'] == 'owned_images_dir') {
             $dir = $row['value'];
-        else if ($row['setting'] == 'root_path_absolute')
+        } else if ($row['setting'] == 'root_path_absolute') {
             $root_abs = $row['value'];
-        else
+        } else {
             $root_web = $row['value'];
+        }
+    }
     $image = ($info['imagefile'] && is_file($dir . $info['imagefile']))
-        ? getimagesize($dir . $info['imagefile']) : array('', '', '');
+        ? getimagesize($dir . $info['imagefile']) : ['', '', ''];
     // make sure $image is an array, in case getimagesize() failed
-    if (!is_array($image))
-        $image = array();
+    if (!is_array($image)) {
+        $image = [];
+    }
     $dir = str_replace($root_abs, $root_web, $dir);
 
     $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = " .
@@ -1910,10 +1987,11 @@ function get_owned_by_category($catid, $status = 'all')
         die(STANDARD_ERROR);
     }
 
-    $ids = array();
+    $ids = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
-    while ($row = $result->fetch())
+    while ($row = $result->fetch()) {
         $ids[] = $row['listingid'];
+    }
     return $ids;
 }
 
@@ -1934,12 +2012,15 @@ function search_owned($search, $status = 'all', $start = 'none')
         "`title`, `subject`, `url`, `desc` ) AGAINST( '$search' ) " .
         "OR `title` LIKE '%$search%' OR `subject` LIKE '%$search%' )";
 
-    if ($status == 'pending')
+    if ($status == 'pending') {
         $query .= " AND `status` = 0";
-    else if ($status == 'upcoming')
+    }
+    else if ($status == 'upcoming') {
         $query .= " AND `status` = 1";
-    else if ($status == 'current')
+    }
+    else if ($status == 'current') {
         $query .= " AND `status` = 2";
+    }
 
     $query .= " ORDER BY `subject` DESC";
 
@@ -1968,10 +2049,11 @@ function search_owned($search, $status = 'all', $start = 'none')
         die(STANDARD_ERROR);
     }
 
-    $ids = array();
+    $ids = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
-    while ($row = $result->fetch())
+    while ($row = $result->fetch()) {
         $ids[] = $row['listingid'];
+    }
     return $ids;
 }
 
@@ -2018,13 +2100,12 @@ function get_listing_stats($id, $extended = false)
 
     $table = $info['dbtable'];
     $afftable = $table . '_affiliates';
-    $stats = array();
+    $stats = [];
 
     // get added date in main table - make sure it is only approved members
     $query = "SELECT `added` FROM `$table` WHERE `pending` = 0 " .
         'ORDER BY `added` DESC LIMIT 1';
-    $result = $db_link_list->prepare($query);
-    $result->execute();
+    $result = $db_link_list->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -2038,18 +2119,18 @@ function get_listing_stats($id, $extended = false)
     // get most recent members
     $query = "SELECT * FROM `$table` WHERE `added` = '" .
         $stats['lastupdated'] . '\'';
-    $result = $db_link_list->prepare($query);
-    $result->execute();
+    $result = $db_link_list->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
             '</i>; Query is: <code>' . $query . '</code>');
         die(STANDARD_ERROR);
     }
-    $new = array();
+    $new = [];
     $result->setFetchMode(PDO::FETCH_ASSOC);
-    while ($row = $result->fetch())
+    while ($row = $result->fetch()) {
         $new[] = $row;
+    }
 
     // get added date in affiliates table if affiliates is present
     if ($info['affiliates'] == 1) {
@@ -2066,8 +2147,9 @@ function get_listing_stats($id, $extended = false)
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
 
-        if ($row['added'] && $row['added'] > $stats['lastupdated'])
+        if ($row['added'] && $row['added'] > $stats['lastupdated']) {
             $stats['lastupdated'] = $row['added'];
+        }
 
         if ($extended) { // do this only if we're looking for "extended" stats
             // now we take the newest affiliates added
@@ -2081,10 +2163,11 @@ function get_listing_stats($id, $extended = false)
                     '</i>; Query is: <code>' . $query . '</code>');
                 die(STANDARD_ERROR);
             }
-            $affrows = array();
+            $affrows = [];
             $result->setFetchMode(PDO::FETCH_ASSOC);
-            while ($affrow = $result->fetch())
+            while ($affrow = $result->fetch()) {
                 $affrows[] = $affrow;
+            }
 
             // prep new affiliates
             require_once('mod_affiliates.php'); // require for f'n
@@ -2092,8 +2175,9 @@ function get_listing_stats($id, $extended = false)
             $newaffiliates_img = '';
             $i = 0;
             foreach ($affrows as $a) {
-                if (($i == count($affrows) - 1) && count($affrows) != 1)
+                if (($i == count($affrows) - 1) && count($affrows) != 1) {
                     $newaffiliates .= 'and ';
+                }
                 $newaffiliates .= '<a href="' . $a['url'];
                 if ($info['linktarget']) {
                     $newaffiliates .= '" target="' . $info['linktarget'];
@@ -2188,8 +2272,9 @@ function get_listing_stats($id, $extended = false)
     $newmembers = '';
     $i = 0;
     foreach ($new as $n) {
-        if (($i == count($new) - 1) && count($new) != 1)
+        if (($i == count($new) - 1) && count($new) != 1) {
             $newmembers .= 'and ';
+        }
         if ($n['url'] != '' && $n['showurl'] == 1) {
             $newmembers .= '<a href="' . $n['url'];
             if ($info['linktarget']) {
@@ -2215,11 +2300,13 @@ function get_listing_stats($id, $extended = false)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    $stats['total'] = $row['count'];
+    $stats['total'] = (int)$row['count'];
 
     // random member
     $rand = rand(1, $stats['total']) - 1;
-    if ($rand < 1) $rand++; // Fix for 0 or negative output
+    if ($rand < 1) {
+        $rand++;
+    } // Fix for 0 or negative output
     $query = "SELECT * FROM `$table` WHERE `pending` = 0 LIMIT :rand, 1";
     $result = $db_link_list->prepare($query);
     $result->bindParam(':rand', $rand, PDO::PARAM_INT);
@@ -2241,8 +2328,9 @@ function get_listing_stats($id, $extended = false)
         $stats['randommember'] .= '">' . $stats['randommember'] .
             '</a>';
     }
-    if (isset($randmem['country']) && $randmem['country'])
+    if (isset($randmem['country']) && $randmem['country']) {
         $stats['randommember'] .= 'from ' . $randmem['country'];
+    }
     $stats['randommember_url'] = $randmem['url'];
     $stats['randommember_name'] = $randmem['name'];
     $stats['randommember_country'] =
@@ -2250,9 +2338,11 @@ function get_listing_stats($id, $extended = false)
             ? $randmem['country'] : '';
     $stats['randommember_email'] = $randmem['email'];
     $afields = explode(',', $info['additional']);
-    foreach ($afields as $field)
-        if ($field)
+    foreach ($afields as $field) {
+        if ($field) {
             $stats['randommember_' . $field] = $randmem[$field];
+        }
+    }
 
     // get total number of PENDING members
     $query = "SELECT COUNT(*) AS `count` FROM `$table` WHERE `pending` = 1";
@@ -2290,8 +2380,9 @@ function get_listing_stats($id, $extended = false)
     @$first = getdate(mktime(0, 0, 0, $firstmonth, $firstday, $firstyear));
     $seconds = $today[0] - $first[0];
     $days = round($seconds / 86400);
-    if ($days == 0)
+    if ($days == 0) {
         $days = 1;
+    }
     $stats['average'] = round($stats['total'] / $days, 2);
 
     // prepare number of countries
@@ -2309,7 +2400,9 @@ function get_listing_stats($id, $extended = false)
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
         $stats['countries'] = $row['countries'];
-    } else $stats['countries'] = '0';
+    } else {
+        $stats['countries'] = '0';
+    }
 
     $db_link_list = null;
     return $stats;

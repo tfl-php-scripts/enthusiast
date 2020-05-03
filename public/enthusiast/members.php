@@ -22,6 +22,9 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+
+use RobotessNet\PaginationUtils;
+
 session_start();
 
 require_once('logincheck.inc.php');
@@ -179,15 +182,15 @@ if ($action === 'edit') {
 
         <form method="post" action="members.php">
             <input type="hidden" name="action" value="edit"/>
-            <input type="hidden" name="id" value="<?php echo $info['listingid'] ?>"/>
-            <input type="hidden" name="email" value="<?php echo $member['email'] ?>"/>
+            <input type="hidden" name="id" value="<?= $info['listingid'] ?>"/>
+            <input type="hidden" name="email" value="<?= $member['email'] ?>"/>
             <input type="hidden" name="done" value="yes"/>
 
             <table>
 
                 <tr>
                     <th colspan="2">
-                        <?php echo $info['subject'] ?> <?php echo ucwords($info['listingtype']) ?> Member
+                        <?= $info['subject'] ?> <?= ucwords($info['listingtype']) ?> Member
                     </th>
                 </tr>
 
@@ -196,7 +199,7 @@ if ($action === 'edit') {
                         Name
                     </td>
                     <td>
-                        <input type="text" name="name" value="<?php echo htmlentities($member['name']) ?>"/>
+                        <input type="text" name="name" value="<?= htmlentities($member['name']) ?>"/>
                     </td>
                 </tr>
 
@@ -205,7 +208,7 @@ if ($action === 'edit') {
                         Email
                     </td>
                     <td>
-                        <input type="text" name="email_new" value="<?php echo $member['email'] ?>"/>
+                        <input type="text" name="email_new" value="<?= $member['email'] ?>"/>
                     </td>
                 </tr>
                 <?php
@@ -218,10 +221,10 @@ if ($action === 'edit') {
                         </td>
                         <td>
                             <select name="country">
-                                <option value="<?php echo $member['country'] ?>">Current
-                                    (<?php echo $member['country'] ?>)
+                                <option value="<?= $member['country'] ?>">Current
+                                    (<?= $member['country'] ?>)
                                 </option>
-                                <option value="<?php echo $member['country'] ?>">---</option>
+                                <option value="<?= $member['country'] ?>">---</option>
                                 <?php
                                 include 'countries.inc.php';
                                 ?>
@@ -231,13 +234,13 @@ if ($action === 'edit') {
                     <?php
                 }
                 ?>
-                <tr <?php echo ($shade) ? 'class="rowshade"' : '' ?>>
+                <tr <?= ($shade) ? 'class="rowshade"' : '' ?>>
                     <td>
                         URL
                     </td>
                     <td>
-                        <input type="text" name="url" value="<?php echo $member['url'] ?>"/>
-                        <?php echo ($member['url']) ? '<a href="' . $member['url'] . '"' .
+                        <input type="text" name="url" value="<?= $member['url'] ?>"/>
+                        <?= ($member['url']) ? '<a href="' . $member['url'] . '"' .
                             ' target="' . $info['linktarget'] . '">(visit)</a>' : '' ?>
                     </td>
                 </tr>
@@ -255,13 +258,13 @@ if ($action === 'edit') {
                             continue;
                         }
                         ?>
-                        <tr <?php echo ($shade) ? 'class="rowshade"' : '' ?>>
+                        <tr <?= ($shade) ? 'class="rowshade"' : '' ?>>
                             <td>
-                                <?php echo ucwords(str_replace('_', ' ', $field)) ?>
+                                <?= ucwords(str_replace('_', ' ', $field)) ?>
                             </td>
                             <td>
-                                <input type="text" name="<?php echo $field ?>"
-                                       value="<?php echo htmlentities($member[$field]) ?>"/>
+                                <input type="text" name="<?= $field ?>"
+                                       value="<?= htmlentities($member[$field]) ?>"/>
                             </td>
                         </tr>
                         <?php
@@ -273,7 +276,7 @@ if ($action === 'edit') {
                     } // end foreach
                 } // end if additional
                 ?>
-                <tr <?php echo ($shade) ? 'class="rowshade"' : '' ?>>
+                <tr <?= ($shade) ? 'class="rowshade"' : '' ?>>
                     <td>
                         Show/Hide Website
                     </td>
@@ -303,7 +306,7 @@ if ($action === 'edit') {
                     $shade = true;
                 }
                 ?>
-                <tr<?php echo ($shade) ? 'class="rowshade"' : '' ?>>
+                <tr<?= ($shade) ? 'class="rowshade"' : '' ?>>
                     <td colspan="2" class="right">
                         <?php
                         if ($member['pending'] == 1) {
@@ -316,7 +319,7 @@ if ($action === 'edit') {
                         <input type="submit" value="Edit member info"/>
                         <input type="reset" value="Reset form values"/>
                         <input type="button" value="Cancel"
-                               onclick="javascript:window.location='members.php?id=<?php echo $listing
+                               onclick="javascript:window.location='members.php?id=<?= $listing
                                ?>';"/>
                     </td>
                 </tr>
@@ -334,7 +337,7 @@ if ($action === 'edit') {
 if ($show_default) {
     ?>
     <div class="submenu">
-        <?php echo ($listing)
+        <?= ($listing)
             ? '<a href="emails.php?action=members&id=' . $listing . '">Email</a>'
             : '' ?>
     </div>
@@ -371,7 +374,7 @@ if ($show_default) {
         ?>
         <form action="members.php" method="get">
             <input type="hidden" name="dosearch" value="now"/>
-            <input type="hidden" name="id" value="<?php echo $listing ?>"/>
+            <input type="hidden" name="id" value="<?= $listing ?>"/>
 
             <p class="center">
                 <input type="text" name="search" <?= $searchText !== null ? (' value="' . $searchText . '"') : '' ?>/>
@@ -383,14 +386,14 @@ if ($show_default) {
         $start = $_REQUEST['start'] ?? '0';
 
         $total = 0;
-        $members = array();
+        $members = [];
         if (isset($_GET['dosearch'])) {
             $members = search_members($searchText, $listing,
                 'approved', $start, get_setting('per_page'));
             $total = count(search_members($searchText, $listing,
                 'approved'));
         } else {
-            $members = get_members($listing, 'approved', array(), $start,
+            $members = get_members($listing, 'approved', [], $start,
                 'bydate', get_setting('per_page'));
             $total = count(get_members($listing, 'approved'));
         }
@@ -400,10 +403,10 @@ if ($show_default) {
             <tr>
                 <th>Action</th>
                 <th>Email</th>
-                <?php echo ($info['country']) ? '<th>Country</th>' : '' ?>
+                <?= ($info['country']) ? '<th>Country</th>' : '' ?>
                 <th>Name</th>
                 <th>URL</th>
-                <?php echo ($info['additional'] !== '') ? '<th>Additional</th>' : '' ?>
+                <?= ($info['additional'] !== '') ? '<th>Additional</th>' : '' ?>
             </tr>
             <?php
             $shade = false;
@@ -411,30 +414,30 @@ if ($show_default) {
                 $class = ($shade) ? ' class="rowshade"' : '';
                 $shade = !$shade;
                 ?>
-                <tr<?php echo $class ?>>
+                <tr<?= $class ?>>
                     <td>
-                        <a href="members.php?action=edit&id=<?php echo $listing
+                        <a href="members.php?action=edit&id=<?= $listing
                         ?>&email=<?= urlencode($member['email']) ?>"><img src="edit.gif" width="42"
                                                                           height="19" border="0" alt=" edit"/></a>
-                        <a href="emails.php?action=directemail&address=<?= urlencode($member['email']) ?>&listing=<?php echo $listing ?>"><img
+                        <a href="emails.php?action=directemail&address=<?= urlencode($member['email']) ?>&listing=<?= $listing ?>"><img
                                     src="email.gif"
                                     width="42" height="19" border="0" alt=" email"/></a>
-                        <a href="members.php?action=delete&id=<?php echo $listing
+                        <a href="members.php?action=delete&id=<?= $listing
                         ?>&email=<?= urlencode($member['email']) ?>" onclick="
-                                go = confirm('Are you sure you want to delete <?php echo addslashes($member['name']) ?>?'); return go;"><img
+                                go = confirm('Are you sure you want to delete <?= addslashes($member['name']) ?>?'); return go;"><img
                                     src="delete.gif" width="42" height="19" border="0" alt=" delete"
                             /></a>
                     </td>
                     <td>
-                        <?php echo $member['email'] ?>
+                        <?= $member['email'] ?>
                     </td>
                     <td>
-                        <?php echo ($info['country']) ? $member['country'] . '</td><td>' : ''; ?>
-                        <?php echo $member['name'] ?>
+                        <?= ($info['country']) ? $member['country'] . '</td><td>' : '' ?>
+                        <?= $member['name'] ?>
                     </td>
                     <td>
-                        <a href="<?php echo $member['url'] ?>" target="<?php echo $info['linktarget']
-                        ?>"><?php echo $member['url'] ?></a>
+                        <a href="<?= $member['url'] ?>" target="<?= $info['linktarget']
+                        ?>"><?= $member['url'] ?></a>
                     </td>
                     <?php
                     if ($info['additional'] != '') {
@@ -457,7 +460,6 @@ if ($show_default) {
             ?>
         </table>
         <?php
-        $page_qty = $total / get_setting('per_page');
         $url = 'members.php';
         $connector = '?';
         $req = array_merge($_GET, $_POST);
@@ -468,7 +470,7 @@ if ($show_default) {
             }
         }
 
-        echo RobotessNet\getPaginatorHTML($page_qty, $url, $connector);
+        echo PaginationUtils::getPaginatorHTML($total, (int)get_setting('per_page'), $url . $connector);
 
     } else { /////////////////////////////////////////////////////// PENDING
         $finalcount = 0;
@@ -486,33 +488,33 @@ if ($show_default) {
                 $finalcount += count($pending);
                 $approved = count(get_members($id, 'approved'));
                 ?>
-                <form action="members.php" method="post" name="listing<?php echo $id ?>">
-                    <input type="hidden" name="id" value="<?php echo $id ?>"/>
+                <form action="members.php" method="post" name="listing<?= $id ?>">
+                    <input type="hidden" name="id" value="<?= $id ?>"/>
                     <input type="hidden" name="action" value="multiple"/>
 
                     <table style="width: 100%;">
 
                         <tr>
-                            <th colspan="<?php echo $qtycol ?>">
-                                <b><?php echo ucwords($info['subject']) ?>
-                                    <?php echo ucwords($info['listingtype']) ?></b>
-                                <small><a href="<?php echo $info['url'] ?>">(view site)</a></small> -
-                                <?php echo count($pending) ?> pending,
-                                <?php echo $approved ?> approved
+                            <th colspan="<?= $qtycol ?>">
+                                <b><?= ucwords($info['subject']) ?>
+                                    <?= ucwords($info['listingtype']) ?></b>
+                                <small><a href="<?= $info['url'] ?>">(view site)</a></small> -
+                                <?= count($pending) ?> pending,
+                                <?= $approved ?> approved
                             </th>
                         </tr>
 
                         <tr class="subheader">
                             <td>
                                 <input type="checkbox" onclick="
-                                        checkAll( document.listing<?php echo $id ?>, this, 'email[]' );"/>
+                                        checkAll( document.listing<?= $id ?>, this, 'email[]' );"/>
                             </td>
                             <td>Action</td>
                             <td>Email</td>
-                            <?php echo ($info['country']) ? '<td>Country</td>' : '' ?>
+                            <?= ($info['country']) ? '<td>Country</td>' : '' ?>
                             <td>Name</td>
                             <td>URL</td>
-                            <?php echo ($info['additional'] != '') ? '<td>Additional</td>' : '' ?>
+                            <?= ($info['additional'] != '') ? '<td>Additional</td>' : '' ?>
                         </tr>
                         <?php
                         $shade = false;
@@ -530,36 +532,36 @@ if ($show_default) {
                                 $update = '<b class="important">*</b>';
                             }
                             ?>
-                            <tr<?php echo $class ?>>
+                            <tr<?= $class ?>>
                                 <td class="center">
-                                    <input type="checkbox" name="email[]" value="<?php echo $member['email'] ?>"/>
+                                    <input type="checkbox" name="email[]" value="<?= $member['email'] ?>"/>
                                 </td>
                                 <td>
-                                    <a href="members.php?action=approve&id=<?php echo $id ?>&email=<?= urlencode($member['email']) ?>"><img
+                                    <a href="members.php?action=approve&id=<?= $id ?>&email=<?= urlencode($member['email']) ?>"><img
                                                 src="approve.gif" width="42"
                                                 height="19" border="0" alt=" approve" title=" approve"/></a>
-                                    <a href="members.php?action=edit&id=<?php echo $id ?>&email=<?php echo urlencode($member['email']); ?>"><img
+                                    <a href="members.php?action=edit&id=<?= $id ?>&email=<?= urlencode($member['email']) ?>"><img
                                                 src="edit.gif" width="42"
                                                 height="19" border="0" alt=" edit" title=" edit"/></a>
-                                    <a href="emails.php?action=directemail&address=<?= urlencode($member['email']) ?>&listing=<?php echo $id ?>"><img
+                                    <a href="emails.php?action=directemail&address=<?= urlencode($member['email']) ?>&listing=<?= $id ?>"><img
                                                 src="email.gif" width="42" height="19" border="0"
                                                 alt=" email" title=" email"/></a>
-                                    <a href="members.php?action=reject&id=<?php echo $id ?>&email=<?= urlencode($member['email']) ?>"
+                                    <a href="members.php?action=reject&id=<?= $id ?>&email=<?= urlencode($member['email']) ?>"
                                        onclick="
-                                               go = confirm('Are you sure you want to reject <?php echo addslashes($member['name']) ?>?'); return go;"><img
+                                               go = confirm('Are you sure you want to reject <?= addslashes($member['name']) ?>?'); return go;"><img
                                                 src="reject.gif" width="42" height="19" border="0"
                                                 alt=" reject" title=" reject"/></a>
                                 </td>
                                 <td>
-                                    <?php echo $update ?><?php echo $member['email'] ?>
+                                    <?= $update ?><?= $member['email'] ?>
                                 </td>
                                 <td>
-                                    <?php echo ($info['country'] == 1)
+                                    <?= ($info['country'] == 1)
                                         ? $member['country'] . '</td><td>' : '' ?>
-                                    <?php echo $member['name'] ?>
+                                    <?= $member['name'] ?>
                                 </td>
                                 <td>
-                                    <?php echo ($member['url'])
+                                    <?= ($member['url'])
                                         ? '<a href="' . $member['url'] . '" target="' .
                                         $info['linktarget'] . '">' . $member['url'] . '</a>'
                                         : '' ?>
@@ -581,8 +583,8 @@ if ($show_default) {
                             <?php
                         }
                         ?>
-                        <tr<?php echo ($shade) ? ' class="rowshade"' : '' ?>>
-                            <td colspan="<?php echo $qtycol ?>" class="right">
+                        <tr<?= ($shade) ? ' class="rowshade"' : '' ?>>
+                            <td colspan="<?= $qtycol ?>" class="right">
                                 Mass approval:
                                 <input type="submit" name="selected" value="APPROVE" style="font-weight: bold;"/>
                                 <input type="submit" name="selected" value="REJECT" onclick="

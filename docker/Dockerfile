@@ -1,5 +1,5 @@
 FROM composer:1.6
-FROM php:7.1-apache
+FROM php:7.2-apache
 
 MAINTAINER Scripts.robotess.net
 
@@ -16,7 +16,8 @@ RUN cp /root/go/bin/mhsendmail /usr/bin/mhsendmail
 RUN touch /usr/local/etc/php/php.ini
 RUN echo 'sendmail_path = /usr/bin/mhsendmail --smtp-addr mailhog:1025' >> /usr/local/etc/php/php.ini
 RUN echo 'display_errors = on' >> /usr/local/etc/php/php.ini \
-    && echo 'log_errors = off' >> /usr/local/etc/php/php.ini
+    && echo 'log_errors = off' >> /usr/local/etc/php/php.ini \
+    && echo 'error_reporting = E_ALL' >> /usr/local/etc/php/php.ini
 
 RUN yes | pecl install xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
@@ -33,10 +34,13 @@ RUN yes | pecl install xdebug \
 RUN a2enmod rewrite
 RUN service apache2 restart
 
-RUN mkdir -p /app/public/images
-RUN chmod -R 777 /app/public/images
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+RUN chmod +x /usr/local/bin/docker-entrypoint
 
 WORKDIR /app
+
+ENTRYPOINT ["docker-entrypoint"]
+CMD ["apache2-foreground"]
 
 COPY --from=0 /usr/bin/composer /usr/bin/composer
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser

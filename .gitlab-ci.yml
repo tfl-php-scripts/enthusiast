@@ -23,13 +23,13 @@ variables:
 
 test:
   script:
-    - cp -R .docker/samplefl300members public/samplefl300members
-    - cp .docker/configs/config-with-listing-1.php public/samplefl/config.php
-    - cp .docker/configs/config-enthusiast-folder.php public/enthusiast/config.php
-    - cp .docker/configs/config-without-listing.php public/config.php
-    - cp .docker/configs/config-without-listing.php public/samplecollective/config.php
+    - cp -R docker/samplefl300members public/samplefl300members
+    - cp docker/configs/config-with-listing-1.php public/samplefl/config.php
+    - cp docker/configs/config-enthusiast-folder.php public/enthusiast/config.php
+    - cp docker/configs/config-without-listing.php public/config.php
+    - cp docker/configs/config-without-listing.php public/samplecollective/config.php
     - echo "SELECT 'OK';" | mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -h mysql "$MYSQL_DATABASE"
-    - mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -h mysql < ".docker/gitlabci.sql"
+    - mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -h mysql < "docker/gitlabci.sql"
     - php vendor/bin/codecept run --steps --xml --env gitlabci
   artifacts:
     when: on_failure

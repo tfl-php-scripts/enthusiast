@@ -1,5 +1,5 @@
 Extra Field via addform:<br>
-<select name="enth_extra_field">
+<select name="extra_field">
     <option value="Test 1">Test 1</option>
     <option value="Test 2">Test 2</option>
     <option value="Test 3">Test 3</option>

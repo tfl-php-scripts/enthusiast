@@ -22,6 +22,9 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+
+use RobotessNet\PaginationUtils;
+
 session_start();
 require_once('logincheck.inc.php');
 if (!isset($logged_in) || !$logged_in) {
@@ -29,8 +32,7 @@ if (!isset($logged_in) || !$logged_in) {
     $next = '';
     if (isset($_SERVER['REQUEST_URI'])) {
         $next = $_SERVER['REQUEST_URI'];
-    }
-    else if (isset($_SERVER['PATH_INFO'])) {
+    } else if (isset($_SERVER['PATH_INFO'])) {
         $next = $_SERVER['PATH_INFO'];
     }
     $_SESSION['next'] = $next;
@@ -101,15 +103,15 @@ if ($show_default) {
     }
     echo '</table>';
 
-    $page_qty = $total / get_setting('per_page');
     $url = 'errorlog.php';
     $connector = '?';
-    foreach ($_GET as $key => $value)
+    foreach ($_GET as $key => $value) {
         if ($key !== 'start' && $key !== 'PHPSESSID') {
             $url .= $connector . $key . '=' . $value;
             $connector = '&amp;';
         }
+    }
 
-    echo RobotessNet\getPaginatorHTML($page_qty, $url, $connector);
+    echo PaginationUtils::getPaginatorHTML($total, (int)get_setting('per_page'), $url . $connector);
 }
 require_once('footer.php');

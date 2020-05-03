@@ -42,8 +42,8 @@ require_once('header.php');
 $showstats = (isset($_GET['nostats'])) ? false : true;
 ?>
 
-    <h1>Welcome to the Enthusiast <?= RobotessNet\getVersion() ?> admin panel
-        for <?php echo get_setting('collective_title') ?>!</h1>
+    <h1>Welcome to the Enthusiast <?= RobotessNet\App::getVersion() ?> admin panel
+        for <?= get_setting('collective_title') ?>!</h1>
 
     <p>
     To log into the admin panel, enter your password in the login box on the left.
@@ -65,7 +65,7 @@ if ($showstats) {
                 Number of categories:
             </td>
             <td>
-                <?php echo $total_cats ?>
+                <?= $total_cats ?>
             </td>
         </tr>
 
@@ -74,7 +74,7 @@ if ($showstats) {
                 Number of joined listings:
             </td>
             <td>
-                <?php echo $joined_approved ?> approved, <?php echo $joined_pending ?> pending
+                <?= $joined_approved ?> approved, <?= $joined_pending ?> pending
             </td>
         </tr>
 
@@ -83,8 +83,8 @@ if ($showstats) {
                 Number of owned listings:
             </td>
             <td>
-                <?php echo $owned_current ?> current, <?php echo $owned_upcoming ?>
-                upcoming, <?php echo $owned_pending ?> pending
+                <?= $owned_current ?> current, <?= $owned_upcoming ?>
+                upcoming, <?= $owned_pending ?> pending
             </td>
         </tr>
 
@@ -93,7 +93,7 @@ if ($showstats) {
                 Number of collective affiliates:
             </td>
             <td>
-                <?php echo $affiliates_collective ?> affiliates
+                <?= $affiliates_collective ?> affiliates
             </td>
         </tr>
 
@@ -105,11 +105,13 @@ if ($showstats) {
                 <?php
                 if (count($owned_newest) > 0) {
                     ?>
-                    <a href="<?php echo $owned_newest['url'] ?>"><?php echo $owned_newest['title']
-                        ?>: the <?php echo $owned_newest['subject'] ?> <?php echo $owned_newest['listingtype']
+                    <a href="<?= $owned_newest['url'] ?>"><?= $owned_newest['title']
+                        ?>: the <?= $owned_newest['subject'] ?> <?= $owned_newest['listingtype']
                         ?></a>
                     <?php
-                } else echo 'None';
+                } else {
+                    echo 'None';
+                }
                 ?>
             </td>
         </tr>
@@ -122,9 +124,11 @@ if ($showstats) {
                 <?php
                 if (count($joined_newest) > 0) {
                     ?>
-                    <a href="<?php echo $joined_newest['url'] ?>"><?php echo $joined_newest['subject'] ?></a>
+                    <a href="<?= $joined_newest['url'] ?>"><?= $joined_newest['subject'] ?></a>
                     <?php
-                } else echo 'None';
+                } else {
+                    echo 'None';
+                }
                 ?>
             </td>
         </tr>
@@ -134,7 +138,7 @@ if ($showstats) {
                 Total members in collective:
             </td>
             <td>
-                <?php echo $collective_total_fans_approved ?> (<?php echo $collective_total_fans_pending ?> pending)
+                <?= $collective_total_fans_approved ?> (<?= $collective_total_fans_pending ?> pending)
             </td>
         </tr>
 
@@ -143,7 +147,7 @@ if ($showstats) {
                 Collective members growth rate:
             </td>
             <td>
-                <?php echo $collective_fans_growth_rate ?> members/day
+                <?= $collective_fans_growth_rate ?> members/day
             </td>
         </tr>
 

@@ -42,7 +42,7 @@ if ($stats['lastupdated']) {
 }
 
 $stats['opened'] = @date(get_setting('date_format'), strtotime($info['opened']));
-if(!$stats['opened']) {
+if (!$stats['opened']) {
     $stats['opened'] = $info['opened'];
 }
 

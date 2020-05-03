@@ -2,6 +2,7 @@
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
+ * Copyright (c) 2020 by Ekaterina http://scripts.robotess.net
  *
  * Enthusiast is a tool for (fan)listing collective owners to easily
  * maintain their listing collectives and listings under that collective.
@@ -22,7 +23,7 @@
  * For more information please view the readme.txt file.
  ******************************************************************************/
 session_start();
-$_SESSION = array();
+$_SESSION = [];
 session_destroy();
-setcookie( 'e3login', '', time() - 3600 );
-header( 'location: index.php' );
+setcookie('e3login', '', time() - 3600);
+header('location: index.php');

@@ -25,8 +25,7 @@
  ******************************************************************************/
 require 'config.php';
 
-use function RobotessNet\clean;
-use function RobotessNet\cleanNormalize;
+use RobotessNet\StringUtils;
 
 require_once('mod_errorlogs.php');
 require_once('mod_owned.php');
@@ -42,19 +41,19 @@ $info = get_listing_info($listing);
 
 // initialize variables
 $show_form = true;
-$messages = array();
+$messages = [];
 $errorstyle = ' style="font-weight: bold; display: block;" ' .
     'class="show_update_error"';
-$data = array();
+$data = [];
 
 $countriesValues = include 'countries.inc.php';
 $countryId = null;
 
 // process forms
-if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
+if (isset($_POST['enth_update']) && $_POST['enth_update'] === 'yes') {
     // do some spam/bot checking first
     $goahead = false;
-    $badStrings = array('Content-Type:',
+    $badStrings = ['Content-Type:',
         'MIME-Version:',
         'Content-Transfer-Encoding:',
         'bcc:',
@@ -62,7 +61,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
         'content-type',
         'onload',
         'onclick',
-        'javascript');
+        'javascript'];
     // 1. check that user is submitting from browser
     // 2. check the POST was indeed used
     // 3. no bad strings in any of the form fields
@@ -85,7 +84,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
     }
 
     // check nonce field
-    $nonce = explode(':', clean($_POST['enth_nonce']));
+    $nonce = explode(':', StringUtils::instance()->clean($_POST['enth_nonce']));
     $mdfived = substr($nonce[2], 0, (strlen($nonce[2]) - 3));
     $appended = substr($nonce[2], -3);
     // check the timestamp; must be more than three seconds after
@@ -114,9 +113,9 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
     }
 
     // check password
-    $cleanNormalizedOldEmail = cleanNormalize($_POST['enth_email']);
+    $cleanNormalizedOldEmail = StringUtils::instance()->cleanNormalize($_POST['enth_email']);
 
-    if (!(check_member_password($listing, $cleanNormalizedOldEmail, clean($_POST['enth_old_password'])))) {
+    if (!(check_member_password($listing, $cleanNormalizedOldEmail, StringUtils::instance()->clean($_POST['enth_old_password'])))) {
         $messages['form'] = 'The password you supplied does not match ' .
             'the password entered in the system. If you have lost your ' .
             'password, <a href="' . $info['lostpasspage'] .
@@ -124,7 +123,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
     } // check email
     else {
         $data['email'] = $cleanNormalizedOldEmail;
-        $data['old_password'] = clean($_POST['enth_old_password']);
+        $data['old_password'] = StringUtils::instance()->clean($_POST['enth_old_password']);
     }
 
     // check validate password
@@ -132,7 +131,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
         $messages['password'] = 'Password validation error. Please check ' .
             'if you have entered the new passwords correctly.';
     } else {
-        $data['password'] = clean($_POST['enth_password']);
+        $data['password'] = StringUtils::instance()->clean($_POST['enth_password']);
     }
 
     if (count($messages) == 0) {
@@ -143,11 +142,11 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
         if ($_POST['enth_email_new'] == '') {
             $data['email_new'] = $member['email'];
         } else {
-            $data['email_new'] = cleanNormalize($_POST['enth_email_new']);
+            $data['email_new'] = StringUtils::instance()->cleanNormalize($_POST['enth_email_new']);
         }
 
         // new name?
-        $data['name'] = ucwords(clean($_POST['enth_name']));
+        $data['name'] = ucwords(StringUtils::instance()->clean($_POST['enth_name']));
         if ($data['name'] == '') {
             $data['name'] = ucwords($member['name']);
         }
@@ -156,7 +155,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
         if (isset($_POST['enth_country']) && $_POST['enth_country'] == '') {
             $data['country'] = $member['country'];
         } else {
-            $countryId = (int)(cleanNormalize($_POST['enth_country']));
+            $countryId = (int)(StringUtils::instance()->cleanNormalize($_POST['enth_country']));
             $data['country'] = $countriesValues[$countryId] ?? $member['country'];
         }
 
@@ -164,7 +163,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
         if ($_POST['enth_url'] == '' && !isset($_POST['enth_url_delete'])) {
             $data['url'] = $member['url'];
         } else {
-            $url = cleanNormalize($_POST['enth_url']);
+            $url = StringUtils::instance()->cleanNormalize($_POST['enth_url']);
             if (preg_match('@^https?://@', $url) === false) {
                 $url = 'http://' . $url;
             }
@@ -190,7 +189,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
                 if ($_POST["enth_$field"] == '' && !isset($_POST['enth_' . $field . '_delete'])) {
                     $data[$field] = $member[$field];
                 } else {
-                    $data[$field] = clean($_POST["enth_$field"]);
+                    $data[$field] = StringUtils::instance()->clean($_POST["enth_$field"]);
                 }
             }
         }
@@ -256,7 +255,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] == 'yes') {
                 <p class="show_update_process_hold">If in two weeks you still
                     have not received the approval email again and you are still not
                     on the members list, please feel free to <a
-                            href="mailto:<?php echo str_replace('@', '&#' . ord('@') . ';', $info['email'])
+                            href="mailto:<?= str_replace('@', '&#' . ord('@') . ';', $info['email'])
                             ?>">email me</a> and ask about your pending update request.</p>
 
                 <p class="show_update_process_hold">Thank you for keeping your
@@ -278,7 +277,7 @@ if ($show_form) {
     $rand = md5(uniqid('', true));
     ?>
     <p class="show_update_intro">If you're a member of the
-        <?php echo $info['listingtype'] ?> and you want to modify your information
+        <?= $info['listingtype'] ?> and you want to modify your information
         listed here, please fill out the form below. Your [old] email address
         and password is required for this form.</p>
 
@@ -286,20 +285,20 @@ if ($show_form) {
         fields you wish unchanged blank, and hit submit only once when you are
         sure you want to change your information.</p>
 
-    <?php echo (isset($messages['form']))
+    <?= (isset($messages['form']))
         ? "<p$errorstyle>{$messages['form']}</p>" : '' ?>
 
-    <p class="show_update_intro_link_to_join"><a href="<?php echo $info['joinpage'] ?>">If you want to join the
-            <?php echo $info['listingtype'] ?> please use this other form.</a></p>
+    <p class="show_update_intro_link_to_join"><a href="<?= $info['joinpage'] ?>">If you want to join the
+            <?= $info['listingtype'] ?> please use this other form.</a></p>
 
-    <!-- Enthusiast <?= RobotessNet\getVersion() ?> Update Form -->
-    <form method="post" action="<?php echo $info['updatepage'] ?>"
+    <!-- Enthusiast <?= RobotessNet\App::getVersion() ?> Update Form -->
+    <form method="post" action="<?= $info['updatepage'] ?>"
           class="show_update_form">
 
         <p class="show_update_old_email">
             <input type="hidden" name="enth_update" value="yes"/>
             <input type="hidden" name="enth_nonce"
-                   value="<?php echo $rand ?>:<?php echo strtotime(date('r')) ?>:<?php echo md5($rand) . substr($rand, 2, 3) ?>"/>
+                   value="<?= $rand ?>:<?= strtotime(date('r')) ?>:<?= md5($rand) . substr($rand, 2, 3) ?>"/>
             <span style="display: block;" class="show_update_old_email_label">
    * Old email address:</span>
             <input type="email" name="enth_email" class="show_update_old_email_field" required/>
@@ -307,7 +306,7 @@ if ($show_form) {
 
         <p class="show_update_current_password">
    <span style="display: block;" class="show_update_current_password_label">
-   * Current password: (<a href="<?php echo $info['lostpasspage'] ?>">Lost it?</a>)
+   * Current password: (<a href="<?= $info['lostpasspage'] ?>">Lost it?</a>)
    </span>
             <input type="password" name="enth_old_password"
                    class="show_update_current_password_field" autocomplete="off" required/>
@@ -328,11 +327,10 @@ if ($show_form) {
         <p class="show_update_password">
    <span style="display: block;" class="show_update_password_label">
    New password (type twice): </span>
-            <?php echo (isset($messages['password']))
+            <?= (isset($messages['password']))
                 ? "<p$errorstyle>{$messages['password']}</p>" : '' ?>
             <input type="password" name="enth_password" class="show_update_password_field"/>
-            <input type="password" name="enth_passwordv"
-                   class="show_update_password_field2"/>
+            <input type="password" name="enth_passwordv" class="show_update_password_field2"/>
         </p>
 
         <p class="show_update_email_settings">
@@ -398,16 +396,16 @@ if ($show_form) {
                     continue;
                 }
                 ?>
-                <p class="show_update_<?php echo $field ?>">
-         <span style="display: block;" class="show_update_<?php echo $field ?>_label">
-         New <?php echo ucwords(str_replace('_', ' ', $field)) ?>: </span>
-                    <input type="text" name="enth_<?php echo $field
-                    ?>" class="show_update_<?php echo $field ?>_field"/>
-                    <span style="display: block;" class="show_update_<?php echo $field
+                <p class="show_update_<?= $field ?>">
+         <span style="display: block;" class="show_update_<?= $field ?>_label">
+         New <?= ucwords(str_replace('_', ' ', $field)) ?>: </span>
+                    <input type="text" name="enth_<?= $field
+                    ?>" class="show_update_<?= $field ?>_field"/>
+                    <span style="display: block;" class="show_update_<?= $field
                     ?>_delete">
-         <input type="checkbox" name="enth_<?php echo $field ?>_delete" value="yes"
-                class="show_update_<?php echo $field ?>_delete_field"/>
-         Delete your <?php echo str_replace('_', ' ', $field) ?> record? </span>
+         <input type="checkbox" name="enth_<?= $field ?>_delete" value="yes"
+                class="show_update_<?= $field ?>_delete_field"/>
+         Delete your <?= str_replace('_', ' ', $field) ?> record? </span>
                 </p>
                 <?php
             }

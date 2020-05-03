@@ -26,7 +26,7 @@
 require_once('header.php');
 require_once('config.php');
 ?>
-    <h1>Enthusiast <?= RobotessNet\getVersion() ?> Category Installation</h1>
+    <h1>Enthusiast <?= RobotessNet\App::getVersion() ?> Category Installation</h1>
 <?php
 
 if (isset($_POST['install']) && $_POST['install'] == 'yes') {
@@ -40,7 +40,7 @@ if (isset($_POST['install']) && $_POST['install'] == 'yes') {
     }
 
     // create cats array
-    $cats = array();
+    $cats = [];
     $cats[] = 'Academia';
     $cats[] = 'Actors';
     $cats[] = 'Actresses';
@@ -126,12 +126,13 @@ if (isset($_POST['install']) && $_POST['install'] == 'yes') {
         $result = $db_link->prepare($query);
         $result->bindParam(':cat', $cat, PDO::PARAM_STR);
         $result->execute();
-        if ($result)
+        if ($result) {
             $installed++;
+        }
     }
     ?>
-    <p><?php echo $installed ?> categories installed successfully.</p>
-    <p><a href="index.php">You can now log into Enthusiast <?= RobotessNet\getVersion() ?>.</a></p>
+    <p><?= $installed ?> categories installed successfully.</p>
+    <p><a href="index.php">You can now log into Enthusiast <?= RobotessNet\App::getVersion() ?>.</a></p>
     <?php
 } else {
     ?>
@@ -139,7 +140,7 @@ if (isset($_POST['install']) && $_POST['install'] == 'yes') {
         This page will install the current categories of
         <a href="http://thefanlistings.org">The Fanlistings Network</a> (and
         optionally the <a href="http://animefanlistings.org">The Anime Fanlistings
-            Network</a> categories as well) to your Enthusiast <?= RobotessNet\getVersion() ?> installation. <b>If
+            Network</a> categories as well) to your Enthusiast <?= RobotessNet\App::getVersion() ?> installation. <b>If
             you have not yet successfully run the <code>install.php</code> file, <a
                     href="install.php">please do that first</a></b>!
     </p>
