@@ -285,7 +285,7 @@ if ((!isset($hide_dropdown) || $hide_dropdown == false) &&
         'back?</a></p>';
 }
 
-// show link back to Indiscripts
+// do not remove the credit link please
 ?>
 <p class="show_owned_credits">
     <?php include ENTH_PATH . 'show_credits.php' ?>

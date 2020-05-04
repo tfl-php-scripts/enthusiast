@@ -36,6 +36,14 @@ final class App
      */
     public static function getVersion(): string
     {
-        return '[Robotess Fork] v. 1.0.3';
+        return '[Robotess Fork] v. 1.0.3+';
+    }
+
+    /**
+     * @return string
+     */
+    public static function getLink(): string
+    {
+        return '<a href="https://scripts.robotess.net" target="_blank" title="PHP Scripts: Enthusiast, Siteskin, Codesort, FanUpdate, Listing Admin - ported to PHP 7">Enthusiast ' . self::getVersion() . '</a>';
     }
 }
