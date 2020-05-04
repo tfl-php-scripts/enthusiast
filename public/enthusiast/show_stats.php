@@ -22,6 +22,9 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+
+use RobotessNet\App;
+
 require 'config.php';
 
 require_once('mod_errorlogs.php');
@@ -77,6 +80,7 @@ $cats = rtrim($cats, ', ');
 
 // customize template
 $template = $info['statstemplate'];
+$template = str_replace('Script used: <a href="http://scripts.indisguise.org">Enthusiast</a><br />', 'Script used: ' . App::getLink() . '<br />', $template);
 $template = str_replace('$$stat_opened$$', $stats['opened'], $template);
 $template = str_replace('$$stat_updated$$', $stats['lastupdated'], $template);
 $template = str_replace('$$stat_approved$$', $stats['total'], $template);

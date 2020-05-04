@@ -161,6 +161,7 @@ if ($show_form) {
 
     </form>
 
+    <!--// do not remove the credit link please-->
     <p style="text-align: center;" class="show_lostpass_credits">
         <?php include ENTH_PATH . 'show_credits.php' ?>
     </p>

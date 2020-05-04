@@ -79,8 +79,7 @@ require_once ('Robotess/Autoloader.php');
     Enthusiast 3 copyright &copy; 2004 - <?= date('Y') ?> by Angela Sabas.<br/>
     <a href="http://indisguise.org/" target="_blank">Indisguise</a> |
     <a href="http://scripts.indisguise.org/" target="_blank">Indiscripts</a>
-    <br/><br/><a href="https://scripts.robotess.net" target="_blank"
-                 title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">Enthusiast <?= RobotessNet\App::getVersion() ?> for PHP 7</a>
+    <br/><br/><?= RobotessNet\App::getLink() ?>
     - support since 2019 by <a href="https://robotess.net" target="_blank" title="PHP Developer">Ekaterina</a>
 </div>
 

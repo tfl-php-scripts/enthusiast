@@ -28,7 +28,7 @@ class CheckUICest
     {
         $I->amOnPage('/enthusiast/dashboard.php');
         $I->amOnPage('/enthusiast/index.php');
-        $I->see('Welcome to the Enthusiast [Robotess Fork] v. 1.0.3 admin panel for My Collective!', 'h1');
+        $I->see('Welcome to the Enthusiast [Robotess Fork] v. 1.0.3+ admin panel for My Collective!', 'h1');
     }
 
     public function seeCorrectOpenedDateInStatsWidget(AcceptanceTester $I): void

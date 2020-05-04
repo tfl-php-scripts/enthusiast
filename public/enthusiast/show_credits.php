@@ -21,8 +21,8 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+
+use RobotessNet\App;
+
 ?>
-Powered by <a href="https://scripts.robotess.net" target="_blank"
-              title="PHP Scripts: Enthusiast, Siteskin, Codesort - ported to PHP 7">
-    Enthusiast <?= RobotessNet\App::getVersion() ?></a>
-(original author: <a href="http://scripts.indisguise.org" target="_blank">Angela Sabas</a>)
+Powered by <?= App::getLink() ?> (original author: <a href="http://scripts.indisguise.org" target="_blank">Angela Sabas</a>)

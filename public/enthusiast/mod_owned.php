@@ -2116,9 +2116,9 @@ function get_listing_stats($id, $extended = false)
     $row = $result->fetch();
     $stats['lastupdated'] = $row['added'];
 
-    // get most recent members
+    // get most recent members - make sure it is only approved members
     $query = "SELECT * FROM `$table` WHERE `added` = '" .
-        $stats['lastupdated'] . '\'';
+        $stats['lastupdated'] . '\' AND `pending` = 0';
     $result = $db_link_list->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
