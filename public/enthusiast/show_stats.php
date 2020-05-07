@@ -80,7 +80,7 @@ $cats = rtrim($cats, ', ');
 
 // customize template
 $template = $info['statstemplate'];
-$template = str_replace('Script used: <a href="http://scripts.indisguise.org">Enthusiast</a><br />', 'Script used: ' . App::getLink() . '<br />', $template);
+$template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\2>)?:?\s*)<a href="http://scripts\.indisguise\.org/?"(?: target="_blank")?>Enthusiast</a>\s*(</blockquote>|<br\s?/?>|</ul>|</li>)@mi', '$1' . App::getLink() . '$4', $template);
 $template = str_replace('$$stat_opened$$', $stats['opened'], $template);
 $template = str_replace('$$stat_updated$$', $stats['lastupdated'], $template);
 $template = str_replace('$$stat_approved$$', $stats['total'], $template);
@@ -89,6 +89,7 @@ $template = str_replace('$$stat_newmembers$$', $stats['new_members'], $template)
 $template = str_replace('$$stat_new_members$$', $stats['new_members'], $template);
 $template = str_replace('$$stat_average$$', $stats['average'], $template);
 $template = str_replace('$$stat_countries$$', $stats['countries'], $template);
+
 $template = str_replace('$$stat_categories$$', $cats, $template);
 $template = str_replace('$$stat_random_member$$', $stats['randommember'], $template);
 $template = str_replace('$$stat_random_member_url$$', $stats['randommember_url'], $template);
