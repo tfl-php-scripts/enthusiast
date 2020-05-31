@@ -449,7 +449,6 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
                 } else if ($value === 'hide') {
                     $value = '0';
                 } else {
-                    $query = '';
                     continue 2;
                 }
                 $query .= "'$value' WHERE LOWER(TRIM(`email`)) = LOWER(TRIM('$email'))";

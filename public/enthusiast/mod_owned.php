@@ -842,6 +842,9 @@ function show_edit_forms()
                         Statistics
                     </td>
                     <td>
+                        Please note, if there's a link to scripts.indisguise.org present in the template, it will be replaced with 2 links - to scripts.robotess.net and to scripts.indisguise.org; <br/>if there's a link to my old website workshop.katenkka.ru - it will be replaced with a link to scripts.robotess.net
+                        <br/>
+                        <br/>
                         <textarea name="statstemplate" rows="10"
                                   cols="60"><?= $info['statstemplate'] ?></textarea>
                     </td>

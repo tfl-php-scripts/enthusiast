@@ -80,7 +80,8 @@ $cats = rtrim($cats, ', ');
 
 // customize template
 $template = $info['statstemplate'];
-$template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\2>)?:?\s*)<a href="(?:http://scripts\.indisguise\.org|https?://workshop\.katenkka\.ru)/?"(?:\s+target="_blank")?>Enthusiast</a>\s*(</blockquote>|<br\s?/?>|</ul>|</li>)@mi', '$1' . App::getLink() . '$4', $template);
+$template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\2>)?:?\s*)<a href="http://scripts\.indisguise\.org/?"(?:\s+target="_blank")?>Enthusiast</a>\s*(</blockquote>|<br\s?/?>|</ul>|</li>|</div>|</p>)@mi', '$1' . App::getLinkWithOriginal() . '$4', $template);
+$template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\2>)?:?\s*)<a href="https?://workshop\.katenkka\.ru/?"(?:\s+target="_blank")?>Enthusiast</a>\s*(</blockquote>|<br\s?/?>|</ul>|</li>|</div>|</p>)@mi', '$1' . App::getLink() . '$4', $template);
 $template = str_replace('$$stat_opened$$', $stats['opened'], $template);
 $template = str_replace('$$stat_updated$$', $stats['lastupdated'], $template);
 $template = str_replace('$$stat_approved$$', $stats['total'], $template);

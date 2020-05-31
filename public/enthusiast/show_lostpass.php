@@ -49,28 +49,10 @@ $errorstyle = ' style="font-weight: bold; display: block;" ' .
 if (isset($_POST['enth_email']) && $_POST['enth_email'] != '') {
     // do some spam/bot checking first
     $goahead = false;
-    $badStrings = ['Content-Type:',
-        'MIME-Version:',
-        'Content-Transfer-Encoding:',
-        'bcc:',
-        'cc:',
-        'content-type',
-        'onload',
-        'onclick',
-        'javascript'];
     // 1. check that user is submitting from browser
     // 2. check the POST was indeed used
-    // 3. no bad strings in any of the form fields
     if (isset($_SERVER['HTTP_USER_AGENT']) &&
-        $_SERVER['REQUEST_METHOD'] == 'POST') {
-        foreach ($_POST as $k => $v) {
-            foreach ($badStrings as $v2) {
-                if (strpos($v, $v2) !== false) {
-                    echo "<p$errorstyle>Bad strings found in form.</p>";
-                    return;
-                }
-            }
-        }
+        $_SERVER['REQUEST_METHOD'] === 'POST') {
         $goahead = true;
     }
 
@@ -82,8 +64,6 @@ if (isset($_POST['enth_email']) && $_POST['enth_email'] != '') {
     $cleanNormalizedEmail = StringUtils::instance()->cleanNormalize($_POST['enth_email']);
 
     $email = '';
-    $matchstring = '/^([0-9a-zA-Z]+[-._+&])*[0-9a-zA-Z]+' .
-        '@([-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6}$/';
     if (!StringUtils::instance()->isEmailValid($cleanNormalizedEmail) ||
         !ctype_graph($cleanNormalizedEmail)) {
         ?>

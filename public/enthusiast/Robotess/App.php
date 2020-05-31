@@ -36,7 +36,15 @@ final class App
      */
     public static function getVersion(): string
     {
-        return '[Robotess Fork] v. 1.0.3+';
+        return '[Robotess Fork] v. 1.0.4';
+    }
+
+    /**
+     * @return string
+     */
+    public static function getLinkWithOriginal(): string
+    {
+        return self::getLink().' (<a href="http://scripts.indisguise.org" target="_blank">original version</a>)';
     }
 
     /**
