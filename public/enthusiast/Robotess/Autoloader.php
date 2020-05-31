@@ -30,11 +30,6 @@ use const DIRECTORY_SEPARATOR;
 
 spl_autoload_register([new Autoloader(), 'autoload']);
 
-if (!class_exists(App::class))
-{
-	trigger_error('Robotess Autoloader not registered properly', E_USER_ERROR);
-}
-
 /**
  * Class Autoloader
  * @package Robotess

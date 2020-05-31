@@ -211,11 +211,42 @@ if ($action === 'edit') {
                         <input type="text" name="email_new" value="<?= $member['email'] ?>"/>
                     </td>
                 </tr>
+
+                <tr>
+                    <td>
+                        Show/Hide Email
+                    </td>
+                    <td style="text-align: left;">
+                        <?php
+                        if ($member['showemail'] == 1) {
+                            ?>
+                            <input type="radio" name="showemail" value="leave" checked="checked"/>
+                            Leave as is (Show)<br/>
+                            <input type="radio" name="showemail" value="hide"/> Hide<br/>
+                            <?php
+                        } else if ($member['showemail'] == 0) {
+                            ?>
+                            <input type="radio" name="showemail" value="leave" checked="checked"/>
+                            Leave as is (Hide)<br/>
+                            <input type="radio" name="showemail" value="show"/> Show<br/>
+                            <?php
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <?php
+                // toggle $shade after show/hide
+                if ($shade) {
+                    $shade = false;
+                } else {
+                    $shade = true;
+                }
+                ?>
+
                 <?php
                 if ($info['country'] == 1) {
-                    $shade = true;
                     ?>
-                    <tr>
+                    <tr <?= ($shade) ? 'class="rowshade"' : '' ?>>
                         <td>
                             Country
                         </td>
@@ -232,6 +263,13 @@ if ($action === 'edit') {
                         </td>
                     </tr>
                     <?php
+                }
+
+                // toggle $shade after country
+                if ($shade) {
+                    $shade = false;
+                } else {
+                    $shade = true;
                 }
                 ?>
                 <tr <?= ($shade) ? 'class="rowshade"' : '' ?>>

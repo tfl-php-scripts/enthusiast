@@ -284,6 +284,8 @@ function printUpdates()
         }
 
         /** @var DOMElement $node */
+        $current = 1;
+        $maxItems = 3;
         foreach ($domChannel->item(0)->getElementsByTagName('item') as $node) {
             $title = $node->getElementsByTagName('title')->item(0)->nodeValue;
             $link = $node->getElementsByTagName('link')->item(0)->nodeValue;
@@ -303,6 +305,10 @@ function printUpdates()
                 <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$min} &bull; <a href="{$link}" target="_blank">permalink</a></small></h2>
                 <blockquote>{$description}</blockquote>
 MARKUP;
+
+            if($current++ >= $maxItems) {
+                break;
+            }
         }
 
         // try caching this now

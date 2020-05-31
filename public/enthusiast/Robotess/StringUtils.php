@@ -91,33 +91,11 @@ final class StringUtils
     }
 
     /**
-     * @param string|null $data
-     * @return string
-     */
-    public function normalize(?string $data): string
-    {
-        if ($data === null) {
-            return '';
-        }
-
-        return strtolower($data);
-    }
-
-    /**
      * @param string $email
      * @return bool
      */
     public function isEmailValid(string $email): bool
     {
         return (bool)preg_match("/^([A-Za-z0-9-_.+]+)@(([A-Za-z0-9-_]+\.)+)([a-zA-Z]{2,})$/i", $email);
-    }
-
-    /**
-     * @param string $url
-     * @return bool
-     */
-    public function isUrlValid(string $url): bool
-    {
-        return (bool)preg_match('@^(https?://)([A-Za-z0-9-_./?]+)\.([A-Za-z.]{2,})/?$@i', $url);
     }
 }

@@ -55,28 +55,10 @@ final class Handler
     {
         // do some spam/bot checking first
         $goahead = false;
-        $badStrings = ['Content-Type:',
-            'MIME-Version:',
-            'Content-Transfer-Encoding:',
-            'bcc:',
-            'cc:',
-            'content-type',
-            'onload',
-            'onclick',
-            'javascript'];
         // 1. check that user is submitting from browser
         // 2. check the POST was indeed used
-        // 3. no bad strings in any of the form fields
         if (isset($_SERVER['HTTP_USER_AGENT']) &&
             $_SERVER['REQUEST_METHOD'] === 'POST') {
-            foreach ($postData as $k => $v) {
-                foreach ($badStrings as $v2) {
-                    if (strpos($v, $v2) !== false) {
-                        echo "<p$errorstyle>Bad strings found in form.</p>";
-                        return false;
-                    }
-                }
-            }
             $goahead = true;
         }
 
