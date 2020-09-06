@@ -25,6 +25,8 @@
  *****************************************************************************
  */
 
+use RobotessNet\EnthusiastErrorHandler;
+
 /**
  * @param string $status
  * @param string $start
@@ -106,8 +108,7 @@ function get_listing_info($id = '', $table = '')
         $query = "SELECT * FROM `$db_owned` WHERE `dbtable` = '$table'";
     }
 
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -117,7 +118,8 @@ function get_listing_info($id = '', $table = '')
 
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    if (count($row) === 0 || !$row) {
+    if (!$row || count($row) === 0) {
+        EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)->logError(__FILE__ . ':' . __LINE__, 'There is no information about listing = '.$id.' in the database. Are you sure this is correct ID?');
         return [];
     }
 

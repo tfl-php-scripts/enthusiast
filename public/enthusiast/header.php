@@ -45,7 +45,7 @@ require_once('Robotess/Autoloader.php');
         $db_errorlog
     ) {
         return EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)
-                                     ->logError($errfile, $errstr, false);
+                                     ->logError($errfile . ':' . $errline, $errstr, false);
     }, E_ALL);
 }
 

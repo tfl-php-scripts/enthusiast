@@ -42,8 +42,7 @@ function get_affiliates($listing = 'none', $start = 'none')
     }
 
     $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = 'per_page'";
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -97,8 +96,7 @@ function get_affiliates($listing = 'none', $start = 'none')
     }
     $query .= $limit_query;
 
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -168,9 +166,9 @@ function add_affiliate($url, $title, $email, $listing = 'collective')
     }
 
     $result = $db_link->prepare($query);
-    $result->bindParam(':url', $url, PDO::PARAM_STR);
-    $result->bindParam(':title', $title, PDO::PARAM_STR);
-    $result->bindParam(':email', $email, PDO::PARAM_STR);
+    $result->bindParam(':url', $url);
+    $result->bindParam(':title', $title);
+    $result->bindParam(':email', $email);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
@@ -202,7 +200,6 @@ function edit_affiliate($id, $listing = '', $image = '', $url = '',
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
 
-    $query = '';
     if ($listing == '' || $listing == 'collective') {
         $query = "UPDATE `$db_affiliates` SET ";
         if ($url) {
@@ -433,8 +430,7 @@ function parse_affiliate_add_email($id, $listing = '')
 
     // get template
     $query = "SELECT * FROM `$db_emailtemplate` WHERE `templateid` = 1";
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -444,7 +440,6 @@ function parse_affiliate_add_email($id, $listing = '')
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $template = $result->fetch();
 
-    $info = [];
     $title = '';
     $url = '';
     $email = '';
