@@ -30,8 +30,7 @@ if (!isset($logged_in) || !$logged_in) {
     $next = '';
     if (isset($_SERVER['REQUEST_URI'])) {
         $next = $_SERVER['REQUEST_URI'];
-    }
-    else if (isset($_SERVER['PATH_INFO'])) {
+    } elseif (isset($_SERVER['PATH_INFO'])) {
         $next = $_SERVER['PATH_INFO'];
     }
     $_SESSION['next'] = $next;
@@ -66,7 +65,7 @@ require_once('mod_errorlogs.php');
 $today = date('F j, Y (l)');
 if (date('a') === 'am') {
     $greeting = 'Good morning';
-} else if (date('G') <= 18) {
+} elseif (date('G') <= 18) {
     $greeting = 'Good afternoon';
 } else {
     $greeting = 'Good evening';
@@ -185,7 +184,7 @@ foreach ($owned as $id) {
     $weeks = 0;
     if ($stats['lastupdated'] && date('Y') != date('Y', strtotime($stats['lastupdated']))) {
         $weeks = (52 - date('W', strtotime($stats['lastupdated']))) + date('W');
-    } else if ($stats['lastupdated']) {
+    } elseif ($stats['lastupdated']) {
         $weeks = date('W') - date('W', strtotime($stats['lastupdated']));
     }
 
@@ -206,8 +205,7 @@ foreach ($owned as $id) {
         echo '<li> ';
         if ($info['title']) {
             echo $info['title'];
-        }
-        else {
+        } else {
             echo $info['subject'];
         }
         echo ", last updated $readable;<br />manage ";
@@ -225,25 +223,9 @@ echo '</ul>';
 
 echo '<h1>Enthusiast Updates</h1>';
 
-
-/**
- * @param $cacheFileName
- * @return string
- */
-function tryReadingFeedFromCache($cacheFileName)
+function tryReadingFeedFromCache(string $cacheFileName): string
 {
-    if (!file_exists($cacheFileName)) {
-        log_error('dashboard.php', 'Was not able to open file ' . __DIR__ . DIRECTORY_SEPARATOR . $cacheFileName . ' for cache, please make sure that the file exists and has CHMOD 777', false);
-        return 'File with cache does not exist, please see error log';
-    }
-
-    $result = file_get_contents($cacheFileName);
-    if (!$result) {
-        log_error('dashboard.php', 'Was not able to open file ' . __DIR__ . DIRECTORY_SEPARATOR . $cacheFileName . ' for cache, please make sure that the file exists and has CHMOD 777', false);
-        return 'Was not able to open file for cache, please see error log';
-    }
-
-    return $result;
+    return file_get_contents($cacheFileName);
 }
 
 /**
@@ -252,16 +234,12 @@ function tryReadingFeedFromCache($cacheFileName)
  */
 function tryWritingToCache($cacheFileName, $posts)
 {
-    try {
-        $cacheFile = fopen($cacheFileName, 'wb');
-        if ($cacheFile === false) {
-            throw new RuntimeException('Was not able to open file ' . __DIR__ . DIRECTORY_SEPARATOR . $cacheFileName . ' for cache, please make sure that the file exists and has CHMOD 777');
-        }
-        fwrite($cacheFile, $posts);
-        fclose($cacheFile);
-    } catch (Exception $e) {
-        log_error('dashboard.php', $e->getMessage(), false);
+    $cacheFile = fopen($cacheFileName, 'wb');
+    if ($cacheFile === false) {
+        return;
     }
+    fwrite($cacheFile, $posts);
+    fclose($cacheFile);
 }
 
 function printUpdates()
@@ -270,54 +248,55 @@ function printUpdates()
     $cachefilename = 'cache/updates';
     $posts = '';
 
-    try {
-        $doc = new DOMDocument();
-        $success = @$doc->load($updatesFeedUrl);
-        if (!$success) {
-            throw new Exception('Was not able to retrieve updates from remote server');
-        }
+    $doc = new DOMDocument();
+    $success = $doc->load($updatesFeedUrl, LIBXML_ERR_ERROR);
+    if (!$success) {
+        echo tryReadingFeedFromCache($cachefilename);
 
-        $domChannel = $doc->getElementsByTagName('channel');
-        if (count($domChannel) !== 1) {
-            // nothing here..
-            return;
-        }
+        return;
+    }
 
-        /** @var DOMElement $node */
-        $current = 1;
-        $maxItems = 3;
-        foreach ($domChannel->item(0)->getElementsByTagName('item') as $node) {
-            $title = $node->getElementsByTagName('title')->item(0)->nodeValue;
-            $link = $node->getElementsByTagName('link')->item(0)->nodeValue;
-            $pubdate = $node->getElementsByTagName('pubDate')->item(0)->nodeValue;
-            $description = $node->getElementsByTagName('description')->item(0)->nodeValue;
+    $domChannel = $doc->getElementsByTagName('channel');
+    if (count($domChannel) !== 1) {
+        // nothing here..
+        return;
+    }
 
-            $timestamp = strtotime($pubdate);
-            $daylong = date('l', $timestamp);
-            $monlong = date('F', $timestamp);
-            $yyyy = date('Y', $timestamp);
-            $dth = date('jS', $timestamp);
-            $min = date('i', $timestamp);
-            $_24hh = date('H', $timestamp);
+    /** @var DOMElement $node */
+    $current = 1;
+    $maxItems = 3;
+    foreach ($domChannel->item(0)
+                        ->getElementsByTagName('item') as $node) {
+        $title = $node->getElementsByTagName('title')
+                      ->item(0)->nodeValue;
+        $link = $node->getElementsByTagName('link')
+                     ->item(0)->nodeValue;
+        $pubdate = $node->getElementsByTagName('pubDate')
+                        ->item(0)->nodeValue;
+        $description = $node->getElementsByTagName('description')
+                            ->item(0)->nodeValue;
 
-            $posts .= <<<MARKUP
+        $timestamp = strtotime($pubdate);
+        $daylong = date('l', $timestamp);
+        $monlong = date('F', $timestamp);
+        $yyyy = date('Y', $timestamp);
+        $dth = date('jS', $timestamp);
+        $min = date('i', $timestamp);
+        $_24hh = date('H', $timestamp);
+
+        $posts .= <<<MARKUP
                 <h2>{$title}<br />
                 <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$min} &bull; <a href="{$link}" target="_blank">permalink</a></small></h2>
                 <blockquote>{$description}</blockquote>
 MARKUP;
 
-            if($current++ >= $maxItems) {
-                break;
-            }
+        if ($current++ >= $maxItems) {
+            break;
         }
-
-        // try caching this now
-        tryWritingToCache($cachefilename, $posts);
-
-    } catch (Exception $e) {
-        log_error('dashboard.php', $e->getMessage(), false);
-        $posts = tryReadingFeedFromCache($cachefilename);
     }
+
+    // try caching this now
+    tryWritingToCache($cachefilename, $posts);
 
     echo $posts;
 }
