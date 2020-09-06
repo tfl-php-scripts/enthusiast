@@ -34,6 +34,12 @@ namespace RobotessNet\DeleteYourself {
     require_once('mod_members.php');
     require_once('mod_settings.php');
 
+    if (!isset($listing)) {
+        echo '!! You haven\'t set $listing variable in config.php. Please set it first - the instruction is at the end of the file.<br/>';
+
+        return;
+    }
+
     $info = get_listing_info($listing);
     $errorstyle = ' style="font-weight: bold; display: block;" ' .
         'class="show_update_error"';

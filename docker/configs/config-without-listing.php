@@ -56,16 +56,8 @@ try {
 } catch (PDOException $e) {
     die(DATABASE_CONNECT_ERROR . $e->getMessage());
 }
-$result = $db_link->prepare($query);
-$result->execute();
+$result = $db_link->query($query);
 if (!$result) {
-    if (function_exists('log_error')) {
-        log_error('config.php',
-            'Error executing query: <i>' . $result->errorInfo()[2] .
-            '</i>; Query is: <code>' . $query . '</code>');
-        die(STANDARD_ERROR);
-    }
-
     die('Error executing query: <i>' . $result->errorInfo()[2] .
         '</i>; Query is: <code>' . $query . '</code>');
 }

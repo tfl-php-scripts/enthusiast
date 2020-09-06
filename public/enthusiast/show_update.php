@@ -36,6 +36,12 @@ require_once('mod_emails.php');
 $install_path = get_setting('installation_path');
 require_once($install_path . 'Mail.php');
 
+if (!isset($listing)) {
+    echo '!! You haven\'t set $listing variable in config.php. Please set it first - the instruction is at the end of the file.<br/>';
+
+    return;
+}
+
 // get listing info
 $info = get_listing_info($listing);
 

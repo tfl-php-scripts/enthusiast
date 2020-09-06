@@ -29,6 +29,12 @@ require_once('mod_affiliates.php');
 require_once('mod_owned.php');
 require_once('mod_settings.php');
 
+if (!isset($listing)) {
+    echo '!! You haven\'t set $listing variable in config.php. Please set it first - the instruction is at the end of the file.<br/>';
+
+    return;
+}
+
 // make sure fanlisting is set to have affiliates
 $info = get_listing_info($listing);
 if ($info['affiliates'] == 0) {

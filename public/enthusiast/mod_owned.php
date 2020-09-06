@@ -938,8 +938,7 @@ function edit_owned($id, $fields)
 
                     // rename physically
                     $query = "ALTER TABLE `$table` RENAME `$value`";
-                    $result = $db_link_list->prepare($query);
-                    $result->execute();
+                    $result = $db_link_list->query($query);
                     if (!$result) {
                         log_error(__FILE__ . ':' . __LINE__,
                             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -952,7 +951,7 @@ function edit_owned($id, $fields)
                     $query = "UPDATE `$db_owned` SET `dbtable` = :value WHERE " .
                         "`listingid` = :id";
                     $result = $db_link->prepare($query);
-                    $result->bindParam(':value', $value, PDO::PARAM_STR);
+                    $result->bindParam(':value', $value);
                     $result->bindParam(':id', $id, PDO::PARAM_INT);
                     $result->execute();
                     if (!$result) {
@@ -980,8 +979,7 @@ function edit_owned($id, $fields)
                 if ($value == 'disable') {
                     // alter table
                     $query = "ALTER TABLE `$table` DROP `country`";
-                    $result = $db_link_list->prepare($query);
-                    $result->execute();
+                    $result = $db_link_list->query($query);
                     if (!$result) {
                         log_error(__FILE__ . ':' . __LINE__,
                             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1359,8 +1357,7 @@ function edit_owned($id, $fields)
                     // get absolute path
                     $query = "SELECT `value` FROM `$db_settings` WHERE " .
                         '`setting` = "owned_images_dir"';
-                    $result = $db_link->prepare($query);
-                    $result->execute();
+                    $result = $db_link->query($query);
                     if (!$result) {
                         log_error(__FILE__ . ':' . __LINE__,
                             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1521,7 +1518,7 @@ function edit_owned($id, $fields)
                 $query = "UPDATE `$db_owned` SET `catid` = :cats " .
                     "WHERE `listingid` = :id";
                 $result = $db_link->prepare($query);
-                $result->bindParam(':cats', $cats, PDO::PARAM_STR);
+                $result->bindParam(':cats', $cats);
                 $result->bindParam(':id', $id, PDO::PARAM_INT);
                 $result->execute();
                 if (!$result) {
@@ -1688,8 +1685,7 @@ function delete_owned($id)
     //get $dir setting
     $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = " .
         "'owned_images_dir'";
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1723,8 +1719,7 @@ function delete_owned($id)
     // drop affiliates table
     $afftable = $table . '_affiliates';
     $query = "DROP TABLE IF EXISTS `$afftable`";
-    $result = $db_link_list->prepare($query);
-    $result->execute();
+    $result = $db_link_list->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1734,8 +1729,7 @@ function delete_owned($id)
 
     // drop actual table
     $query = "DROP TABLE `$table`";
-    $result = $db_link_list->prepare($query);
-    $result->execute();
+    $result = $db_link_list->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1745,7 +1739,7 @@ function delete_owned($id)
 
     // unlink image if present
     if ($dir . $image) {
-        @unlink($dir . $file);
+        unlink($dir . $file);
     }
 
     return true;

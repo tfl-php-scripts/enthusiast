@@ -33,6 +33,12 @@ require_once('mod_categories.php');
 require_once('mod_members.php');
 require_once('mod_settings.php');
 
+if (!isset($listing)) {
+    echo '!! You haven\'t set $listing variable in config.php. Please set it first - the instruction is at the end of the file.<br/>';
+
+    return;
+}
+
 $info = get_listing_info($listing);
 $stats = get_listing_stats($listing, true);
 
@@ -80,8 +86,10 @@ $cats = rtrim($cats, ', ');
 
 // customize template
 $template = $info['statstemplate'];
-$template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\2>)?:?\s*)<a href="http://scripts\.indisguise\.org/?"(?:\s+target="_blank")?>Enthusiast</a>\s*(</blockquote>|<br\s?/?>|</ul>|</li>|</div>|</p>)@mi', '$1' . App::getLinkWithOriginal() . '$4', $template);
-$template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\2>)?:?\s*)<a href="https?://workshop\.katenkka\.ru/?"(?:\s+target="_blank")?>Enthusiast</a>\s*(</blockquote>|<br\s?/?>|</ul>|</li>|</div>|</p>)@mi', '$1' . App::getLink() . '$4', $template);
+$template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\2>)?:?\s*)<a href="http://scripts\.indisguise\.org/?"(?:\s+target="_blank")?>Enthusiast</a>\s*(</blockquote>|<br\s?/?>|</ul>|</li>|</div>|</p>)@mi',
+    '$1' . App::getLinkWithOriginal() . '$4', $template);
+$template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\2>)?:?\s*)<a href="https?://workshop\.katenkka\.ru/?"(?:\s+target="_blank")?>Enthusiast</a>\s*(</blockquote>|<br\s?/?>|</ul>|</li>|</div>|</p>)@mi',
+    '$1' . App::getLink() . '$4', $template);
 $template = str_replace('$$stat_opened$$', $stats['opened'], $template);
 $template = str_replace('$$stat_updated$$', $stats['lastupdated'], $template);
 $template = str_replace('$$stat_approved$$', $stats['total'], $template);

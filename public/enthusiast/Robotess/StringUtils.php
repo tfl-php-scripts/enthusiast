@@ -27,22 +27,7 @@ namespace RobotessNet;
 
 final class StringUtils
 {
-    /**
-     * @var self
-     */
-    private static $instance;
-
-    private function __construct()
-    { /***/ }
-
-    public static function instance(): self
-    {
-        if (empty(self::$instance)) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
+    use Singleton;
 
     public function clean(string $data, bool $leaveHtml = false): string
     {
