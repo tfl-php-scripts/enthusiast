@@ -102,7 +102,7 @@ foreach ($_COOKIE as $index => $value) {
           content="Angela Maria Protacia M. Sabas, Lysianthus <she@lysianth.us>, Ekaterina [http://robotess.net]"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <link rel="stylesheet" type="text/css" href="style.css?v=2"/>
     <script src="js.js" type="text/javascript"></script>
 </head>
 <body>
