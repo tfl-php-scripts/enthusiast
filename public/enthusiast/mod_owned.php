@@ -1073,7 +1073,7 @@ function edit_owned($id, $fields)
                 if ($value == 'disable') {
                     // drop aff table
                     $afftable = $table . '_affiliates';
-                    $query = "DROP TABLE `$afftable`";
+                    $query = "DROP TABLE IF EXISTS `$afftable`";
                     $result = $db_link_list->prepare($query);
                     $result->execute();
                     if (!$result) {
@@ -1114,7 +1114,7 @@ function edit_owned($id, $fields)
                 } else if ($value == 'enable') {
                     // add table
                     $afftable = $table . '_affiliates';
-                    $query = "CREATE TABLE `$afftable` (" .
+                    $query = "CREATE TABLE IF NOT EXISTS `$afftable` (" .
                         "`affiliateid` int(5) NOT NULL auto_increment, " .
                         "`url` varchar(255) NOT NULL default '', " .
                         "`title` varchar(255) NOT NULL default '', " .
@@ -1214,7 +1214,9 @@ function edit_owned($id, $fields)
                         if ($row['Field'] == 'url') {
                             $start = true;
                             continue;
-                        } else if ($row['Field'] == 'pending') {
+                        }
+
+                        if ($row['Field'] == 'pending') {
                             $start = false;
                             break;
                         }
@@ -1230,7 +1232,9 @@ function edit_owned($id, $fields)
                             $new == $current[$index]) { // same, continue
                             $prev = $new;
                             continue;
-                        } else if ($new == '' && $index == (count($value) - 1)) {
+                        }
+
+                        if ($new == '' && $index == (count($value) - 1)) {
                             break;
                         } else if ($new == '') {
                             // delete the field
