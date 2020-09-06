@@ -36,11 +36,13 @@ $db_errorlog = 'errorlog';
 
 
 /******************************************************************************
-DO NOT MODIFY BELOW THIS LINE!
+ * DO NOT MODIFY BELOW THIS LINE!
  ******************************************************************************/
-if( !defined( 'DATABASE_CONNECT_ERROR' ) )
-    define( 'DATABASE_CONNECT_ERROR', 'Cannot connect to the database. ' .
-        'Check your config file and try again. MySQL said: ' );
-if( !defined( 'STANDARD_ERROR' ) )
-    define( 'STANDARD_ERROR', '<p class="error">Error executing query. ' .
-        'Please see the error logs.' );
+if (!defined('DATABASE_CONNECT_ERROR')) {
+    define('DATABASE_CONNECT_ERROR', 'Cannot connect to the database. ' .
+        'Check your config file and try again. MySQL said: ');
+}
+if (!defined('STANDARD_ERROR')) {
+    define('STANDARD_ERROR', '<p class="error">Error executing query. ' .
+        'Please see the error logs.');
+}

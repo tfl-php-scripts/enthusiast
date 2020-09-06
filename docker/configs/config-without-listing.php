@@ -50,7 +50,8 @@ if (!defined('STANDARD_ERROR')) {
 $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = " .
     '"installation_path"';
 try {
-    $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+    $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+        $db_password);
     $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -63,10 +64,10 @@ if (!$result) {
             'Error executing query: <i>' . $result->errorInfo()[2] .
             '</i>; Query is: <code>' . $query . '</code>');
         die(STANDARD_ERROR);
-    } else {
-        die('Error executing query: <i>' . $result->errorInfo()[2] .
-            '</i>; Query is: <code>' . $query . '</code>');
     }
+
+    die('Error executing query: <i>' . $result->errorInfo()[2] .
+        '</i>; Query is: <code>' . $query . '</code>');
 }
 $result->setFetchMode(PDO::FETCH_ASSOC);
 $row = $result->fetch();
