@@ -1,4 +1,7 @@
 <?php
+
+use RobotessNet\StringUtils;
+
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
@@ -455,13 +458,20 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
                 break;
 
             case 'name' :
-            case 'email_new' :
             case 'country' :
+                $col = $field;
+                $value = StringUtils::instance()->clean($value);
+                $query = "UPDATE `$table` SET `$col` = '$value' " .
+                    "WHERE LOWER(TRIM(`email`)) = LOWER(TRIM('$email'))";
+                break;
+
+            case 'email_new' :
             case 'url' :
                 $col = $field;
                 if ($field === 'email_new') {
                     $col = 'email';
                 }
+                $value = StringUtils::instance()->cleanNormalize($value);
                 $query = "UPDATE `$table` SET `$col` = '$value' " .
                     "WHERE LOWER(TRIM(`email`)) = LOWER(TRIM('$email'))";
                 if ($field === 'email_new') {
@@ -590,7 +600,7 @@ function search_members($search, $listing = '', $status = 'all',
     }
 
     $result = $db_link->prepare($query);
-    $result->bindParam(':search', $search);
+    $result->bindParam(':search', $search, PDO::PARAM_STR);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
