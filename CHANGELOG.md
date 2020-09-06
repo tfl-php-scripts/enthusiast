@@ -1,5 +1,12 @@
 # Changes:
 
+v.1.0.5
+
+* Fixed #38 - suppressing a warning when cache file does not exist and cannot be created
+* Fixed #40 - creating an affiliates table only if it does not exist, dropping it only if it exists
+
+There were also some enhancements and fixes regarding usage of the deprecated functions. Also now if you forget to set $listing variable in config file, you will get a warning on the page. 
+
 v.1.0.4
 
 * Closed #37 - now it's possible to update a setting 'show/hide email' for a user via dashboard.
