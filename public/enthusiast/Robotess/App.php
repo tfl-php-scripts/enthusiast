@@ -25,31 +25,18 @@ declare(strict_types = 1);
 
 namespace RobotessNet;
 
-/**
- * Class App
- * @package RobotessNet
- */
 final class App
 {
-    /**
-     * @return string
-     */
     public static function getVersion(): string
     {
         return '[Robotess Fork] v. 1.0.4';
     }
 
-    /**
-     * @return string
-     */
     public static function getLinkWithOriginal(): string
     {
-        return self::getLink().' (<a href="http://scripts.indisguise.org" target="_blank">original version</a>)';
+        return self::getLink() . ' (<a href="http://scripts.indisguise.org" target="_blank">original version</a>)';
     }
 
-    /**
-     * @return string
-     */
     public static function getLink(): string
     {
         return '<a href="https://scripts.robotess.net" target="_blank" title="PHP Scripts: Enthusiast, Siteskin, Codesort, FanUpdate, Listing Admin - ported to PHP 7">Enthusiast ' . self::getVersion() . '</a>';

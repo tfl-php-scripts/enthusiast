@@ -25,18 +25,8 @@ declare(strict_types = 1);
 
 namespace RobotessNet;
 
-/**
- * Class PaginationUtils
- * @package Robotess
- */
 final class PaginationUtils
 {
-    /**
-     * @param int $totalEntries
-     * @param int $perPage
-     * @param string $url
-     * @return string
-     */
     public static function getPaginatorHTML(int $totalEntries, int $perPage, string $url): string
     {
         $numberOfPages = (int)ceil($totalEntries / $perPage);

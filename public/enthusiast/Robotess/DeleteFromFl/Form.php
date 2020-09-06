@@ -26,20 +26,9 @@ declare(strict_types = 1);
 namespace RobotessNet\DeleteFromFl;
 
 use RobotessNet\App;
-use function date;
-use function md5;
-use function substr;
-use function uniqid;
 
 final class Form
 {
-    /**
-     * @param array $listingInfo
-     * @param string $errorStyle
-     * @param string $email
-     * @param string $errorMessage
-     * @return void
-     */
     public function print(array $listingInfo = [], string $errorStyle = '', string $email = '', string $errorMessage = ''): void
     {
         $rand = md5(uniqid('', true));

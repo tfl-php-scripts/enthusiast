@@ -25,15 +25,8 @@ declare(strict_types = 1);
 
 namespace RobotessNet;
 
-use function str_replace;
-use const DIRECTORY_SEPARATOR;
-
 spl_autoload_register([new Autoloader(), 'autoload']);
 
-/**
- * Class Autoloader
- * @package Robotess
- */
 final class Autoloader
 {
     /**
@@ -41,27 +34,24 @@ final class Autoloader
      */
     private $path;
 
-    /**
-	 * Constructor
-	 */
-	public function __construct()
-	{
-		$this->path = __DIR__ . DIRECTORY_SEPARATOR;
-	}
-
-	/**
-	 * @param string $class
-	 */
-	public function autoload(string $class): void
+    public function __construct()
     {
-		if (strpos($class, 'RobotessNet\\') !== 0)
-		{
-			return;
-		}
+        $this->path = __DIR__ . DIRECTORY_SEPARATOR;
+    }
 
-        $classNameWithoutRobotessNS = str_replace( 'RobotessNet\\', '', $class );
+    public function autoload(string $class): void
+    {
+        if (strpos($class, 'RobotessNet\\') !== 0) {
+            return;
+        }
 
-        $filename = $this->path . DIRECTORY_SEPARATOR . str_replace( '\\', DIRECTORY_SEPARATOR, $classNameWithoutRobotessNS ) . '.php';
-		include $filename;
-	}
+        $classNameWithoutRobotessNS = str_replace('RobotessNet\\', '', $class);
+
+        $filename = $this->path . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR,
+                $classNameWithoutRobotessNS) . '.php';
+
+        if(file_exists($filename)) {
+            include $filename;
+        }
+    }
 }
