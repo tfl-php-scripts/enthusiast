@@ -249,7 +249,12 @@ function printUpdates()
     $posts = '';
 
     $doc = new DOMDocument();
-    $success = $doc->load($updatesFeedUrl, LIBXML_ERR_ERROR);
+    $success = false;
+    $file_headers = @get_headers($updatesFeedUrl);
+    if ($file_headers && $file_headers[0] !== 'HTTP/1.0 404 Not Found' && $file_headers[0] !== 'HTTP/1.1 404 Not Found') {
+        $success = $doc->load($updatesFeedUrl, LIBXML_NOWARNING);
+    }
+
     if (!$success) {
         echo tryReadingFeedFromCache($cachefilename);
 
