@@ -45,8 +45,27 @@ require_once('Robotess/Autoloader.php');
         $db_errorlog
     ) {
         //workaround to not log error with RSS :D
-        if(isset($errcontext["updatesFeedUrl"])) {
-            return "";
+        if (isset($errcontext["updatesFeedUrl"])) {
+            return true;
+        }
+        $errstr = htmlspecialchars($errstr);
+
+        switch ($errno) {
+            case E_ERROR:
+                $errstr = "<b>ERROR</b> [$errno] $errstr<br />\n";
+                break;
+
+            case E_WARNING:
+                $errstr = "<b>WARNING</b> [$errno] $errstr<br />\n";
+                break;
+
+            case E_NOTICE:
+                $errstr = "<b>NOTICE</b> [$errno] $errstr<br />\n";
+                break;
+
+            default:
+                $errstr = "Unknown error type: [$errno] $errstr<br />\n";
+                break;
         }
 
         return EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)
