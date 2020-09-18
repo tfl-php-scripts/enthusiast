@@ -225,15 +225,22 @@ echo '<h1>Enthusiast Updates</h1>';
 
 function tryReadingFeedFromCache(string $cacheFileName): string
 {
+    if (!file_exists($cacheFileName)) {
+        return 'Could not load updates from remote server and cache file does not exist';
+    }
+
     return file_get_contents($cacheFileName);
 }
-
 /**
  * @param $cacheFileName
  * @param $posts
  */
 function tryWritingToCache($cacheFileName, $posts)
 {
+    if (!file_exists($cacheFileName)) {
+        return;
+    }
+
     $cacheFile = fopen($cacheFileName, 'wb');
     if ($cacheFile === false) {
         return;
@@ -249,12 +256,7 @@ function printUpdates()
     $posts = '';
 
     $doc = new DOMDocument();
-    $success = false;
-    $file_headers = @get_headers($updatesFeedUrl);
-    if ($file_headers && $file_headers[0] !== 'HTTP/1.0 404 Not Found' && $file_headers[0] !== 'HTTP/1.1 404 Not Found') {
-        $success = $doc->load($updatesFeedUrl, LIBXML_NOWARNING);
-    }
-
+    $success = $doc->load($updatesFeedUrl, LIBXML_ERR_ERROR);
     if (!$success) {
         echo tryReadingFeedFromCache($cachefilename);
 

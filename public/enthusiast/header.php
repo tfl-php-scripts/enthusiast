@@ -44,6 +44,11 @@ require_once('Robotess/Autoloader.php');
         $db_settings,
         $db_errorlog
     ) {
+        //workaround to not log error with RSS :D
+        if(isset($errcontext["updatesFeedUrl"])) {
+            return "";
+        }
+
         return EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)
                                      ->logError($errfile . ':' . $errline, $errstr, false);
     }, E_ALL);
