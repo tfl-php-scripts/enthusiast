@@ -64,6 +64,10 @@ if (!$result) {
 $result->setFetchMode(PDO::FETCH_ASSOC);
 $row = $result->fetch();
 $path = $row['value'];
+if ($row === false) {
+    die('Error executing query - $row is false: <i>' . $result->errorInfo()[2] .
+        '</i>; Query is: <code>' . $query . '</code>');
+}
 if (!defined('ENTH_PATH')) {
     define('ENTH_PATH', $row['value']);
 }

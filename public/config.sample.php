@@ -64,6 +64,9 @@ if (!defined('ENTH_PATH')) {
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
+    if ($row === false) {
+        throw new RuntimeException('Query ' . $query . ' gave unexpected result - false');
+    }
     $path = $row['value'];
     define('ENTH_PATH', $row['value']);
 }
