@@ -394,6 +394,9 @@ function get_member_info($listing, $email)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
+    if ($row === false) {
+        return null;
+    }
 
     $db_link_list = null;
     $db_link = null;

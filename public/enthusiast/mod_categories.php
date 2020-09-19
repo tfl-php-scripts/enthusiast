@@ -128,6 +128,9 @@ function get_category_name($id)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
+    if ($row === false) {
+        return "";
+    }
     return $row['catname'];
 }
 
@@ -270,7 +273,10 @@ function get_ancestors($id)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    $i = 0;
+    if ($row === false) {
+        return $family;
+    }
+
     while ($row['parent'] != 0 && $row['parent'] != '') {
         $family[] = $row['parent'];
         $query = "SELECT `parent` FROM `$db_category` WHERE `catid` = '" .
@@ -285,6 +291,9 @@ function get_ancestors($id)
         }
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
+        if ($row === false) {
+            break;
+        }
     }
     return $family;
 }

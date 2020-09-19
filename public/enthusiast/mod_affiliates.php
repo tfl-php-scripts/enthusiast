@@ -74,6 +74,9 @@ function get_affiliates($listing = 'none', $start = 'none')
 
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $info = $result->fetch();
+        if ($info === false) {
+            return [];
+        }
         if ($info['affiliates'] != 1) {
             return [];
         } // return blank array if affiliates is not enabled

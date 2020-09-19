@@ -277,7 +277,7 @@ function parse_template($templateid, $email, $listing, $affid = 0)
 
         if (!ctype_digit($affid) || $affid == 0) {
             // its a member being emailed, get member info
-            $query = "SELECT * FROM `$table` WHERE `email` = :email";
+            $query = "SELECT * FROM `$table` WHERE TRIM(LOWER(`email`)) = TRIM(LOWER(:email))";
             $result = $db_link->prepare($query);
             $result->bindParam(':email', $email);
             $result->execute();
@@ -503,7 +503,7 @@ function parse_email_text($subject, $body, $email, $listing, $affid = 0)
 
         if (!ctype_digit($affid) || $affid == 0) {
             // its a member being emailed, get member info
-            $query = "SELECT * FROM `$table` WHERE `email` = :email";
+            $query = "SELECT * FROM `$table` WHERE TRIM(LOWER(`email`)) = TRIM(LOWER(:email))";
             $result = $db_link->prepare($query);
             $result->bindParam(':email', $email);
             $result->execute();
@@ -665,7 +665,7 @@ function send_email($to, $from, $subject, $body)
     $result = $db_link->query($settingq);
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    $use_mailer = (count($row)) ? $row['value'] : 'php';
+    $use_mailer = ($row === false || count($row) === 0) ? 'php' : $row['value'];
 
     // php: use native php
     // sendmail: use sendmail
@@ -679,7 +679,7 @@ function send_email($to, $from, $subject, $body)
         $result = $db_link->query($settingq);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
-        $sendmail_path = (count($row)) ? $row['value'] : '/usr/bin/sendmail';
+        $use_mailer = ($row === false || count($row) === 0) ? '/usr/bin/sendmail' : $row['value'];
 
         // setup pear mail
         $headers = ['From' => $from,
