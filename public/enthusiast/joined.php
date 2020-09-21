@@ -214,7 +214,7 @@ if( $action == 'add' ) {
       <tr class="rowshade"><td>
       Image
       </td><td>
-      <input type="file" name="image" value="<?= $filename ?>" />
+      <input type="file" name="image" value="<?= $filename ?? '' ?>" />
       </td></tr>
 
       <tr><td colspan="2" class="right">
@@ -397,7 +397,7 @@ if( $action == 'add' ) {
          }
          if( isset( $image_changed_error ) && $image_changed_error ) {
             echo ' Please make sure that your joined images folder path is ' .
-               'correct (<code>' . $dir . '</code>) and it is CHMODed to 755.';
+               'correct (<code>' . $dir ?? '' . '</code>) and it is CHMODed to 755.';
          }
          echo '</p>';
       }

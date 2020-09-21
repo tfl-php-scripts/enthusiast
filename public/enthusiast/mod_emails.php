@@ -388,18 +388,18 @@ function parse_template($templateid, $email, $listing, $affid = 0)
         }
 
         // subject
-        $subject = str_replace('$$site_url$$', $url, $subject);
-        $subject = str_replace('$$site_title$$', html_entity_decode($title,
+        $subject = str_replace('$$site_url$$', $url ?? '', $subject);
+        $subject = str_replace('$$site_title$$', html_entity_decode($title ?? '',
             ENT_QUOTES), $subject);
-        $subject = str_replace('$$site_owner$$', $name, $subject);
-        $subject = str_replace('$$site_email$$', $email, $subject);
+        $subject = str_replace('$$site_owner$$', $name ?? '', $subject);
+        $subject = str_replace('$$site_email$$', $email ?? '', $subject);
         $subject = str_replace('$$site_aff_url$$', $info['url'], $subject);
         $subject = str_replace('$$site_aff_title$$',
             html_entity_decode($info['title'], ENT_QUOTES), $subject);
 
         // body
-        $body = str_replace('$$site_url$$', $url, $body);
-        $body = str_replace('$$site_title$$', html_entity_decode($title,
+        $body = str_replace('$$site_url$$', $url ?? '', $body);
+        $body = str_replace('$$site_title$$', html_entity_decode($title ?? '',
             ENT_QUOTES), $body);
         $body = str_replace('$$site_email$$', $email, $body);
         $body = str_replace('$$site_aff_url$$', $info['url'], $body);
@@ -617,20 +617,20 @@ function parse_email_text($subject, $body, $email, $listing, $affid = 0)
         }
 
         // subject
-        $subject = str_replace('$$site_url$$', $url, $subject);
+        $subject = str_replace('$$site_url$$', $url ?? '', $subject);
         $subject = str_replace('$$site_title$$',
-            html_entity_decode($title, ENT_QUOTES), $subject);
-        $subject = str_replace('$$site_owner$$', $name, $subject);
+            html_entity_decode($title ?? '', ENT_QUOTES), $subject);
+        $subject = str_replace('$$site_owner$$', $name ?? '', $subject);
         $subject = str_replace('$$site_email$$', $email, $subject);
         $subject = str_replace('$$site_aff_url$$', $info['url'], $subject);
         $subject = str_replace('$$site_aff_title$$',
             html_entity_decode($info['title'], ENT_QUOTES), $subject);
 
         // body
-        $body = str_replace('$$site_url$$', $url, $body);
+        $body = str_replace('$$site_url$$', $url ?? '', $body);
         $body = str_replace('$$site_title$$',
-            html_entity_decode($title, ENT_QUOTES), $body);
-        $body = str_replace('$$site_owner$$', $name, $body);
+            html_entity_decode($title ?? '', ENT_QUOTES), $body);
+        $body = str_replace('$$site_owner$$', $name ?? '', $body);
         $body = str_replace('$$site_email$$', $email, $body);
         $body = str_replace('$$site_aff_url$$', $info['url'], $body);
         $body = str_replace('$$site_aff_title$$',
