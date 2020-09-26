@@ -68,6 +68,9 @@ class UpdateFLInfoCest
 
     public function beSuccessfullyUpdated(AcceptanceTester $I): void
     {
+        $I->amOnPage('/samplefl');
+        $I->see("Last updated: 24th June 2019");
+
         $I->amOnPage($this->page);
         $I->see($this->title);
         $I->amGoingTo('submit user form');
@@ -78,10 +81,16 @@ class UpdateFLInfoCest
         $I->see('Your information has been successfully updated in the member database. Thank you for keeping your information up to date with us!');
         $I->dontSeeElement($this->formElement);
 
+        $I->amOnPage('/samplefl');
+        $today = date('dS F Y');
+        $I->see(sprintf("Last updated: %s", $today));
+        $I->see(sprintf("Newest members: %s", $this->newName));
+
         $I->amOnPage('/samplefl/list.php');
         $I->see('New Name (United States)');
-        $I->seeInSource('<p><b>' . $this->newName . '</b> (United States)');
-        $I->seeInSource('jsemail = ( \'' . $this->newEmailPart1 . '\' + \'@\' + \'' . $this->newEmailPart2 . '\' );');
-        $I->seeInSource('<a href="' . $this->newWebsite . '" target="_top" class="show_members_website">website</a>');
+        $I->seeInSource(sprintf("<p><b>%s</b> (United States)", $this->newName));
+        $I->seeInSource(sprintf("jsemail = ( '%s' + '@' + '%s' );", $this->newEmailPart1, $this->newEmailPart2));
+        $I->seeInSource(sprintf("<a href=\"%s\" target=\"_top\" class=\"show_members_website\">website</a>",
+            $this->newWebsite));
     }
 }

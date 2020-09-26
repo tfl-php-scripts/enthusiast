@@ -353,7 +353,7 @@ if ($show_form) {
                     <?php
                     foreach ($countriesValues as $key => $countryVal) {
                         $selected = '';
-                        if ($country !== '' && $countryId === $key) {
+                        if (!empty($countryId) && $countryId === $key) {
                             $selected = ' selected="selected"';
                         }
                         echo '<option value="' . $key . '"' . $selected . '>' . $countryVal . '</option>';

@@ -31,7 +31,7 @@ class CheckUICest
         $I->see('Welcome to the Enthusiast [Robotess Fork] v. 1.0.5 admin panel for My Collective!', 'h1');
     }
 
-    public function seeCorrectOpenedDateInStatsWidget(AcceptanceTester $I): void
+    public function seeCorrectDatesInStatsWidget(AcceptanceTester $I): void
     {
         $I->amOnPage('/samplefl');
         $I->see('Opened: 17th February 2010');
