@@ -33,7 +33,7 @@ if (!isset($logged_in) || !$logged_in) {
     $next = '';
     if (isset($_SERVER['REQUEST_URI'])) {
         $next = $_SERVER['REQUEST_URI'];
-    } else if (isset($_SERVER['PATH_INFO'])) {
+    } elseif (isset($_SERVER['PATH_INFO'])) {
         $next = $_SERVER['PATH_INFO'];
     }
     $_SESSION['next'] = $next;
@@ -124,7 +124,7 @@ if ($action === 'multiple') {
                 if (!$success) {
                     echo '<p class="error">Error approving member with ' .
                         'email address <i>' . $_REQUEST['email'] . '</i>.</p>';
-                } else if ($info['emailapproved']) { // send if there is
+                } elseif ($info['emailapproved']) { // send if there is
                     $body = parse_email('approved', $listing, $email);
 
                     // use send_email function
@@ -132,7 +132,7 @@ if ($action === 'multiple') {
                 }
             }
             echo '<p class="success">Finished approving selected members.</p>';
-        } else if ($selected === 'REJECT') {
+        } elseif ($selected === 'REJECT') {
             foreach ($_POST['email'] as $email) {
                 $success = delete_member($listing, $email);
                 if (!$success) {
@@ -224,7 +224,7 @@ if ($action === 'edit') {
                             Leave as is (Show)<br/>
                             <input type="radio" name="showemail" value="hide"/> Hide<br/>
                             <?php
-                        } else if ($member['showemail'] == 0) {
+                        } elseif ($member['showemail'] == 0) {
                             ?>
                             <input type="radio" name="showemail" value="leave" checked="checked"/>
                             Leave as is (Hide)<br/>
@@ -257,7 +257,10 @@ if ($action === 'edit') {
                                 </option>
                                 <option value="<?= $member['country'] ?>">---</option>
                                 <?php
-                                include 'countries.inc.php';
+                                $countriesValues = include 'countries.inc.php';
+                                foreach ($countriesValues as $key => $countryVal) {
+                                    echo '<option value="' . $countryVal . '">' . $countryVal . '</option>';
+                                }
                                 ?>
                             </select>
                         </td>
@@ -326,7 +329,7 @@ if ($action === 'edit') {
                             Leave as is (Show)<br/>
                             <input type="radio" name="showurl" value="hide"/> Hide<br/>
                             <?php
-                        } else if ($member['showurl'] == 0) {
+                        } elseif ($member['showurl'] == 0) {
                             ?>
                             <input type="radio" name="showurl" value="leave" checked="checked"/>
                             Leave as is (Hide)<br/>

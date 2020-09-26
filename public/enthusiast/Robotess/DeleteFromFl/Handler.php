@@ -44,13 +44,6 @@ final class Handler
      */
     private $cleanEmail = '';
 
-    /**
-     * @param int $listing
-     * @param array $postData
-     * @param array $listingInfo
-     * @param string $errorstyle
-     * @return bool successful
-     */
     public function handle(int $listing, array $postData, array $listingInfo, string $errorstyle): bool
     {
         // do some spam/bot checking first
@@ -140,25 +133,16 @@ HTML;
         return true;
     }
 
-    /**
-     * @return bool
-     */
     public function isShowForm(): bool
     {
         return $this->showForm;
     }
 
-    /**
-     * @return string
-     */
     public function getResponseMessage(): string
     {
         return $this->responseMessage;
     }
 
-    /**
-     * @return string
-     */
     public function getCleanEmail(): string
     {
         return $this->cleanEmail;

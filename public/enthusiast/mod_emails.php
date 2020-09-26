@@ -277,7 +277,7 @@ function parse_template($templateid, $email, $listing, $affid = 0)
 
         if (!ctype_digit($affid) || $affid == 0) {
             // its a member being emailed, get member info
-            $query = "SELECT * FROM `$table` WHERE `email` = :email";
+            $query = "SELECT * FROM `$table` WHERE TRIM(LOWER(`email`)) = TRIM(LOWER(:email))";
             $result = $db_link->prepare($query);
             $result->bindParam(':email', $email);
             $result->execute();
@@ -388,18 +388,18 @@ function parse_template($templateid, $email, $listing, $affid = 0)
         }
 
         // subject
-        $subject = str_replace('$$site_url$$', $url, $subject);
-        $subject = str_replace('$$site_title$$', html_entity_decode($title,
+        $subject = str_replace('$$site_url$$', $url ?? '', $subject);
+        $subject = str_replace('$$site_title$$', html_entity_decode($title ?? '',
             ENT_QUOTES), $subject);
-        $subject = str_replace('$$site_owner$$', $name, $subject);
-        $subject = str_replace('$$site_email$$', $email, $subject);
+        $subject = str_replace('$$site_owner$$', $name ?? '', $subject);
+        $subject = str_replace('$$site_email$$', $email ?? '', $subject);
         $subject = str_replace('$$site_aff_url$$', $info['url'], $subject);
         $subject = str_replace('$$site_aff_title$$',
             html_entity_decode($info['title'], ENT_QUOTES), $subject);
 
         // body
-        $body = str_replace('$$site_url$$', $url, $body);
-        $body = str_replace('$$site_title$$', html_entity_decode($title,
+        $body = str_replace('$$site_url$$', $url ?? '', $body);
+        $body = str_replace('$$site_title$$', html_entity_decode($title ?? '',
             ENT_QUOTES), $body);
         $body = str_replace('$$site_email$$', $email, $body);
         $body = str_replace('$$site_aff_url$$', $info['url'], $body);
@@ -503,7 +503,7 @@ function parse_email_text($subject, $body, $email, $listing, $affid = 0)
 
         if (!ctype_digit($affid) || $affid == 0) {
             // its a member being emailed, get member info
-            $query = "SELECT * FROM `$table` WHERE `email` = :email";
+            $query = "SELECT * FROM `$table` WHERE TRIM(LOWER(`email`)) = TRIM(LOWER(:email))";
             $result = $db_link->prepare($query);
             $result->bindParam(':email', $email);
             $result->execute();
@@ -617,20 +617,20 @@ function parse_email_text($subject, $body, $email, $listing, $affid = 0)
         }
 
         // subject
-        $subject = str_replace('$$site_url$$', $url, $subject);
+        $subject = str_replace('$$site_url$$', $url ?? '', $subject);
         $subject = str_replace('$$site_title$$',
-            html_entity_decode($title, ENT_QUOTES), $subject);
-        $subject = str_replace('$$site_owner$$', $name, $subject);
+            html_entity_decode($title ?? '', ENT_QUOTES), $subject);
+        $subject = str_replace('$$site_owner$$', $name ?? '', $subject);
         $subject = str_replace('$$site_email$$', $email, $subject);
         $subject = str_replace('$$site_aff_url$$', $info['url'], $subject);
         $subject = str_replace('$$site_aff_title$$',
             html_entity_decode($info['title'], ENT_QUOTES), $subject);
 
         // body
-        $body = str_replace('$$site_url$$', $url, $body);
+        $body = str_replace('$$site_url$$', $url ?? '', $body);
         $body = str_replace('$$site_title$$',
-            html_entity_decode($title, ENT_QUOTES), $body);
-        $body = str_replace('$$site_owner$$', $name, $body);
+            html_entity_decode($title ?? '', ENT_QUOTES), $body);
+        $body = str_replace('$$site_owner$$', $name ?? '', $body);
         $body = str_replace('$$site_email$$', $email, $body);
         $body = str_replace('$$site_aff_url$$', $info['url'], $body);
         $body = str_replace('$$site_aff_title$$',
@@ -665,7 +665,7 @@ function send_email($to, $from, $subject, $body)
     $result = $db_link->query($settingq);
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    $use_mailer = (count($row)) ? $row['value'] : 'php';
+    $use_mailer = ($row === false || count($row) === 0) ? 'php' : $row['value'];
 
     // php: use native php
     // sendmail: use sendmail
@@ -679,7 +679,7 @@ function send_email($to, $from, $subject, $body)
         $result = $db_link->query($settingq);
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
-        $sendmail_path = (count($row)) ? $row['value'] : '/usr/bin/sendmail';
+        $use_mailer = ($row === false || count($row) === 0) ? '/usr/bin/sendmail' : $row['value'];
 
         // setup pear mail
         $headers = ['From' => $from,
@@ -744,12 +744,10 @@ function send_email($to, $from, $subject, $body)
     if (!$mail_sent || $use_mailer == 'php') {
         $headers = "From: $from\r\n";
         $success = @mail($to, $subject, $body, $headers);
-        if (!$success) {
-            // We're still having an error sending through mail()!
-            log_error(__FILE__ . ':' . __LINE__,
-                "Email sending to $to failed using native mail().", false);
-        } else {
+        if ($success) {
             $mail_sent = true;
+        } else {
+            trigger_error(sprintf('Email sending to %s failed using native mail().', $to), E_USER_WARNING);
         }
     }
 

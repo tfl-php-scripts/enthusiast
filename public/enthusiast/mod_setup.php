@@ -172,7 +172,6 @@ function show_step1() {
       $options[] = [ 'text' => $optiontext, 'id' => $cat['catid'] ];
    }
    usort( $options, 'category_array_compare' );
-   $selected = explode( '|', $info['catid'] );
    foreach( $options as $o ) {
       echo '<option value="' . $o['id'];
       if( in_array( $o['id'], $catids ) )

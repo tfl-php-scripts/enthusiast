@@ -23,17 +23,8 @@
  * For more information please view the readme.txt file.
  ******************************************************************************/
 require_once('mod_settings.php');
+
 if (isset($_COOKIE['e3login'])) {
-
-    // login security fix code thanks to boyzie
-    // (http://codegrrl.com/forums/index.php?showuser=3674)
-
-    if (!(get_magic_quotes_gpc())) {
-        // Note, we won't be connected to the database until the check_password() function
-        // is executed, so we'll use addslashes instead of mysql_real_escape_string().
-        $_COOKIE['e3login'] = addslashes($_COOKIE['e3login']);
-    }
-
     // Is the password hash valid.
     if (check_password($_COOKIE['e3login'])) {
         $logged_in = true;

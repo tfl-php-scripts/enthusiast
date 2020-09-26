@@ -32,6 +32,12 @@ require_once('mod_owned.php');
 require_once('mod_members.php');
 require_once('mod_settings.php');
 
+if (!isset($listing)) {
+    echo '!! You haven\'t set $listing variable in config.php. Please set it first - the instruction is at the end of the file.<br/>';
+
+    return;
+}
+
 // get listing info, start pagination at what index, and member type
 $info = get_listing_info($listing);
 $start = (isset($_REQUEST['start']) && ctype_digit($_REQUEST['start']))

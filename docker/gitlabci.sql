@@ -278,7 +278,7 @@ INSERT INTO `settings` (`setting`, `title`, `value`, `help`) VALUES
 ('collective_title', 'Collective Title', 'My collective', 'Your collective title.'),
 ('collective_url', 'Collective URL', 'http://localhost:8081', 'Web address of your collective.'),
 ('password', 'Password', '5f4dcc3b5aa765d61d8327deb882cf99', 'The password used to log into this installation of Enthusiast 3.'),
-('log_errors', 'Log errors?', 'yes', 'Turn error logging on or off.'),
+('log_errors', 'Log errors?', 'no', 'Turn error logging on or off.'),
 ('installation_path', 'Installation Path (Absolute)', '/builds/tfl-php-scripts/enthusiast/public/enthusiast/', 'Installation path (absolute path) for this installation of Enthusiast 3.'),
 ('root_path_absolute', 'Root absolute path', '/builds/tfl-php-scripts/enthusiast/public/', 'Absolute path of your root directory (i.e., /home/username/public_html/)'),
 ('root_path_web', 'Root web address', 'http://localhost:8081/', 'Web address of your root directory (i.e.,http://yourdomain.com)'),

@@ -24,19 +24,21 @@
  * For more information please view the readme.txt file.
  ******************************************************************************/
 
-namespace {
+namespace
+{
 
     require_once('Robotess/Autoloader.php');
 
     /*___________________________________________________________________________*/
-    function get_setting($setting)
+    function get_setting($setting, bool $reportNotFound = true)
     {
         include 'config.php';
 
         $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = :setting";
 
         try {
-            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+                $db_password);
             $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -52,6 +54,14 @@ namespace {
         }
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
+        if ($row === false) {
+            if(!$reportNotFound) {
+                return "";
+            }
+
+            trigger_error(sprintf('Setting [name="%s"] was not found', $setting), E_USER_WARNING);
+        }
+
         return $row['value'];
 
     } // end of get_setting
@@ -66,7 +76,8 @@ namespace {
         $query .= "`value` = :password";
 
         try {
-            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+                $db_password);
             $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -80,11 +91,8 @@ namespace {
                 '</i>; Query is: <code>' . $query . '</code>');
             die(STANDARD_ERROR);
         }
-        if ($result->rowCount() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+
+        return $result->rowCount() > 0;
     }
 
 
@@ -95,7 +103,8 @@ namespace {
 
         $query = "SELECT `title` FROM `$db_settings` WHERE `setting` = :setting";
         try {
-            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+                $db_password);
             $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -111,6 +120,10 @@ namespace {
         }
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
+        if ($row === false) {
+            return "";
+        }
+
         return $row['title'];
 
     } // end of get_setting_title
@@ -123,7 +136,8 @@ namespace {
 
         $query = "SELECT `help` FROM `$db_settings` WHERE `setting` = :setting";
         try {
-            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+                $db_password);
             $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -139,6 +153,10 @@ namespace {
         }
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
+        if ($row === false) {
+            return "";
+        }
+
         return $row['help'];
 
     } // end of get_setting_desc
@@ -152,7 +170,8 @@ namespace {
         $query = "SELECT * FROM `$db_settings` WHERE `setting` " .
             "NOT LIKE '%template%'";
         try {
-            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+                $db_password);
             $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -171,6 +190,7 @@ namespace {
         while ($row = $result->fetch()) {
             $settings[] = $row;
         }
+
         return $settings;
 
     } // end of get_all_settings
@@ -183,7 +203,8 @@ namespace {
 
         $query = "SELECT * FROM `$db_settings` WHERE `setting` LIKE '%template%'";
         try {
-            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+                $db_password);
             $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -201,6 +222,7 @@ namespace {
         while ($row = $result->fetch()) {
             $templates[] = $row;
         }
+
         return $templates;
 
     } // end of get_all_settings
@@ -212,7 +234,8 @@ namespace {
         include 'config.php';
 
         try {
-            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+                $db_password);
             $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -255,7 +278,8 @@ namespace {
     {
         include 'config.php';
         try {
-            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+            $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+                $db_password);
             $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             die(DATABASE_CONNECT_ERROR . $e->getMessage());

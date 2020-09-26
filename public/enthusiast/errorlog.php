@@ -32,7 +32,7 @@ if (!isset($logged_in) || !$logged_in) {
     $next = '';
     if (isset($_SERVER['REQUEST_URI'])) {
         $next = $_SERVER['REQUEST_URI'];
-    } else if (isset($_SERVER['PATH_INFO'])) {
+    } elseif (isset($_SERVER['PATH_INFO'])) {
         $next = $_SERVER['PATH_INFO'];
     }
     $_SESSION['next'] = $next;
@@ -40,44 +40,57 @@ if (!isset($logged_in) || !$logged_in) {
     die('Redirecting you...');
 }
 require('config.php');
-require_once('header.php');
 require_once('mod_errorlogs.php');
 require_once('mod_settings.php');
+
+$postAction = '';
+if (isset($_POST["action"])) {
+    $postAction = $_POST['action'];
+}
+if ($postAction === 'flush') {
+    flush_logs();
+    header('location: ' . $_SERVER['PHP_SELF'] . '?action=flushed');
+    die('Redirecting you...');
+}
+
+require_once('header.php');
 
 $show_default = true;
 ?>
     <h1>Enthusiast 3 Error Logs</h1>
 <?php
-$action = '';
-if (isset($_REQUEST["action"])) {
-    $action = $_REQUEST['action'];
-}
 
+$getAction = '';
+if (isset($_GET["action"])) {
+    $getAction = $_GET['action'];
+}
 
 /*______________________________________________________________________EDIT_*/
-if ($action == 'flush') {
-    flush_logs();
+
+if ($getAction === 'flushed') {
     echo '<p class="success">Error logs flushed.</p>';
 }
-
 
 /*___________________________________________________________________DEFAULT_*/
 if ($show_default) {
     ?>
     <div class="submenu">
-        <a href="errorlog.php?action=flush" onclick="
-      go = confirm( 'Are you sure you wish to flush your error logs?' );
-      return go;">Flush logs</a>
+        <form action="errorlog.php" method="post">
+            <input type="hidden" name="action" value="flush"/>
+            <button type="submit"
+                    onclick="if(!confirm( 'Are you sure you wish to flush your error logs?' )){return false}">Flush logs
+            </button>
+        </form>
     </div>
 
     <p>You may see all existing error logs on this page. These error logs
-        keep track of the database errors that your Enth3 installation outputs,
-        except for the database connection failures.</p>
+        keep track of the errors that your installation outputs.</p>
     <p>This feature is here for (hopefully) easier debugging of errors. However,
         turning this feature on takes up a fraction of your database space,
         for each database error that your installation generates. Feel free to
         turn this off if your installation is running smoothly, and remember to
         flush the logs regularly.</p>
+    <p>There are different types of messages: error, script error, warning, notice. Most important are error and script error, and you can ignore warnings and notices unless there's some issue with the script. When asking for help, make sure to share the whole log.</p>
 
     <table>
 

@@ -1,4 +1,7 @@
 <?php
+
+use RobotessNet\StringUtils;
+
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
@@ -79,9 +82,9 @@ function parse_email($type, $listing, $email, $password = '')
     }
 
     // get member info
-    $query = "SELECT * FROM `$table` WHERE `email` = :email";
+    $query = "SELECT * FROM `$table` WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email))";
     $result = $db_link_list->prepare($query);
-    $result->bindParam(':email', $email, PDO::PARAM_STR);
+    $result->bindParam(':email', $email);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
@@ -268,7 +271,7 @@ function delete_member($listingId, $email)
     // delete fan
     $query = "DELETE FROM `$table` WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email))";
     $result = $db_link_list->prepare($query);
-    $result->bindParam(':email', $email, PDO::PARAM_STR);
+    $result->bindParam(':email', $email);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
@@ -323,9 +326,9 @@ function approve_member($id, $email)
 
     // approve member
     $query = "UPDATE `$table` SET `pending` = 0, `added` = CURDATE() WHERE " .
-        '`email` = :email';
+        'LOWER(TRIM(`email`)) = LOWER(TRIM(:email))';
     $result = $db_link_list->prepare($query);
-    $result->bindParam(':email', $email, PDO::PARAM_STR);
+    $result->bindParam(':email', $email);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
@@ -381,7 +384,7 @@ function get_member_info($listing, $email)
     // get member info
     $query = "SELECT * FROM `$table` WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email))";
     $result = $db_link_list->prepare($query);
-    $result->bindParam(':email', $email, PDO::PARAM_STR);
+    $result->bindParam(':email', $email);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
@@ -391,6 +394,9 @@ function get_member_info($listing, $email)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
+    if ($row === false) {
+        return null;
+    }
 
     $db_link_list = null;
     $db_link = null;
@@ -455,13 +461,20 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
                 break;
 
             case 'name' :
-            case 'email_new' :
             case 'country' :
+                $col = $field;
+                $value = StringUtils::instance()->clean($value);
+                $query = "UPDATE `$table` SET `$col` = '$value' " .
+                    "WHERE LOWER(TRIM(`email`)) = LOWER(TRIM('$email'))";
+                break;
+
+            case 'email_new' :
             case 'url' :
                 $col = $field;
                 if ($field === 'email_new') {
                     $col = 'email';
                 }
+                $value = StringUtils::instance()->cleanNormalize($value);
                 $query = "UPDATE `$table` SET `$col` = '$value' " .
                     "WHERE LOWER(TRIM(`email`)) = LOWER(TRIM('$email'))";
                 if ($field === 'email_new') {
@@ -508,7 +521,7 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
         // place on pending!
         $query = "UPDATE `$table` SET `pending` = 1 WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email))";
         $result = $db_link_list->prepare($query);
-        $result->bindParam(':email', $email, PDO::PARAM_STR);
+        $result->bindParam(':email', $email);
         $result->execute();
         if (!$result) {
             log_error(__FILE__ . ':' . __LINE__,
@@ -521,7 +534,7 @@ function edit_member_info($id, $email, $fields, $hold = 'no')
     // update added date
     $query = "UPDATE `$table` SET `added` = CURDATE() WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email))";
     $result = $db_link_list->prepare($query);
-    $result->bindParam(':email', $email, PDO::PARAM_STR);
+    $result->bindParam(':email', $email);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
@@ -743,8 +756,8 @@ function check_member_password($listing, $email, $attempt)
     $query = "SELECT * FROM `$table` WHERE LOWER(TRIM(`email`)) = LOWER(TRIM(:email)) AND " .
         '`password` = MD5( :attempt )';
     $result = $db_link_list->prepare($query);
-    $result->bindParam(':email', $email, PDO::PARAM_STR);
-    $result->bindParam(':attempt', $attempt, PDO::PARAM_STR);
+    $result->bindParam(':email', $email);
+    $result->bindParam(':attempt', $attempt);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
@@ -809,10 +822,10 @@ function reset_member_password($listing, $email)
 
     // update record
     $query = "UPDATE `$table` SET `password` = MD5( :password ) WHERE " .
-        '`email` = :email';
+        'LOWER(TRIM(`email`)) = LOWER(TRIM(:email))';
     $result = $db_link_list->prepare($query);
-    $result->bindParam(':password', $password, PDO::PARAM_STR);
-    $result->bindParam(':email', $email, PDO::PARAM_STR);
+    $result->bindParam(':password', $password);
+    $result->bindParam(':email', $email);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,

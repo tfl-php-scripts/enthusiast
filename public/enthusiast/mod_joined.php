@@ -64,8 +64,7 @@ function get_joined($status = 'all', $start = 'none', $bydate = 'no')
         $query .= " LIMIT $start, $limit";
     }
 
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -95,8 +94,7 @@ function get_joined_cats()
 
     $query = "SELECT DISTINCT( `catid` ) as `id` FROM `$db_joined` ";
 
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -122,8 +120,7 @@ function get_joined_cats()
     $query = rtrim($query, 'OR ') . ' ) ';
     $query .= ' ORDER BY `catname` ASC';
 
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -226,8 +223,7 @@ function parse_joined_template($id)
     $query = "SELECT `setting`, `value` FROM `$db_settings` WHERE `setting` =" .
         ' "joined_images_dir" OR `setting` = "root_path_absolute" ' .
         ' OR `setting` = "root_path_web"';
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -257,8 +253,7 @@ function parse_joined_template($id)
 
     $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = " .
         "'joined_template'";
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -324,8 +319,7 @@ function search_joined($search, $status = 'all', $start = 'none')
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -359,12 +353,12 @@ function add_joined($catids, $url, $subject, $desc, $comments,
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
     $result = $db_link->prepare($query);
-    $result->bindParam(':cats', $cats, PDO::PARAM_STR);
-    $result->bindParam(':url', $url, PDO::PARAM_STR);
-    $result->bindParam(':subject', $subject, PDO::PARAM_STR);
-    $result->bindParam(':desc', $desc, PDO::PARAM_STR);
-    $result->bindParam(':comments', $comments, PDO::PARAM_STR);
-    $result->bindParam(':pending', $pending, PDO::PARAM_STR);
+    $result->bindParam(':cats', $cats);
+    $result->bindParam(':url', $url);
+    $result->bindParam(':subject', $subject);
+    $result->bindParam(':desc', $desc);
+    $result->bindParam(':comments', $comments);
+    $result->bindParam(':pending', $pending);
     $result->execute();
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,

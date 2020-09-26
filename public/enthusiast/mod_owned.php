@@ -106,8 +106,7 @@ function get_listing_info($id = '', $table = '')
         $query = "SELECT * FROM `$db_owned` WHERE `dbtable` = '$table'";
     }
 
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -117,8 +116,9 @@ function get_listing_info($id = '', $table = '')
 
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    if (count($row) === 0 || !$row) {
-        return [];
+    if (!$row || count($row) === 0) {
+        trigger_error(sprintf("There is no information about listing = %s in the database. Are you sure this is correct ID?",
+            $id), E_USER_ERROR);
     }
 
     foreach ($row as $key => $value) {
@@ -938,8 +938,7 @@ function edit_owned($id, $fields)
 
                     // rename physically
                     $query = "ALTER TABLE `$table` RENAME `$value`";
-                    $result = $db_link_list->prepare($query);
-                    $result->execute();
+                    $result = $db_link_list->query($query);
                     if (!$result) {
                         log_error(__FILE__ . ':' . __LINE__,
                             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -952,7 +951,7 @@ function edit_owned($id, $fields)
                     $query = "UPDATE `$db_owned` SET `dbtable` = :value WHERE " .
                         "`listingid` = :id";
                     $result = $db_link->prepare($query);
-                    $result->bindParam(':value', $value, PDO::PARAM_STR);
+                    $result->bindParam(':value', $value);
                     $result->bindParam(':id', $id, PDO::PARAM_INT);
                     $result->execute();
                     if (!$result) {
@@ -980,8 +979,7 @@ function edit_owned($id, $fields)
                 if ($value == 'disable') {
                     // alter table
                     $query = "ALTER TABLE `$table` DROP `country`";
-                    $result = $db_link_list->prepare($query);
-                    $result->execute();
+                    $result = $db_link_list->query($query);
                     if (!$result) {
                         log_error(__FILE__ . ':' . __LINE__,
                             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1073,7 +1071,7 @@ function edit_owned($id, $fields)
                 if ($value == 'disable') {
                     // drop aff table
                     $afftable = $table . '_affiliates';
-                    $query = "DROP TABLE `$afftable`";
+                    $query = "DROP TABLE IF EXISTS `$afftable`";
                     $result = $db_link_list->prepare($query);
                     $result->execute();
                     if (!$result) {
@@ -1114,7 +1112,7 @@ function edit_owned($id, $fields)
                 } else if ($value == 'enable') {
                     // add table
                     $afftable = $table . '_affiliates';
-                    $query = "CREATE TABLE `$afftable` (" .
+                    $query = "CREATE TABLE IF NOT EXISTS `$afftable` (" .
                         "`affiliateid` int(5) NOT NULL auto_increment, " .
                         "`url` varchar(255) NOT NULL default '', " .
                         "`title` varchar(255) NOT NULL default '', " .
@@ -1214,7 +1212,9 @@ function edit_owned($id, $fields)
                         if ($row['Field'] == 'url') {
                             $start = true;
                             continue;
-                        } else if ($row['Field'] == 'pending') {
+                        }
+
+                        if ($row['Field'] == 'pending') {
                             $start = false;
                             break;
                         }
@@ -1230,7 +1230,9 @@ function edit_owned($id, $fields)
                             $new == $current[$index]) { // same, continue
                             $prev = $new;
                             continue;
-                        } else if ($new == '' && $index == (count($value) - 1)) {
+                        }
+
+                        if ($new == '' && $index == (count($value) - 1)) {
                             break;
                         } else if ($new == '') {
                             // delete the field
@@ -1355,8 +1357,7 @@ function edit_owned($id, $fields)
                     // get absolute path
                     $query = "SELECT `value` FROM `$db_settings` WHERE " .
                         '`setting` = "owned_images_dir"';
-                    $result = $db_link->prepare($query);
-                    $result->execute();
+                    $result = $db_link->query($query);
                     if (!$result) {
                         log_error(__FILE__ . ':' . __LINE__,
                             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1517,7 +1518,7 @@ function edit_owned($id, $fields)
                 $query = "UPDATE `$db_owned` SET `catid` = :cats " .
                     "WHERE `listingid` = :id";
                 $result = $db_link->prepare($query);
-                $result->bindParam(':cats', $cats, PDO::PARAM_STR);
+                $result->bindParam(':cats', $cats);
                 $result->bindParam(':id', $id, PDO::PARAM_INT);
                 $result->execute();
                 if (!$result) {
@@ -1684,8 +1685,7 @@ function delete_owned($id)
     //get $dir setting
     $query = "SELECT `value` FROM `$db_settings` WHERE `setting` = " .
         "'owned_images_dir'";
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1719,8 +1719,7 @@ function delete_owned($id)
     // drop affiliates table
     $afftable = $table . '_affiliates';
     $query = "DROP TABLE IF EXISTS `$afftable`";
-    $result = $db_link_list->prepare($query);
-    $result->execute();
+    $result = $db_link_list->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1730,8 +1729,7 @@ function delete_owned($id)
 
     // drop actual table
     $query = "DROP TABLE `$table`";
-    $result = $db_link_list->prepare($query);
-    $result->execute();
+    $result = $db_link_list->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -1741,7 +1739,7 @@ function delete_owned($id)
 
     // unlink image if present
     if ($dir . $image) {
-        @unlink($dir . $file);
+        unlink($dir . $file);
     }
 
     return true;
@@ -2117,7 +2115,10 @@ function get_listing_stats($id, $extended = false)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    $stats['lastupdated'] = $row['added'];
+    $stats['lastupdated'] = '0000-00-00';
+    if($row !== false) {
+        $stats['lastupdated'] = $row['added'];
+    }
 
     // get most recent members - make sure it is only approved members
     $query = "SELECT * FROM `$table` WHERE `added` = '" .
@@ -2150,11 +2151,12 @@ function get_listing_stats($id, $extended = false)
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
 
-        if ($row['added'] && $row['added'] > $stats['lastupdated']) {
+        $stats['lastupdated'] = '0000-00-00';
+        if ($row !== false && $row['added'] && $row['added'] > $stats['lastupdated']) {
             $stats['lastupdated'] = $row['added'];
         }
 
-        if ($extended) { // do this only if we're looking for "extended" stats
+        if ($extended && $row !== false && $row['added']) { // do this only if we're looking for "extended" stats
             // now we take the newest affiliates added
             $query = "SELECT * FROM `$afftable` WHERE `added` = '" .
                 $row['added'] . "'";
@@ -2322,28 +2324,30 @@ function get_listing_stats($id, $extended = false)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $randmem = $result->fetch();
-    $stats['randommember'] = $randmem['name'];
-    if ($randmem['url'] && $randmem['showurl'] == 1) {
-        $stats['randommember'] = '<a href="' . $randmem['url'];
-        if ($info['linktarget']) {
-            $stats['randommember'] .= '" target="' . $info['linktarget'];
+    if($randmem !== false) {
+        $stats['randommember'] = $randmem['name'];
+        if ($randmem['url'] && $randmem['showurl'] == 1) {
+            $stats['randommember'] = '<a href="' . $randmem['url'];
+            if ($info['linktarget']) {
+                $stats['randommember'] .= '" target="' . $info['linktarget'];
+            }
+            $stats['randommember'] .= '">' . $stats['randommember'] .
+                '</a>';
         }
-        $stats['randommember'] .= '">' . $stats['randommember'] .
-            '</a>';
-    }
-    if (isset($randmem['country']) && $randmem['country']) {
-        $stats['randommember'] .= 'from ' . $randmem['country'];
-    }
-    $stats['randommember_url'] = $randmem['url'];
-    $stats['randommember_name'] = $randmem['name'];
-    $stats['randommember_country'] =
-        (isset($randmem['country']) && $randmem['country'])
-            ? $randmem['country'] : '';
-    $stats['randommember_email'] = $randmem['email'];
-    $afields = explode(',', $info['additional']);
-    foreach ($afields as $field) {
-        if ($field) {
-            $stats['randommember_' . $field] = $randmem[$field];
+        if (isset($randmem['country']) && $randmem['country']) {
+            $stats['randommember'] .= 'from ' . $randmem['country'];
+        }
+        $stats['randommember_url'] = $randmem['url'];
+        $stats['randommember_name'] = $randmem['name'];
+        $stats['randommember_country'] =
+            (isset($randmem['country']) && $randmem['country'])
+                ? $randmem['country'] : '';
+        $stats['randommember_email'] = $randmem['email'];
+        $afields = explode(',', $info['additional']);
+        foreach ($afields as $field) {
+            if ($field) {
+                $stats['randommember_' . $field] = $randmem[$field];
+            }
         }
     }
 
@@ -2376,19 +2380,23 @@ function get_listing_stats($id, $extended = false)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    $firstyear = $row['year'];
-    $firstmonth = $row['month'];
-    $firstday = $row['day'];
-    $today = getdate();
-    @$first = getdate(mktime(0, 0, 0, $firstmonth, $firstday, $firstyear));
-    $seconds = $today[0] - $first[0];
-    $days = round($seconds / 86400);
-    if ($days == 0) {
-        $days = 1;
+    $stats['average'] = 'n/a';
+    if($row !== false) {
+        $firstyear = $row['year'];
+        $firstmonth = $row['month'];
+        $firstday = $row['day'];
+        $today = getdate();
+        $first = getdate(mktime(0, 0, 0, $firstmonth, $firstday, $firstyear));
+        $seconds = $today[0] - $first[0];
+        $days = round($seconds / 86400);
+        if ($days == 0) {
+            $days = 1;
+        }
+        $stats['average'] = round($stats['total'] / $days, 2);
     }
-    $stats['average'] = round($stats['total'] / $days, 2);
 
     // prepare number of countries
+    $stats['countries'] = '0';
     if ($info['country'] == 1) {
         $query = 'SELECT COUNT( DISTINCT( `country` ) ) AS `countries` FROM ' .
             "`$table` WHERE `pending` = 0";
@@ -2402,9 +2410,9 @@ function get_listing_stats($id, $extended = false)
         }
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
-        $stats['countries'] = $row['countries'];
-    } else {
-        $stats['countries'] = '0';
+        if($row !== false) {
+            $stats['countries'] = $row['countries'];
+        }
     }
 
     $db_link_list = null;

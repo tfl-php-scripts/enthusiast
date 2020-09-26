@@ -25,44 +25,32 @@
  *****************************************************************************
  */
 
+use RobotessNet\EnthusiastErrorHandler;
 
-/*___________________________________________________________________________*/
+require_once('mod_robotess_errorhandler.php');
+
+/**
+ * @param $page
+ * @param $text
+ * @param bool $kill
+ *
+ * @return bool
+ * @deprecated
+ *
+ * Use trigger_error instead
+ */
 function log_error($page, $text, $kill = true)
 {
     require 'config.php';
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
-    // check if we're monitoring errors!
-    $query = "SELECT `value` FROM `$db_settings` WHERE " .
-        "`setting` = 'log_errors'";
-    try {
-        $result = $db_link->prepare($query);
-        $result->execute();
-    } catch (PDOException $e) {
-        die('Error executing query: ' . $e->getMessage());
-    }
-    $result->setFetchMode(PDO::FETCH_ASSOC);
-    $row = $result->fetch();
-    if ($row['value'] == 'yes') {
-        $text = addslashes($text);
-        $query = "INSERT INTO `$db_errorlog` VALUES( NOW(), :page, :dtext )"; /* [Lysianthus] Changed :text to :dtext because it is a reserved keyword? */
-        try {
-            $result = $db_link->prepare($query);
-            $result->bindParam(':page', $page, PDO::PARAM_STR);
-            $result->bindParam(':dtext', $text, PDO::PARAM_STR); /* [Lysianthus] See above comment. */
-            $result->execute();
-        } catch (PDOException $e) {
-            die('Error executing query: ' . $e->getMessage());
-        }
-    } else if ($kill) {
-        echo "On $page - $text";
-        die();
-    }
-    return true;
+
+    return EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)->handleError($page, E_USER_WARNING, $text, true, $kill);
 }
 
 /*___________________________________________________________________________*/
@@ -78,13 +66,13 @@ function get_logs($start = 'none', $date = '')
         $query .= " LIMIT $start, " . get_setting('per_page');
     }
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
-    $result = $db_link->prepare($query);
-    $result->execute();
+    $result = $db_link->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -96,6 +84,7 @@ function get_logs($start = 'none', $date = '')
     while ($row = $result->fetch()) {
         $logs[] = $row;
     }
+
     return $logs;
 }
 
@@ -106,12 +95,14 @@ function flush_logs()
     require 'config.php';
     $query = "TRUNCATE `$db_errorlog`";
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $result = $db_link->prepare($query);
         $result->execute();
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
+
     return $result;
 }
