@@ -90,38 +90,38 @@ $template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\
     '$1' . App::getLinkWithOriginal() . '$4', $template);
 $template = preg_replace('@((?:<([^>])>)?(?:Powered By|Script Used|Script):?(</\2>)?:?\s*)<a href="https?://workshop\.katenkka\.ru/?"(?:\s+target="_blank")?>Enthusiast</a>\s*(</blockquote>|<br\s?/?>|</ul>|</li>|</div>|</p>)@mi',
     '$1' . App::getLink() . '$4', $template);
-$template = str_replace('$$stat_opened$$', $stats['opened'], $template);
-$template = str_replace('$$stat_updated$$', $stats['lastupdated'], $template);
-$template = str_replace('$$stat_approved$$', $stats['total'], $template);
-$template = str_replace('$$stat_pending$$', $stats['pending'], $template);
-$template = str_replace('$$stat_newmembers$$', $stats['new_members'], $template); // deprecated!
-$template = str_replace('$$stat_new_members$$', $stats['new_members'], $template);
-$template = str_replace('$$stat_average$$', $stats['average'], $template);
-$template = str_replace('$$stat_countries$$', $stats['countries'], $template);
+$template = str_replace('$$stat_opened$$', $stats['opened'] ?? '', $template);
+$template = str_replace('$$stat_updated$$', $stats['lastupdated'] ?? '', $template);
+$template = str_replace('$$stat_approved$$', $stats['total'] ?? '', $template);
+$template = str_replace('$$stat_pending$$', $stats['pending'] ?? '', $template);
+$template = str_replace('$$stat_newmembers$$', $stats['new_members'] ?? '', $template); // deprecated!
+$template = str_replace('$$stat_new_members$$', $stats['new_members'] ?? '', $template);
+$template = str_replace('$$stat_average$$', $stats['average'] ?? '', $template);
+$template = str_replace('$$stat_countries$$', $stats['countries'] ?? '', $template);
 
-$template = str_replace('$$stat_categories$$', $cats, $template);
-$template = str_replace('$$stat_random_member$$', $stats['randommember'], $template);
-$template = str_replace('$$stat_random_member_url$$', $stats['randommember_url'], $template);
-$template = str_replace('$$stat_random_member_name$$', $stats['randommember_name'], $template);
-$template = str_replace('$$stat_random_member_email$$', $stats['randommember_email'], $template);
-$template = str_replace('$$stat_random_member_country$$', $stats['randommember_country'], $template);
+$template = str_replace('$$stat_categories$$', $cats ?? '', $template);
+$template = str_replace('$$stat_random_member$$', $stats['randommember'] ?? '', $template);
+$template = str_replace('$$stat_random_member_url$$', $stats['randommember_url'] ?? '', $template);
+$template = str_replace('$$stat_random_member_name$$', $stats['randommember_name'] ?? '', $template);
+$template = str_replace('$$stat_random_member_email$$', $stats['randommember_email'] ?? '', $template);
+$template = str_replace('$$stat_random_member_country$$', $stats['randommember_country'] ?? '', $template);
 
 $afields = explode(',', $info['additional']);
 foreach ($afields as $field) {
     if ($field == '') {
         continue;
     }
-    $template = str_replace('$$stat_random_member_' . $field . '$$', $stats['randommember_' . $field], $template);
+    $template = str_replace('$$stat_random_member_' . $field . '$$', $stats['randommember_' . $field] ?? '', $template);
 }
 
 if ($info['affiliates'] == 1) {
     // show this only if affiliates are enabled!
-    $template = str_replace('$$stat_new_affiliates_img$$', $stats['newaffiliatesimg'], $template);
-    $template = str_replace('$$stat_new_affiliates$$', $stats['newaffiliates'], $template);
-    $template = str_replace('$$stat_total_affiliates$$', $stats['totalaffiliates'], $template);
-    $template = str_replace('$$stat_random_affiliate$$', $stats['randomaffiliate'], $template);
-    $template = str_replace('$$stat_random_affiliate_img$$', $stats['randomaffiliateimg'], $template);
-    $template = str_replace('$$stat_totalaffiliates$$', $stats['totalaffiliates'], $template);
+    $template = str_replace('$$stat_new_affiliates_img$$', $stats['newaffiliatesimg'] ?? '', $template);
+    $template = str_replace('$$stat_new_affiliates$$', $stats['newaffiliates'] ?? '', $template);
+    $template = str_replace('$$stat_total_affiliates$$', $stats['totalaffiliates'] ?? '', $template);
+    $template = str_replace('$$stat_random_affiliate$$', $stats['randomaffiliate'] ?? '', $template);
+    $template = str_replace('$$stat_random_affiliate_img$$', $stats['randomaffiliateimg'] ?? '', $template);
+    $template = str_replace('$$stat_totalaffiliates$$', $stats['totalaffiliates'] ?? '', $template);
 }
 
 echo $template;

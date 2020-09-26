@@ -30,7 +30,7 @@ namespace
     require_once('Robotess/Autoloader.php');
 
     /*___________________________________________________________________________*/
-    function get_setting($setting)
+    function get_setting($setting, bool $reportNotFound = true)
     {
         include 'config.php';
 
@@ -55,6 +55,10 @@ namespace
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
         if ($row === false) {
+            if(!$reportNotFound) {
+                return "";
+            }
+
             trigger_error(sprintf('Setting [name="%s"] was not found', $setting), E_USER_WARNING);
         }
 

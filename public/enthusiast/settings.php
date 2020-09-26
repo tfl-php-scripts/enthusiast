@@ -130,10 +130,10 @@ if ($show_default) {
                 </td>
                 <td>
                     <input type="radio" name="log_errors"
-                           value="yes" <?= (get_setting('log_errors') == 'yes') ? 'checked="checked" ' : '' ?>/>
+                           value="yes" <?= (get_setting('log_errors', false) == 'yes') ? 'checked="checked" ' : '' ?>/>
                     Yes<br/>
                     <input type="radio" name="log_errors"
-                           value="no" <?= (get_setting('log_errors') != 'yes') ? 'checked="checked" ' : '' ?>/>
+                           value="no" <?= (get_setting('log_errors', false) != 'yes') ? 'checked="checked" ' : '' ?>/>
                     No
                 </td>
             </tr>
@@ -233,7 +233,7 @@ if ($show_default) {
                     SMTP authentication settings
                 </td>
                 <td>
-                    <input type="checkbox" name="smtp_auth" value="yes" <?= (get_setting('smtp_auth') == 'yes')
+                    <input type="checkbox" name="smtp_auth" value="yes" <?= (get_setting('smtp_auth', false) == 'yes')
                         ? 'checked="checked"' : '' ?>/> Yes, SMTP server requires authentication<br/>
 
                     Username: <input type="text" name="smtp_username" size="50"
