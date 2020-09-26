@@ -25,53 +25,8 @@ declare(strict_types = 1);
  * For more information please view the readme.txt file.
  ******************************************************************************/
 
-use RobotessNet\EnthusiastErrorHandler;
-
 require_once('Robotess/Autoloader.php');
-{
-    require 'config.php';
-    try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
-            $db_password);
-        $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die(DATABASE_CONNECT_ERROR . $e->getMessage());
-    }
-
-    set_error_handler(static function (int $errno, string $errstr, string $errfile, int $errline, array $errcontext) use
-    (
-        $db_link,
-        $db_settings,
-        $db_errorlog
-    ) {
-        //workaround to not log error with RSS :D
-        if (isset($errcontext["updatesFeedUrl"])) {
-            return true;
-        }
-        $errstr = htmlspecialchars($errstr);
-
-        switch ($errno) {
-            case E_ERROR:
-                $errstr = "<b>ERROR</b> [$errno] $errstr<br />\n";
-                break;
-
-            case E_WARNING:
-                $errstr = "<b>WARNING</b> [$errno] $errstr<br />\n";
-                break;
-
-            case E_NOTICE:
-                $errstr = "<b>NOTICE</b> [$errno] $errstr<br />\n";
-                break;
-
-            default:
-                $errstr = "Unknown error type: [$errno] $errstr<br />\n";
-                break;
-        }
-
-        return EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)
-                                     ->logError($errfile . ':' . $errline, $errstr, false);
-    }, E_ALL);
-}
+require_once('mod_robotess_errorhandler.php');
 
 // automatically clean inputs
 foreach ($_GET as $index => $value) {
@@ -126,7 +81,7 @@ foreach ($_COOKIE as $index => $value) {
           content="Angela Maria Protacia M. Sabas, Lysianthus <she@lysianth.us>, Ekaterina [http://robotess.net]"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="style.css?v=2"/>
+    <link rel="stylesheet" type="text/css" href="style.css?v=3"/>
     <script src="js.js" type="text/javascript"></script>
 </head>
 <body>

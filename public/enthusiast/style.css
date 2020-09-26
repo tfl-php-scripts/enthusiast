@@ -244,7 +244,7 @@ table.loginbox tr td {
   width: 100px;
 }
 
-.submenu a, .submenu a:link, .submenu a:visited {
+.submenu a, .submenu a:link, .submenu a:visited, .submenu button[type="submit"] {
   display: block;
   text-decoration: none;
   text-align: center;
@@ -261,7 +261,13 @@ table.loginbox tr td {
   width: 80%;
 }
 
-.submenu a:hover, .submenu a:active {
+.submenu button[type="submit"] {
+  cursor: pointer;
+  color: #58719B;
+  outline: none;
+}
+
+.submenu a:hover, .submenu a:active, .submenu button[type="submit"]:hover, .submenu button[type="submit"]:active {
   text-decoration: none;
   background-color: #58719B;
   color: #EEF3FC;

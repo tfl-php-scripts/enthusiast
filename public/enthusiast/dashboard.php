@@ -59,6 +59,7 @@ require_once('mod_errorlogs.php');
     <p>When you're asking for help with the script, please share the following information:</p>
     <p class="enth-version">Enthusiast: <?= RobotessNet\App::getVersion() ?></p>
     <p>PHP: <?= PHP_VERSION ?></p>
+    <p>Please also attach the whole <a href="errorlog.php">error log</a>.</p>
 
     <h1>You are managing: <?= get_setting('collective_title') ?></h1>
 <?php

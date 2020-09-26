@@ -32,3 +32,9 @@ If you are using Enthusiast 3.1.6 (old version by Angela) or Enthusiast [Robotes
 Please follow the instructions carefully. A lot of issues were caused by users having incorrect config files.
 
 That's it! Should you encounter any problems, please create an issue (here: https://gitlab.com/tfl-php-scripts/enthusiast/-/issues), and I will try and solve it if I can. You can also report an issue via contact form: http://contact.robotess.net?box=scripts&subject=Issue+with+Enthusiast Please note that I don't support fresh installations, only those that were upgraded from old version.
+
+## Appreciations
+Thanks to everyone who report their issues in any way, and thanks to those who are beta-testers of the new versions:
+* [Nicki](https://fanlistings.nickifaulk.com/)
+ 
+If you're willing to be a beta-tester, just let me know via form: http://contact.robotess.net?box=scripts&subject=Beta-Testing+of+Enthusiast

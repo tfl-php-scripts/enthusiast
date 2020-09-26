@@ -55,7 +55,7 @@ namespace
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
         if ($row === false) {
-            return "";
+            trigger_error(sprintf('Setting [name="%s"] was not found', $setting), E_USER_WARNING);
         }
 
         return $row['value'];

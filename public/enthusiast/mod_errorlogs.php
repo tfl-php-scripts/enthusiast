@@ -27,6 +27,8 @@
 
 use RobotessNet\EnthusiastErrorHandler;
 
+require_once('mod_robotess_errorhandler.php');
+
 /**
  * @param $page
  * @param $text
@@ -34,6 +36,8 @@ use RobotessNet\EnthusiastErrorHandler;
  *
  * @return bool
  * @deprecated
+ *
+ * Use trigger_error instead
  */
 function log_error($page, $text, $kill = true)
 {
@@ -46,7 +50,7 @@ function log_error($page, $text, $kill = true)
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
 
-    return EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)->logError($page, $text, $kill);
+    return EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)->handleError($page, E_USER_ERROR, $text, true, $kill);
 }
 
 /*___________________________________________________________________________*/

@@ -25,8 +25,6 @@
  *****************************************************************************
  */
 
-use RobotessNet\EnthusiastErrorHandler;
-
 /**
  * @param string $status
  * @param string $start
@@ -119,8 +117,8 @@ function get_listing_info($id = '', $table = '')
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
     if (!$row || count($row) === 0) {
-        EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)->logError(__FILE__ . ':' . __LINE__, 'There is no information about listing = '.$id.' in the database. Are you sure this is correct ID?');
-        return [];
+        trigger_error(sprintf("There is no information about listing = %s in the database. Are you sure this is correct ID?",
+            $id), E_USER_ERROR);
     }
 
     foreach ($row as $key => $value) {
