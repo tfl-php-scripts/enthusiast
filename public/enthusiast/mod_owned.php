@@ -29,6 +29,7 @@
  * @param string $status
  * @param string $start
  * @param string $bydate
+ *
  * @return array
  */
 function get_owned($status = 'all', $start = 'none', $bydate = 'no')
@@ -36,7 +37,8 @@ function get_owned($status = 'all', $start = 'none', $bydate = 'no')
     require 'config.php';
 
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -46,18 +48,15 @@ function get_owned($status = 'all', $start = 'none', $bydate = 'no')
 
     if ($status == 'pending') {
         $query .= " WHERE `status` = 0";
-    }
-    else if ($status == 'upcoming') {
+    } elseif ($status == 'upcoming') {
         $query .= " WHERE `status` = 1";
-    }
-    else if ($status == 'current') {
+    } elseif ($status == 'current') {
         $query .= " WHERE `status` = 2";
     }
 
     if ($bydate == 'bydate') {
         $query .= " ORDER BY `opened` DESC";
-    }
-    else {
+    } else {
         $query .= " ORDER BY `subject` ASC";
     }
 
@@ -85,6 +84,7 @@ function get_owned($status = 'all', $start = 'none', $bydate = 'no')
     while ($row = $result->fetch()) {
         $ids[] = $row['listingid'];
     }
+
     return $ids;
 }
 
@@ -95,7 +95,8 @@ function get_listing_info($id = '', $table = '')
     require 'config.php';
 
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -339,7 +340,7 @@ function show_edit_forms()
             </table>
         </form>
         <?php
-    } else if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'info') {
+    } elseif (isset($_REQUEST['type']) && $_REQUEST['type'] == 'info') {
         ?>
         <form action="owned.php" method="post" enctype="multipart/form-data">
             <input type="hidden" name="action" value="edit"/>
@@ -455,8 +456,7 @@ function show_edit_forms()
                         $dir = get_setting('owned_images_dir');
                         if ($info['imagefile'] == '' || !is_file($dir . $info['imagefile'])) {
                             echo 'No image specified.';
-                        }
-                        else {
+                        } else {
                             $root_web = get_setting('root_path_web');
                             $root_abs = get_setting('root_path_absolute');
                             @$image = getimagesize($dir . $info['imagefile']);
@@ -493,10 +493,10 @@ function show_edit_forms()
                             if ($info['status'] == 0) {
                                 echo '<option value="pending">Leave as is (Pending)</option>';
                                 echo '<option value="pending">--</option>';
-                            } else if ($info['status'] == 1) {
+                            } elseif ($info['status'] == 1) {
                                 echo '<option value="upcoming">Leave as is (Upcoming)</option>';
                                 echo '<option value="upcoming">--</option>';
-                            } else if ($info['status'] == 2) {
+                            } elseif ($info['status'] == 2) {
                                 echo '<option value="current">Leave as is (Current)</option>';
                                 echo '<option value="current">--</option>';
                             }
@@ -568,7 +568,7 @@ function show_edit_forms()
             </table>
         </form>
         <?php
-    } else if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'settings') {
+    } elseif (isset($_REQUEST['type']) && $_REQUEST['type'] == 'settings') {
         ?>
         <form action="owned.php" method="post">
             <input type="hidden" name="action" value="edit"/>
@@ -739,7 +739,7 @@ function show_edit_forms()
             </table>
         </form>
         <?php
-    } else if (isset($_REQUEST['type']) && $_REQUEST['type'] == 'emails') {
+    } elseif (isset($_REQUEST['type']) && $_REQUEST['type'] == 'emails') {
         ?>
         <form action="owned.php" method="post">
             <input type="hidden" name="action" value="edit"/>
@@ -804,7 +804,7 @@ function show_edit_forms()
             </table>
         </form>
         <?php
-    } else if (isset($_REQUEST['type']) &&
+    } elseif (isset($_REQUEST['type']) &&
         $_REQUEST['type'] == 'templates') {
         ?>
         <form action="owned.php" method="post">
@@ -842,7 +842,10 @@ function show_edit_forms()
                         Statistics
                     </td>
                     <td>
-                        Please note, if there's a link to scripts.indisguise.org present in the template, it will be replaced with 2 links - to scripts.robotess.net and to scripts.indisguise.org; <br/>if there's a link to my old website workshop.katenkka.ru - it will be replaced with a link to scripts.robotess.net
+                        Please note, if there's a link to scripts.indisguise.org present in the template, it will be
+                        replaced with 2 links - to scripts.robotess.net and to scripts.indisguise.org; <br/>if there's a
+                        link to my old website workshop.katenkka.ru - it will be replaced with a link to
+                        scripts.robotess.net
                         <br/>
                         <br/>
                         <textarea name="statstemplate" rows="10"
@@ -874,7 +877,8 @@ function edit_owned($id, $fields)
 
     // get listing info
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -930,7 +934,8 @@ function edit_owned($id, $fields)
                 if ($value != $table) {
                     // change data! we actually change the database table
                     try {
-                        $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8', $dbuser, $dbpassword);
+                        $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8',
+                            $dbuser, $dbpassword);
                         $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     } catch (PDOException $e) {
                         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -970,7 +975,8 @@ function edit_owned($id, $fields)
                     continue 2;
                 }
                 try {
-                    $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8', $dbuser, $dbpassword);
+                    $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8',
+                        $dbuser, $dbpassword);
                     $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 } catch (PDOException $e) {
                     die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1002,7 +1008,7 @@ function edit_owned($id, $fields)
                     }
                     $changes[] = 'Country field disabled.';
 
-                } else if ($value == 'enable') {
+                } elseif ($value == 'enable') {
                     // alter table
                     $query = "ALTER TABLE `$table` ADD `country` VARCHAR(128) " .
                         "NOT NULL default '' AFTER `name`";
@@ -1062,7 +1068,8 @@ function edit_owned($id, $fields)
 
                 // connect to remote table
                 try {
-                    $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8', $dbuser, $dbpassword);
+                    $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8',
+                        $dbuser, $dbpassword);
                     $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 } catch (PDOException $e) {
                     die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1083,7 +1090,8 @@ function edit_owned($id, $fields)
                     $db_link_list = null;
 
                     try {
-                        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+                        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8',
+                            $db_user, $db_password);
                         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     } catch (PDOException $e) {
                         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1109,7 +1117,7 @@ function edit_owned($id, $fields)
                     }
                     $changes[] = 'Affiliates feature disabled.';
 
-                } else if ($value == 'enable') {
+                } elseif ($value == 'enable') {
                     // add table
                     $afftable = $table . '_affiliates';
                     $query = "CREATE TABLE IF NOT EXISTS `$afftable` (" .
@@ -1132,7 +1140,8 @@ function edit_owned($id, $fields)
                     $db_link_list = null;
 
                     try {
-                        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+                        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8',
+                            $db_user, $db_password);
                         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     } catch (PDOException $e) {
                         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1153,12 +1162,13 @@ function edit_owned($id, $fields)
                     }
                     $changes[] = 'Affiliates feature enabled.';
 
-                } else if ($value == 'rename') {
+                } elseif ($value == 'rename') {
                     $db_link_list = null; // no need for remote database
 
                     // connect to actual database
                     try {
-                        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+                        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8',
+                            $db_user, $db_password);
                         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     } catch (PDOException $e) {
                         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1191,7 +1201,8 @@ function edit_owned($id, $fields)
                     $dbpassword = $info['dbpassword'];
 
                     try {
-                        $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8', $dbuser, $dbpassword);
+                        $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8',
+                            $dbuser, $dbpassword);
                         $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     } catch (PDOException $e) {
                         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1234,7 +1245,7 @@ function edit_owned($id, $fields)
 
                         if ($new == '' && $index == (count($value) - 1)) {
                             break;
-                        } else if ($new == '') {
+                        } elseif ($new == '') {
                             // delete the field
                             $query = "ALTER TABLE `$table` DROP `" .
                                 $current[$index] . '`';
@@ -1246,7 +1257,7 @@ function edit_owned($id, $fields)
                                     '</i>; Query is: <code>' . $query . '</code>');
                                 die(STANDARD_ERROR);
                             }
-                        } else if (!isset($current[$index])) {
+                        } elseif (!isset($current[$index])) {
                             // add after the previous column
                             $query = "ALTER TABLE `$table` ADD COLUMN `$new` " .
                                 "VARCHAR(255) DEFAULT NULL AFTER `$prev`";
@@ -1309,8 +1320,7 @@ function edit_owned($id, $fields)
                 $status = 0;
                 if ($value == 'upcoming') {
                     $status = 1;
-                }
-                else if ($value == 'current') {
+                } elseif ($value == 'current') {
                     $status = 2;
                 }
                 $query .= "$status WHERE `listingid` = :id";
@@ -1384,7 +1394,7 @@ function edit_owned($id, $fields)
                         }
                     }
 
-                } else if ($value == 'yes') {
+                } elseif ($value == 'yes') {
                     if (!isset($fields['imagefile']) ||
                         $fields['imagefile'] == '') {
                         continue 2;
@@ -1476,11 +1486,9 @@ function edit_owned($id, $fields)
                 $set = 0;
                 if ($value == 'disable') {
                     $set = 0;
-                }
-                else if ($value == 'enable') {
+                } elseif ($value == 'enable') {
                     $set = 1;
-                }
-                else {
+                } else {
                     continue 2;
                 }
                 $query .= "$set WHERE `listingid` = :id";
@@ -1495,12 +1503,10 @@ function edit_owned($id, $fields)
                 }
                 if ($field == 'dropdown') {
                     $changes[] = 'Dropdown usage ' . $value . 'd.';
-                }
-                else if ($field == 'notifynew') {
+                } elseif ($field == 'notifynew') {
                     $changes[] = 'Notify owner of pending members ' . $value .
                         'd.';
-                }
-                else if ($field == 'holdupdate') {
+                } elseif ($field == 'holdupdate') {
                     $changes[] = 'Hold member updates ' . $value . 'd.';
                 }
                 break;
@@ -1575,66 +1581,46 @@ function edit_owned($id, $fields)
                 }
                 if ($field == 'dbserver') {
                     $changes[] = 'Database server updated.';
-                }
-                else if ($field == 'dbuser') {
+                } elseif ($field == 'dbuser') {
                     $changes[] = 'Database user updated.';
-                }
-                else if ($field == 'title') {
+                } elseif ($field == 'title') {
                     $changes[] = 'Listing title updated.';
-                }
-                else if ($field == 'subject') {
+                } elseif ($field == 'subject') {
                     $changes[] = 'Listing subject updated.';
-                }
-                else if ($field == 'email') {
+                } elseif ($field == 'email') {
                     $changes[] = 'Email address updated.';
-                }
-                else if ($field == 'url') {
+                } elseif ($field == 'url') {
                     $changes[] = 'Listing URL updated.';
-                }
-                else if ($field == 'desc') {
+                } elseif ($field == 'desc') {
                     $changes[] = 'Description updated.';
-                }
-                else if ($field == 'listingtype') {
+                } elseif ($field == 'listingtype') {
                     $changes[] = 'Listing type updated.';
-                }
-                else if ($field == 'sort') {
+                } elseif ($field == 'sort') {
                     $changes[] = 'Member sorting field updated.';
-                }
-                else if ($field == 'perpage') {
+                } elseif ($field == 'perpage') {
                     $changes[] = 'Items per page updated.';
-                }
-                else if ($field == 'linktarget') {
+                } elseif ($field == 'linktarget') {
                     $changes[] = 'Link targets updated.';
-                }
-                else if ($field == 'joinpage') {
+                } elseif ($field == 'joinpage') {
                     $changes[] = 'Join page file updated.';
-                }
-                else if ($field == 'updatepage') {
+                } elseif ($field == 'updatepage') {
                     $changes[] = 'Update page file updated.';
-                }
-                else if ($field == 'lostpasspage') {
+                } elseif ($field == 'lostpasspage') {
                     $changes[] = 'Lost password page file updated.';
-                }
-                else if ($field == 'emailsignup') {
+                } elseif ($field == 'emailsignup') {
                     $changes[] = 'Signup email template updated.';
-                }
-                else if ($field == 'emailapproved') {
+                } elseif ($field == 'emailapproved') {
                     $changes[] = 'Approved member email template updated.';
-                }
-                else if ($field == 'emailupdate') {
+                } elseif ($field == 'emailupdate') {
                     $changes[] = 'Member update information email ' .
                         'template updated.';
-                }
-                else if ($field == 'emaillostpass') {
+                } elseif ($field == 'emaillostpass') {
                     $changes[] = 'Lost password email template updated.';
-                }
-                else if ($field == 'listtemplate') {
+                } elseif ($field == 'listtemplate') {
                     $changes[] = 'Members list template updated';
-                }
-                else if ($field == 'affiliatestemplate') {
+                } elseif ($field == 'affiliatestemplate') {
                     $changes[] = 'Affiliates template updated.';
-                }
-                else if ($field == 'statstemplate') {
+                } elseif ($field == 'statstemplate') {
                     $changes[] = 'Listing statistics template updated.';
                 }
                 break;
@@ -1646,6 +1632,7 @@ function edit_owned($id, $fields)
 
         } // end switch
     } // end foreach
+
     return $changes;
 }
 
@@ -1656,7 +1643,8 @@ function delete_owned($id)
     require 'config.php';
 
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1751,7 +1739,8 @@ function get_owned_cats($status = 'all')
 {
     require 'config.php';
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1761,11 +1750,9 @@ function get_owned_cats($status = 'all')
     if ($status && $status != 'all') {
         if ($status == 'pending') {
             $query .= " WHERE `status` = 0";
-        }
-        else if ($status == 'upcoming') {
+        } elseif ($status == 'upcoming') {
             $query .= " WHERE `status` = 1";
-        }
-        else if ($status == 'current') {
+        } elseif ($status == 'current') {
             $query .= " WHERE `status` = 2";
         }
     }
@@ -1810,6 +1797,7 @@ function get_owned_cats($status = 'all')
     while ($row = $result->fetch()) {
         $ids[] = $row['catid'];
     }
+
     return $ids;
 }
 
@@ -1820,7 +1808,8 @@ function parse_owned_template($id)
     require 'config.php';
 
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1897,7 +1886,7 @@ function parse_owned_template($id)
     while ($row = $result->fetch()) {
         if ($row['setting'] == 'owned_images_dir') {
             $dir = $row['value'];
-        } else if ($row['setting'] == 'root_path_absolute') {
+        } elseif ($row['setting'] == 'root_path_absolute') {
             $root_abs = $row['value'];
         } else {
             $root_web = $row['value'];
@@ -1972,7 +1961,8 @@ function get_owned_by_category($catid, $status = 'all')
     $query .= ' ORDER BY `subject`';
 
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -1993,6 +1983,7 @@ function get_owned_by_category($catid, $status = 'all')
     while ($row = $result->fetch()) {
         $ids[] = $row['listingid'];
     }
+
     return $ids;
 }
 
@@ -2003,7 +1994,8 @@ function search_owned($search, $status = 'all', $start = 'none')
     require 'config.php';
 
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -2015,11 +2007,9 @@ function search_owned($search, $status = 'all', $start = 'none')
 
     if ($status == 'pending') {
         $query .= " AND `status` = 0";
-    }
-    else if ($status == 'upcoming') {
+    } elseif ($status == 'upcoming') {
         $query .= " AND `status` = 1";
-    }
-    else if ($status == 'current') {
+    } elseif ($status == 'current') {
         $query .= " AND `status` = 2";
     }
 
@@ -2055,6 +2045,7 @@ function search_owned($search, $status = 'all', $start = 'none')
     while ($row = $result->fetch()) {
         $ids[] = $row['listingid'];
     }
+
     return $ids;
 }
 
@@ -2065,7 +2056,8 @@ function get_listing_stats($id, $extended = false)
     require 'config.php';
 
     try {
-        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user, $db_password);
+        $db_link = new PDO('mysql:host=' . $db_server . ';dbname=' . $db_database . ';charset=utf8', $db_user,
+            $db_password);
         $db_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
@@ -2085,17 +2077,20 @@ function get_listing_stats($id, $extended = false)
     $info = $result->fetch();
 
     try {
-        $db_link_list = new PDO('mysql:host=' . $info['dbserver'] . ';charset=utf8', $info['dbuser'], $info['dbpassword']);
+        $db_link_list = new PDO('mysql:host=' . $info['dbserver'] . ';charset=utf8', $info['dbuser'],
+            $info['dbpassword']);
         $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
         echo '<p class="error">' . DATABASE_CONNECT_ERROR .
             " Can't connect to MySQL server on {$info['dbserver']}</p>";
+
         return;
     }
     $dbselected = $db_link_list->query('USE ' . $info['dbdatabase']);
     if (!$dbselected) {
         echo '<p class="error">' . DATABASE_CONNECT_ERROR .
             " Can't connect to MySQL database '{$info['dbdatabase']}'</p>";
+
         return;
     }
 
@@ -2115,25 +2110,26 @@ function get_listing_stats($id, $extended = false)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
-    $stats['lastupdated'] = '0000-00-00';
-    if($row !== false) {
-        $stats['lastupdated'] = $row['added'];
-    }
 
-    // get most recent members - make sure it is only approved members
-    $query = "SELECT * FROM `$table` WHERE `added` = '" .
-        $stats['lastupdated'] . '\' AND `pending` = 0';
-    $result = $db_link_list->query($query);
-    if (!$result) {
-        log_error(__FILE__ . ':' . __LINE__,
-            'Error executing query: <i>' . $result->errorInfo()[2] .
-            '</i>; Query is: <code>' . $query . '</code>');
-        die(STANDARD_ERROR);
-    }
+    $stats['lastupdated'] = null;
     $new = [];
-    $result->setFetchMode(PDO::FETCH_ASSOC);
-    while ($row = $result->fetch()) {
-        $new[] = $row;
+    if ($row !== false) {
+        $stats['lastupdated'] = $row['added'];
+
+        // get most recent members - make sure it is only approved members
+        $query = "SELECT * FROM `$table` WHERE `added` = '" .
+            $stats['lastupdated'] . '\' AND `pending` = 0';
+        $result = $db_link_list->query($query);
+        if (!$result) {
+            log_error(__FILE__ . ':' . __LINE__,
+                'Error executing query: <i>' . $result->errorInfo()[2] .
+                '</i>; Query is: <code>' . $query . '</code>');
+            die(STANDARD_ERROR);
+        }
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        while ($row = $result->fetch()) {
+            $new[] = $row;
+        }
     }
 
     // get added date in affiliates table if affiliates is present
@@ -2151,8 +2147,7 @@ function get_listing_stats($id, $extended = false)
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
 
-        $stats['lastupdated'] = '0000-00-00';
-        if ($row !== false && $row['added'] && $row['added'] > $stats['lastupdated']) {
+        if ($row !== false && $row['added'] && ($stats['lastupdated'] === null || $row['added'] > $stats['lastupdated'])) {
             $stats['lastupdated'] = $row['added'];
         }
 
@@ -2197,17 +2192,20 @@ function get_listing_stats($id, $extended = false)
 
             // sigh, reconnect :p
             try {
-                $db_link_list = new PDO('mysql:host=' . $info['dbserver'] . ';charset=utf8', $info['dbuser'], $info['dbpassword']);
+                $db_link_list = new PDO('mysql:host=' . $info['dbserver'] . ';charset=utf8', $info['dbuser'],
+                    $info['dbpassword']);
                 $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
                 echo '<p class="error">' . DATABASE_CONNECT_ERROR .
                     " Can't connect to MySQL server on {$info['dbserver']}</p>";
+
                 return;
             }
             $dbselected = $db_link_list->query('USE ' . $info['dbdatabase']);
             if (!$dbselected) {
                 echo '<p class="error">' . DATABASE_CONNECT_ERROR .
                     " Can't connect to MySQL database '{$info['dbdatabase']}'</p>";
+
                 return;
             }
 
@@ -2257,17 +2255,20 @@ function get_listing_stats($id, $extended = false)
 
             // sigh, reconnect :p
             try {
-                $db_link_list = new PDO('mysql:host=' . $info['dbserver'] . ';charset=utf8', $info['dbuser'], $info['dbpassword']);
+                $db_link_list = new PDO('mysql:host=' . $info['dbserver'] . ';charset=utf8', $info['dbuser'],
+                    $info['dbpassword']);
                 $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
                 echo '<p class="error">' . DATABASE_CONNECT_ERROR .
                     " Can't connect to MySQL server on {$info['dbserver']}</p>";
+
                 return;
             }
             $dbselected = $db_link_list->query('USE ' . $info['dbdatabase']);
             if (!$dbselected) {
                 echo '<p class="error">' . DATABASE_CONNECT_ERROR .
                     " Can't connect to MySQL database '{$info['dbdatabase']}'</p>";
+
                 return;
             }
         }
@@ -2324,7 +2325,7 @@ function get_listing_stats($id, $extended = false)
     }
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $randmem = $result->fetch();
-    if($randmem !== false) {
+    if ($randmem !== false) {
         $stats['randommember'] = $randmem['name'];
         if ($randmem['url'] && $randmem['showurl'] == 1) {
             $stats['randommember'] = '<a href="' . $randmem['url'];
@@ -2370,8 +2371,7 @@ function get_listing_stats($id, $extended = false)
         "`month`, DAYOFMONTH( `added` ) AS `day` FROM `$table` WHERE " .
         "`pending` = 0 AND `added` != '0000-00-00' ORDER BY `added` ASC " .
         'LIMIT 1';
-    $result = $db_link_list->prepare($query);
-    $result->execute();
+    $result = $db_link_list->query($query);
     if (!$result) {
         log_error(__FILE__ . ':' . __LINE__,
             'Error executing query: <i>' . $result->errorInfo()[2] .
@@ -2381,7 +2381,7 @@ function get_listing_stats($id, $extended = false)
     $result->setFetchMode(PDO::FETCH_ASSOC);
     $row = $result->fetch();
     $stats['average'] = 'n/a';
-    if($row !== false) {
+    if ($row !== false) {
         $firstyear = $row['year'];
         $firstmonth = $row['month'];
         $firstday = $row['day'];
@@ -2410,11 +2410,12 @@ function get_listing_stats($id, $extended = false)
         }
         $result->setFetchMode(PDO::FETCH_ASSOC);
         $row = $result->fetch();
-        if($row !== false) {
+        if ($row !== false) {
             $stats['countries'] = $row['countries'];
         }
     }
 
     $db_link_list = null;
+
     return $stats;
 }
