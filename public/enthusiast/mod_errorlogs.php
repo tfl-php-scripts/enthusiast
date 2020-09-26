@@ -50,7 +50,7 @@ function log_error($page, $text, $kill = true)
         die(DATABASE_CONNECT_ERROR . $e->getMessage());
     }
 
-    return EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)->handleError($page, E_USER_ERROR, $text, true, $kill);
+    return EnthusiastErrorHandler::instance($db_link, $db_settings, $db_errorlog)->handleError($page, E_USER_WARNING, $text, true, $kill);
 }
 
 /*___________________________________________________________________________*/

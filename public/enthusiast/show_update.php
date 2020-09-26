@@ -201,7 +201,7 @@ if (isset($_POST['enth_update']) && $_POST['enth_update'] === 'yes') {
                 $fields = explode(',', $info['additional']);
                 foreach ($fields as $field) {
                     if ($field != '') {
-                        @$notify_message .= ucwords(str_replace('_', ' ',
+                        $notify_message .= ucwords(str_replace('_', ' ',
                                 $field)) . ': ' . $data[$field] . "\r\n";
                     }
                 }

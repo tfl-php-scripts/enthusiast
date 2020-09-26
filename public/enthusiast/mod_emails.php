@@ -744,12 +744,10 @@ function send_email($to, $from, $subject, $body)
     if (!$mail_sent || $use_mailer == 'php') {
         $headers = "From: $from\r\n";
         $success = @mail($to, $subject, $body, $headers);
-        if (!$success) {
-            // We're still having an error sending through mail()!
-            log_error(__FILE__ . ':' . __LINE__,
-                "Email sending to $to failed using native mail().", false);
-        } else {
+        if ($success) {
             $mail_sent = true;
+        } else {
+            trigger_error(sprintf('Email sending to %s failed using native mail().', $to), E_USER_WARNING);
         }
     }
 
