@@ -35,7 +35,6 @@ class CheckUICest
     {
         $I->amOnPage('/samplefl');
         $I->see('Opened: 17th February 2010');
-        $I->see('Last updated: 24th June 2019');
     }
 
     public function seeCorrectLinkToLostpassPage(AcceptanceTester $I): void
