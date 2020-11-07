@@ -41,7 +41,10 @@ services:
       - internal
 
   mysql:
-    image: mysql:5.5
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: enth_docker

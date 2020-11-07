@@ -6,8 +6,6 @@
   },
   "require": {
     "php": "^7.2",
-    "ext-pdo": "*",
-    "ext-libxml": "*",
-    "ext-dom": "*"
+    "ext-pdo": "*"
   }
 }

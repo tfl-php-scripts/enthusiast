@@ -222,93 +222,16 @@ foreach ($owned as $id) {
 }
 echo '</ul>';
 
-echo '<h1>Enthusiast Updates</h1>';
+$feedUrl = 'https://scripts.robotess.net/projects/enthusiast/atom.xml';
+?>
+<h1>Enthusiast Updates</h1>
+<script>
+     showRss(`<?= $feedUrl?>`);
+</script>
 
-function tryReadingFeedFromCache(string $cacheFileName): string
-{
-    if (!file_exists($cacheFileName)) {
-        return 'Could not load updates from remote server and cache file does not exist';
-    }
+<div id="rss-feed">
+    Nothing here yet. Please check <a href="<?= $feedUrl; ?>" target="_blank">feed</a> manually.
+</div>
 
-    return file_get_contents($cacheFileName);
-}
-/**
- * @param $cacheFileName
- * @param $posts
- */
-function tryWritingToCache($cacheFileName, $posts)
-{
-    if (!file_exists($cacheFileName)) {
-        return;
-    }
-
-    $cacheFile = fopen($cacheFileName, 'wb');
-    if ($cacheFile === false) {
-        return;
-    }
-    fwrite($cacheFile, $posts);
-    fclose($cacheFile);
-}
-
-function printUpdates()
-{
-    $updatesFeedUrl = 'https://scripts.robotess.net/projects/enthusiast/atom.xml';
-    $cachefilename = 'cache/updates';
-    $posts = '';
-
-    $doc = new DOMDocument();
-    $success = $doc->load($updatesFeedUrl, LIBXML_ERR_ERROR);
-    if (!$success) {
-        echo tryReadingFeedFromCache($cachefilename);
-
-        return;
-    }
-
-    $domChannel = $doc->getElementsByTagName('channel');
-    if (count($domChannel) !== 1) {
-        // nothing here..
-        return;
-    }
-
-    /** @var DOMElement $node */
-    $current = 1;
-    $maxItems = 3;
-    foreach ($domChannel->item(0)
-                        ->getElementsByTagName('item') as $node) {
-        $title = $node->getElementsByTagName('title')
-                      ->item(0)->nodeValue;
-        $link = $node->getElementsByTagName('link')
-                     ->item(0)->nodeValue;
-        $pubdate = $node->getElementsByTagName('pubDate')
-                        ->item(0)->nodeValue;
-        $description = $node->getElementsByTagName('description')
-                            ->item(0)->nodeValue;
-
-        $timestamp = strtotime($pubdate);
-        $daylong = date('l', $timestamp);
-        $monlong = date('F', $timestamp);
-        $yyyy = date('Y', $timestamp);
-        $dth = date('jS', $timestamp);
-        $min = date('i', $timestamp);
-        $_24hh = date('H', $timestamp);
-
-        $posts .= <<<MARKUP
-                <h2>{$title}<br />
-                <small>{$daylong}, {$dth} {$monlong} {$yyyy}, {$_24hh}:{$min} &bull; <a href="{$link}" target="_blank">permalink</a></small></h2>
-                <blockquote>{$description}</blockquote>
-MARKUP;
-
-        if ($current++ >= $maxItems) {
-            break;
-        }
-    }
-
-    // try caching this now
-    tryWritingToCache($cachefilename, $posts);
-
-    echo $posts;
-}
-
-printUpdates();
-
+<?php
 require_once('footer.php');

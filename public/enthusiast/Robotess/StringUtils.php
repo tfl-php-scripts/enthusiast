@@ -29,7 +29,7 @@ final class StringUtils
 {
     use Singleton;
 
-    public function clean(string $data, bool $leaveHtml = false): string
+    public function clean(?string $data, bool $leaveHtml = false): string
     {
         if ($data === null) {
             return '';
@@ -46,13 +46,21 @@ final class StringUtils
         return $data;
     }
 
-    public function cleanNormalize(string $data): string
+    public function cleanNormalize(?string $data): string
     {
+        if ($data === null) {
+            return '';
+        }
+
         return strtolower($this->clean($data));
     }
 
-    public function isEmailValid(string $email): bool
+    public function isEmailValid(?string $email): bool
     {
+        if ($email === null) {
+            return false;
+        }
+
         return (bool)preg_match("/^([A-Za-z0-9-_.+]+)@(([A-Za-z0-9-_]+\.)+)([a-zA-Z]{2,})$/i", $email);
     }
 }

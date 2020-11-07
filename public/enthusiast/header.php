@@ -82,7 +82,7 @@ foreach ($_COOKIE as $index => $value) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="style.css?v=3"/>
-    <script src="js.js" type="text/javascript"></script>
+    <script src="js.js?v=2" type="text/javascript"></script>
 </head>
 <body>
 
