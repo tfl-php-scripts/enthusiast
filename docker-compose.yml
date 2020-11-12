@@ -14,7 +14,9 @@ services:
     links:
       - mysql
     volumes:
-      - ./public:/app/public
+      - ./public/enthusiast:/app/public/enthusiast
+      - ./public/samplecollective:/app/public/samplecollective
+      - ./public/samplefl:/app/public/samplefl
       - ./composer.json:/app/composer.json
       - ./composer.lock:/app/composer.lock
       - ./codeception.yml:/app/codeception.yml

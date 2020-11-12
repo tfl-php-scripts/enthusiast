@@ -291,9 +291,9 @@ INSERT INTO `settings` (`setting`, `title`, `value`, `help`) VALUES
 ('smtp_port', 'SMTP port', '25', 'The port to connect to on the SMTP server.'),
 ('smtp_username', 'SMTP username', '', 'The username to use for SMTP authentication.'),
 ('smtp_password', 'SMTP password', '', 'The password to use for SMTP authentication.'),
-('affiliates_dir', 'Collective Affiliates Directory', '/app/public/enthusiast/affiliates/', 'Directory where your collective affiliates images (if any) are stored.'),
-('joined_images_dir', 'Joined images directory', '/app/public/enthusiast/joined/', 'Directory where your joined images will be stored. This should be an absolute path, and a trailing slash is important.'),
-('owned_images_dir', 'Owned images directory', '/app/public/enthusiast/owned/', 'Directory where your owned listing images will be stored. This should be an absolute path, and a trailing slash is important.');
+('affiliates_dir', 'Collective Affiliates Directory', '/app/public/images/affiliates/', 'Directory where your collective affiliates images (if any) are stored.'),
+('joined_images_dir', 'Joined images directory', '/app/public/images/joined/', 'Directory where your joined images will be stored. This should be an absolute path, and a trailing slash is important.'),
+('owned_images_dir', 'Owned images directory', '/app/public/images/owned/', 'Directory where your owned listing images will be stored. This should be an absolute path, and a trailing slash is important.');
 
 -- --------------------------------------------------------
 
