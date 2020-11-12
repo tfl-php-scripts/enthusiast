@@ -62,8 +62,8 @@ require_once('mod_errorlogs.php');
 try {
     if (isset($db_link) && $db_link instanceof PDO) {
         $mysqlVersion = $db_link->getAttribute(PDO::ATTR_SERVER_VERSION);
-        echo '<p>MySQL: '.$mysqlVersion.'</p>';
-        if( (float)$mysqlVersion >= 8.0 ) {
+        echo '<p>MySQL: ' . $mysqlVersion . '</p>';
+        if ((float)$mysqlVersion >= 8.0) {
             echo '<p class="important">Warning: you are using MySQL >= 8.0 . Please make sure all of your listing tables (the ones that contain members) have field `added` defined as nullable; for that, go to phpmyadmin, select the table, then choose \'Structure\' tab, and there check that column `added` has \'Null\' marked as Yes, not No</p>';
         }
     }
@@ -71,7 +71,8 @@ try {
 
 }
 ?>
-    <p>When you're asking for help with the script, please share the information above and also attach the whole <a href="errorlog.php">error log</a>.</p>
+    <p>When you're asking for help with the script, please share the information above and also attach the whole <a
+                href="errorlog.php">error log</a>.</p>
 
 
     <h1>You are managing: <?= get_setting('collective_title') ?></h1>
@@ -237,14 +238,14 @@ echo '</ul>';
 
 $feedUrl = 'https://scripts.robotess.net/projects/enthusiast/atom.xml';
 ?>
-<h1>Enthusiast Updates</h1>
-<script>
-     showRss(`<?= $feedUrl?>`);
-</script>
+    <h1>Enthusiast Updates</h1>
+    <script>
+        showRss(`<?= $feedUrl?>?date=<?=date('Y-m-d');?>`);
+    </script>
 
-<div id="rss-feed">
-    Nothing here yet. Please check <a href="<?= $feedUrl; ?>" target="_blank">feed</a> manually.
-</div>
+    <div id="rss-feed">
+        Nothing here yet. Please check <a href="<?= $feedUrl; ?>" target="_blank">feed</a> manually.
+    </div>
 
 <?php
 require_once('footer.php');
