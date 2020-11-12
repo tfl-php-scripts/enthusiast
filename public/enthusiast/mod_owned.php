@@ -2369,7 +2369,7 @@ function get_listing_stats($id, $extended = false)
     // prepare average number of new fans a day
     $query = "SELECT YEAR( `added` ) AS `year`, MONTH( `added` ) AS " .
         "`month`, DAYOFMONTH( `added` ) AS `day` FROM `$table` WHERE " .
-        "`pending` = 0 AND `added` != '0000-00-00' ORDER BY `added` ASC " .
+        "`pending` = 0 AND COALESCE(`added`, '0000-00-00') != '0000-00-00' ORDER BY `added` ASC " .
         'LIMIT 1';
     $result = $db_link_list->query($query);
     if (!$result) {

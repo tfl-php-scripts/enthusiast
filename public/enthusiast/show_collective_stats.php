@@ -231,7 +231,7 @@ $collective_total_fans_pending = $collective_total_fans -
 // get the earliest opened owned listing
 $query = "SELECT YEAR( `opened` ) AS `year`, MONTH( `opened` ) AS `month`, " .
     "DAYOFMONTH( `opened` ) AS `day` FROM `$db_owned` WHERE " .
-    "`status` != 0 AND `opened` != '0000-00-00' ORDER BY `opened` ASC LIMIT 1";
+    "`status` != 0 AND COALESCE(`opened`, '0000-00-00') != '0000-00-00' ORDER BY `opened` ASC LIMIT 1";
 $result = $db_link->query($query);
 if (!$result) {
     log_error(__FILE__ . ':' . __LINE__,
@@ -265,7 +265,7 @@ $collective_fans_growth_rate = round($collective_total_fans_approved / $days,
 // joined growth rate
 $query = "SELECT YEAR( `added` ) AS `year`, MONTH( `added` ) AS `month`, " .
     "DAYOFMONTH( `added` ) AS `day` FROM `$db_joined` WHERE " .
-    "`added` != '0000-00-00' ORDER BY `added` ASC LIMIT 1";
+    "COALESCE(`added`, '0000-00-00') != '0000-00-00' ORDER BY `added` ASC LIMIT 1";
 $result = $db_link->prepare($query);
 $result->execute();
 if (!$result) {

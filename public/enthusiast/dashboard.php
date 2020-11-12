@@ -56,10 +56,23 @@ require_once('mod_errorlogs.php');
            title="PHP Script Enthusiast ported to PHP7">project's page</a>.</p>
 
     <h2>Server info (useful for debugging and reporting issues)</h2>
-    <p>When you're asking for help with the script, please share the following information:</p>
     <p class="enth-version">Enthusiast: <?= RobotessNet\App::getVersion() ?></p>
     <p>PHP: <?= PHP_VERSION ?></p>
-    <p>Please also attach the whole <a href="errorlog.php">error log</a>.</p>
+<?php
+try {
+    if (isset($db_link) && $db_link instanceof PDO) {
+        $mysqlVersion = $db_link->getAttribute(PDO::ATTR_SERVER_VERSION);
+        echo '<p>MySQL: '.$mysqlVersion.'</p>';
+        if( (float)$mysqlVersion >= 8.0 ) {
+            echo '<p class="important">Warning: you are using MySQL >= 8.0 . Please make sure all of your listing tables (the ones that contain members) have field `added` defined as nullable; for that, go to phpmyadmin, select the table, then choose \'Structure\' tab, and there check that column `added` has \'Null\' marked as Yes, not No</p>';
+        }
+    }
+} catch (Exception $exception) {
+
+}
+?>
+    <p>When you're asking for help with the script, please share the information above and also attach the whole <a href="errorlog.php">error log</a>.</p>
+
 
     <h1>You are managing: <?= get_setting('collective_title') ?></h1>
 <?php
