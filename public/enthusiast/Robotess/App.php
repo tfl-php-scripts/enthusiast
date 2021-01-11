@@ -29,7 +29,7 @@ final class App
 {
     public static function getVersion(): string
     {
-        return '[Robotess Fork] v. 1.0.5';
+        return '[Robotess Fork] v. 1.0.6 (Beta)';
     }
 
     public static function getLinkWithOriginal(): string

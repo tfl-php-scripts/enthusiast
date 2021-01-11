@@ -291,9 +291,9 @@ INSERT INTO `settings` (`setting`, `title`, `value`, `help`) VALUES
 ('smtp_port', 'SMTP port', '25', 'The port to connect to on the SMTP server.'),
 ('smtp_username', 'SMTP username', '', 'The username to use for SMTP authentication.'),
 ('smtp_password', 'SMTP password', '', 'The password to use for SMTP authentication.'),
-('affiliates_dir', 'Collective Affiliates Directory', '/builds/tfl-php-scripts/enthusiast/public/enthusiast/affiliates/', 'Directory where your collective affiliates images (if any) are stored.'),
-('joined_images_dir', 'Joined images directory', '/builds/tfl-php-scripts/enthusiast/public/enthusiast/joined/', 'Directory where your joined images will be stored. This should be an absolute path, and a trailing slash is important.'),
-('owned_images_dir', 'Owned images directory', '/builds/tfl-php-scripts/enthusiast/public/enthusiast/owned/', 'Directory where your owned listing images will be stored. This should be an absolute path, and a trailing slash is important.');
+('affiliates_dir', 'Collective Affiliates Directory', '/builds/tfl-php-scripts/enthusiast/public/images/affiliates/', 'Directory where your collective affiliates images (if any) are stored.'),
+('joined_images_dir', 'Joined images directory', '/builds/tfl-php-scripts/enthusiast/public/images/joined/', 'Directory where your joined images will be stored. This should be an absolute path, and a trailing slash is important.'),
+('owned_images_dir', 'Owned images directory', '/builds/tfl-php-scripts/enthusiast/public/images/owned/', 'Directory where your owned listing images will be stored. This should be an absolute path, and a trailing slash is important.');
 
 -- --------------------------------------------------------
 
@@ -317,6 +317,14 @@ CREATE TABLE `subj3` (
 -- --------------------------------------------------------
 
 --
+-- Dumping data for table `subj3`
+--
+
+INSERT INTO `subj3` (`email`, `name`, `country`, `url`, `pending`, `password`, `showemail`, `showurl`, `added`) VALUES
+    ('normalEmail@localhost123456.com', 'Test', 'United States', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '0000-00-00'),
+    ('normalEmailPending@localhost123456.com', 'Test2 Pending', 'United States', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL);
+
+--
 -- Table structure for table `tab2`
 --
 
@@ -326,7 +334,6 @@ CREATE TABLE `tab2` (
   `name` varchar(128) NOT NULL DEFAULT '',
   `country` varchar(128) NOT NULL DEFAULT '',
   `url` varchar(255) DEFAULT NULL,
-  `extra_field` varchar(255) DEFAULT NULL,
   `pending` tinyint(1) NOT NULL DEFAULT '0',
   `password` varchar(255) NOT NULL DEFAULT '',
   `showemail` tinyint(1) NOT NULL DEFAULT '1',
@@ -345,7 +352,7 @@ CREATE PROCEDURE InsertRand(IN NumRows INT)
         START TRANSACTION;
         WHILE i <= NumRows DO
             SET email = CONCAT('email', CEIL(RAND() * 100), '.', i, '@localhost123456.com');
-    		INSERT INTO `tab2` (`email`, `name`, `country`, `url`, `extra_field`, `pending`, `password`, `showemail`, `showurl`, `added`) VALUES (email, 'Test', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-06-24');
+    		INSERT INTO `tab2` (`email`, `name`, `country`, `url`, `pending`, `password`, `showemail`, `showurl`, `added`) VALUES (email, 'Test', 'United States', '', 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-06-24');
             SET i = i + 1;
         END WHILE;
         COMMIT;
@@ -353,6 +360,9 @@ CREATE PROCEDURE InsertRand(IN NumRows INT)
 DELIMITER ;
 
 CALL InsertRand(2000);
+
+INSERT INTO `tab2` (`email`, `name`, `country`, `url`, `pending`, `password`, `showemail`, `showurl`, `added`) VALUES ('fgjdfhghgdifhjfgjghjghd@ujgdghnjjkdf.com', 'Testpending', 'United States', '', 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '0000-00-00');
+INSERT INTO `tab2` (`email`, `name`, `country`, `url`, `pending`, `password`, `showemail`, `showurl`, `added`) VALUES ('fgjdfhghgdifhjfgd@ujgdghnjjkdf.com', 'Testpending2', 'United States', '', 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '0000-00-00');
 -- --------------------------------------------------------
 
 --
@@ -378,14 +388,14 @@ CREATE TABLE `table1` (
 --
 
 INSERT INTO `table1` (`email`, `name`, `country`, `url`, `extra_field`, `pending`, `password`, `showemail`, `showurl`, `added`) VALUES
-    ('normalEmail@localhost123456.com', 'Test', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-06-24'),
-    ('normalEmailPending@localhost123456.com', 'Test2 Pending', 'United States', '', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
-    ('with+plus@localhost123456.com', 'Plus Pending', 'United States', '', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
-    ('pendinguser@localhost123456.com', 'Pending', 'United States', '', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
-    ('user1@user.com', 'abc', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-01-24'),
-    ('user2@user.com', 'cab', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-02-24'),
-    ('user3@user.com', 'abc', 'Canada', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-05-24'),
-    ('user4@user.com', 'cab', 'England', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-03-24');
+('normalEmail@localhost123456.com', 'Test', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-06-24'),
+('normalEmailPending@localhost123456.com', 'Test2 Pending', 'United States', '', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
+('with+plus@localhost123456.com', 'Plus Pending', 'United States', '', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
+('pendinguser@localhost123456.com', 'Pending', 'United States', '', NULL, 1, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, NULL),
+('user1@user.com', 'abc', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-01-24'),
+('user2@user.com', 'cab', 'United States', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-02-24'),
+('user3@user.com', 'abc', 'Canada', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-05-24'),
+('user4@user.com', 'cab', 'England', '', NULL, 0, '5f4dcc3b5aa765d61d8327deb882cf99', 1, 1, '2019-03-24');
 
 -- --------------------------------------------------------
 
@@ -400,7 +410,7 @@ CREATE TABLE `table1_affiliates` (
   `title` varchar(255) NOT NULL DEFAULT '',
   `imagefile` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL DEFAULT '',
-  `added` date NOT NULL DEFAULT '0000-00-00'
+  `added` date DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --

@@ -14,7 +14,9 @@ services:
     links:
       - mysql
     volumes:
-      - ./public:/app/public
+      - ./public/enthusiast:/app/public/enthusiast
+      - ./public/samplecollective:/app/public/samplecollective
+      - ./public/samplefl:/app/public/samplefl
       - ./composer.json:/app/composer.json
       - ./composer.lock:/app/composer.lock
       - ./codeception.yml:/app/codeception.yml
@@ -41,7 +43,10 @@ services:
       - internal
 
   mysql:
-    image: mysql:5.5
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: enth_docker
