@@ -1,4 +1,5 @@
 <?php
+use RobotessNet\App;
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
@@ -47,7 +48,7 @@ function show_step1() {
    and you just need this installation to connect to the other database. </li>
 
    <li> <b>Make sure you have proper MySQL privileges
-   set!</b> Enthusiast 3 requires the privilege to <code>CREATE</code>,
+   set!</b> Enthusiast <?= App::getVersion() ?> requires the privilege to <code>CREATE</code>,
    <code>ALTER</code>, and <code>DROP</code> database tables. When a listing
    is deleted, the database table is deleted as well. </li>
 

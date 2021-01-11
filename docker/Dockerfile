@@ -1,5 +1,5 @@
-FROM composer:1.6
-FROM php:7.2-apache
+FROM composer:2.0
+FROM php:7.3-apache
 
 MAINTAINER Scripts.robotess.net
 
@@ -45,4 +45,3 @@ CMD ["apache2-foreground"]
 COPY --from=0 /usr/bin/composer /usr/bin/composer
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER 1
-RUN composer global require "hirak/prestissimo:^0.3" --prefer-dist --no-progress --no-suggest --classmap-authoritative

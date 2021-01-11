@@ -6,14 +6,15 @@ Original author is [Angela Sabas](https://github.com/angelasabas/enthusiast), th
 
 #### I would highly recommend not to use this script for new installations. Although some modifications were made, this script is still pretty old, not very secure, and does not have any tests, that's why please only update it if you have already installed it before.
 
-This version requires at least PHP 7.2.
+This version requires at least PHP 7.3 and MySQL = 5.7.
 
 | PHP version | Supported until | Supported by Enthusiast |
 |------------------------------------------|--------------------|-------------------------|
-| 7.2 | 30 November 2020 | :white_check_mark: |
 | 7.3 | 6 December 2021 | :white_check_mark: |
 | 7.4 (recommended, LTS version) | December 2022 | :white_check_mark: |
-| 8.0 (not released yet) | Q4 2023 or Q1 2024 | :grey_question: |
+| 8.0 | Q4 2023 or Q1 2024 | :grey_question: |
+
+**If you have MySQL 8.0 or higher, proper script operation is not guaranteed. For now, I'm not planning to fully support MySQL 8.0.** 
 
 Changes are available in [changelog](CHANGELOG.md).
 
