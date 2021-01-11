@@ -64,7 +64,7 @@ try {
         $mysqlVersion = $db_link->getAttribute(PDO::ATTR_SERVER_VERSION);
         echo '<p>MySQL: ' . $mysqlVersion . '</p>';
         if ((float)$mysqlVersion >= 8.0) {
-            echo '<p class="important">Warning: you are using MySQL >= 8.0 . Please make sure all of your listing tables (the ones that contain members) have field `added` defined as nullable; for that, go to phpmyadmin, select the table, then choose \'Structure\' tab, and there check that column `added` has \'Null\' marked as Yes, not No</p>';
+            echo '<p class="important">Warning: you are using MySQL >= 8.0 and the proper script operation is not guaranteed. Please make sure all of your listing tables (the ones that contain members) have field `added` defined as nullable; for that, go to phpmyadmin, select the table, then choose \'Structure\' tab, and there check that column `added` has \'Null\' marked as Yes, not No</p>';
         }
     }
 } catch (Exception $exception) {
