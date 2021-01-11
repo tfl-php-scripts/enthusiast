@@ -1,5 +1,9 @@
 # Changes:
 
+v.1.0.6 (Beta)
+
+* Fixed #44 - fixes for MySQL 8.0. However, full support won't be provided.
+
 v.1.0.5
 
 * Fixed #38 - suppressing a warning when cache file does not exist and cannot be created. Thanks for reporting, @misssolitude! 
