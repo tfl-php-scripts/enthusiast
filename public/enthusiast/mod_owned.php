@@ -1120,15 +1120,28 @@ function edit_owned($id, $fields)
                 } elseif ($value == 'enable') {
                     // add table
                     $afftable = $table . '_affiliates';
-                    $query = "CREATE TABLE IF NOT EXISTS `$afftable` (" .
-                        "`affiliateid` int(5) NOT NULL auto_increment, " .
-                        "`url` varchar(255) NOT NULL default '', " .
-                        "`title` varchar(255) NOT NULL default '', " .
-                        "`imagefile` varchar(255) default NULL, " .
-                        "`email` varchar(255) NOT NULL default '', " .
-                        "`added` DATE NOT NULL default '0000-00-00', " .
-                        "PRIMARY KEY( affiliateid ) " .
-                        ") ENGINE=MyISAM AUTO_INCREMENT=1";
+                    $mysqlVersion = $db_link_list->getAttribute(PDO::ATTR_SERVER_VERSION);
+                    if ((float)$mysqlVersion >= 8.0) {
+                        $query = "CREATE TABLE IF NOT EXISTS `$afftable` (" .
+                            "`affiliateid` int(5) NOT NULL auto_increment, " .
+                            "`url` varchar(255) NOT NULL default '', " .
+                            "`title` varchar(255) NOT NULL default '', " .
+                            "`imagefile` varchar(255) default NULL, " .
+                            "`email` varchar(255) NOT NULL default '', " .
+                            "`added` DATE NOT NULL, " .
+                            "PRIMARY KEY( affiliateid ) " .
+                            ") ENGINE=MyISAM AUTO_INCREMENT=1";
+                    } else {
+                        $query = "CREATE TABLE IF NOT EXISTS `$afftable` (" .
+                            "`affiliateid` int(5) NOT NULL auto_increment, " .
+                            "`url` varchar(255) NOT NULL default '', " .
+                            "`title` varchar(255) NOT NULL default '', " .
+                            "`imagefile` varchar(255) default NULL, " .
+                            "`email` varchar(255) NOT NULL default '', " .
+                            "`added` DATE NOT NULL default '0000-00-00', " .
+                            "PRIMARY KEY( affiliateid ) " .
+                            ") ENGINE=MyISAM AUTO_INCREMENT=1";
+                    }
                     $result = $db_link_list->prepare($query);
                     $result->execute();
                     if (!$result) {
