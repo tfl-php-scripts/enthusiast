@@ -1,5 +1,5 @@
 FROM composer:2.0
-FROM php:7.2-apache
+FROM php:7.3-apache
 
 MAINTAINER Scripts.robotess.net
 
