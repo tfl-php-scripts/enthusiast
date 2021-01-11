@@ -1120,7 +1120,6 @@ function edit_owned($id, $fields)
                 } elseif ($value == 'enable') {
                     // add table
                     $afftable = $table . '_affiliates';
-
                     $mysqlVersion = $db_link_list->getAttribute(PDO::ATTR_SERVER_VERSION);
                     if ((float)$mysqlVersion >= 8.0) {
                         $query = "CREATE TABLE IF NOT EXISTS `$afftable` (" .
