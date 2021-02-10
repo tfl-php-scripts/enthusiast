@@ -4,9 +4,6 @@ cache:
   paths:
     - vendor/
 
-services:
-  - mysql:5.7
-
 variables:
   MYSQL_ROOT_PASSWORD: password
   MYSQL_DATABASE: enth_docker
@@ -14,6 +11,8 @@ variables:
   MYSQL_PASSWORD: password
 
 test:
+  services:
+    - mysql:5.7
   script:
     - apt-get update -yqq
     - apt-get install -yqq git zip unzip default-mysql-client
