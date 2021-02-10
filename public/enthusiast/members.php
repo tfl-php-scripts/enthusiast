@@ -367,7 +367,7 @@ if ($action === 'edit') {
 
             </table>
         </form>
-        <?php
+<?php
     }
 
     // free up memory

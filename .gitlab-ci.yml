@@ -1,16 +1,8 @@
-image: php:7.3
+image: php:7.4
 
 cache:
   paths:
     - vendor/
-
-before_script:
-  - apt-get update -yqq
-  - apt-get install -yqq git zip unzip default-mysql-client
-  - docker-php-ext-install pdo pdo_mysql
-  - curl -sS https://getcomposer.org/installer | php
-  - php composer.phar install
-  - php -S localhost:8081 --docroot public &>/dev/null&
 
 services:
   - mysql:5.7
@@ -23,6 +15,13 @@ variables:
 
 test:
   script:
+    - apt-get update -yqq
+    - apt-get install -yqq git zip unzip default-mysql-client
+    - docker-php-ext-install pdo pdo_mysql
+    - curl -sS https://getcomposer.org/installer | php
+    - rm composer.lock
+    - php composer.phar install
+    - php -S localhost:8081 --docroot public &>/dev/null&
     - cp -R docker/samplefl300members public/samplefl300members
     - cp docker/configs/config-with-listing-1.php public/samplefl/config.php
     - cp docker/configs/config-enthusiast-folder.php public/enthusiast/config.php
@@ -38,3 +37,27 @@ test:
       - tests/_output/
     reports:
       junit: tests/_output/report.xml
+
+artifacts_php72:
+  stage: artifacts
+  only:
+    refs:
+      - master
+      - develop
+  script:
+    - apt-get update -yqq
+    - apt-get install -yqq git zip unzip
+    - curl -sS https://getcomposer.org/installer | php
+    - rm composer.lock
+    - rm composer.json
+    - php composer.phar require rector/rector
+    - php composer.phar install
+    - vendor/bin/rector process --config rector-downgrade-72.php
+  artifacts:
+    name: "enthusiast-php72-php-73-$CI_COMMIT_REF_NAME"
+    paths:
+      - public
+
+stages:
+  - test
+  - artifacts

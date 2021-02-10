@@ -2,17 +2,18 @@
 
 The main repository with issue tracking is at gitlab: https://gitlab.com/tfl-php-scripts/enthusiast
 
-Original author is [Angela Sabas](https://github.com/angelasabas/enthusiast), the other contributor is [Lysianthus](https://github.com/Lysianthus/enthusiast) / Original readme by Angela is [here](readme.txt).
+An original author is [Angela Sabas](https://github.com/angelasabas/enthusiast), the other contributor is [Lysianthus](https://github.com/Lysianthus/enthusiast) / Original readme by Angela is [here](readme.txt).
 
 #### I would highly recommend not to use this script for new installations. Although some modifications were made, this script is still pretty old, not very secure, and does not have any tests, that's why please only update it if you have already installed it before.
 
-This version requires at least PHP 7.3 and MySQL = 5.7.
+This version requires at least PHP 7.2 and PDO_MySQL extensions (with MySQL = 5.7; or 5.6 - though it's pretty outdated).
 
-| PHP version | Supported until | Supported by Enthusiast |
-|------------------------------------------|--------------------|-------------------------|
-| 7.3 | 6 December 2021 | :white_check_mark: |
-| 7.4 (recommended, LTS version) | December 2022 | :white_check_mark: |
-| 8.0 | Q4 2023 or Q1 2024 | :grey_question: |
+| PHP version | Supported by Enthusiast | Link to download |
+|------------------------------------------|-------------------------|---------------------|
+| 7.2 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.2](https://gitlab.com/tfl-php-scripts/enthusiast/-/jobs/artifacts/master/download?job=artifacts_php72)|
+| 7.3 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.3](https://gitlab.com/tfl-php-scripts/enthusiast/-/jobs/artifacts/master/download?job=artifacts_php72)| 
+| 7.4 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.4](https://gitlab.com/tfl-php-scripts/enthusiast/-/archive/master/enthusiast-master.zip?path=public)|
+| 8.0 | :grey_question: |-|
 
 **If you have MySQL 8.0 or higher, proper script operation is not guaranteed. For now, I'm not planning to fully support MySQL 8.0.** 
 
@@ -26,7 +27,7 @@ If you are using Enthusiast 3.1.6 (old version by Angela) or Enthusiast [Robotes
 
 1. **Back up all your current Enthusiast configurations, files, and databases first.**
 2. Take note of your database information in all your `config.php` files.
-3. Download [an archive of the public folder of this repository](https://gitlab.com/tfl-php-scripts/enthusiast/-/archive/master/enthusiast-master.zip?path=public). Extract the archive.
+3. Download an archive - please choose appropriate link from the table above. Extract the archive.
 4. Replace your current `enthusiast/` files with the `public/enthusiast/` files from this repository. Make sure that you have all files from the folder uploaded.
 5. In every fanlisting folder, as well as in the enthusiast and collective folder, paste the `config.sample.php` file. Edit your database information and listing ID variable accordingly, and save it as `config.php` to overwrite your old one. There are samplefl and samplecollective folders put to the archive right for that so please, make your FLs consistent with those examples. 
 

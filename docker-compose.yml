@@ -20,6 +20,7 @@ services:
       - ./composer.json:/app/composer.json
       - ./composer.lock:/app/composer.lock
       - ./codeception.yml:/app/codeception.yml
+      - ./rector.php:/app/rector.php
       - ./tests:/app/tests
       - ./docker/samplefl300members:/app/public/samplefl300members:ro
       - ./docker/vhost.conf:/etc/apache2/sites-available/000-default.conf

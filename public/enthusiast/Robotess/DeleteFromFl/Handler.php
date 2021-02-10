@@ -29,20 +29,11 @@ use RobotessNet\StringUtils;
 
 final class Handler
 {
-    /**
-     * @var bool
-     */
-    private $showForm = false;
+    private bool $showForm = false;
 
-    /**
-     * @var string
-     */
-    private $responseMessage = '';
+    private string $responseMessage = '';
 
-    /**
-     * @var string
-     */
-    private $cleanEmail = '';
+    private string $cleanEmail = '';
 
     public function handle(int $listing, array $postData, array $listingInfo, string $errorstyle): bool
     {

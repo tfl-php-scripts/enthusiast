@@ -159,7 +159,7 @@ function get_members($listing, $status = 'all', $sort = [], $start = 'none', $by
     $dbdatabase = $info['dbdatabase'];
     $dbuser = $info['dbuser'];
     $dbpassword = $info['dbpassword'];
-    $perpage = $perpage ?? $info['perpage'];
+    $perpage ??= $info['perpage'];
 
     // create limit query
     $limit_query = '';

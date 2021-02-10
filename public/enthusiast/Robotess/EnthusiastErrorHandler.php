@@ -39,9 +39,9 @@ class EnthusiastErrorHandler
 {
     use Singleton;
 
-    private $isMonitoring;
-    private $dbLink;
-    private $dbErrorLog;
+    private ?bool $isMonitoring = null;
+    private \PDO $dbLink;
+    private string $dbErrorLog;
 
     private function __construct(PDO $db_link, string $db_settings, string $db_errorlog)
     {
@@ -131,8 +131,8 @@ class EnthusiastErrorHandler
             } catch (PDOException $e) {
                 die('Error executing query: ' . $e->getMessage());
             }
-        } else if($showError) {
-            echo $errhumantype." occurred on the page: $errstr<br/>";
+        } elseif ($showError) {
+            echo $errhumantype . " occurred on the page: $errstr<br/>";
         }
 
         if ($kill) {

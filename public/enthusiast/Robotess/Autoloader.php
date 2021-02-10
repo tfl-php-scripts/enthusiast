@@ -29,10 +29,7 @@ spl_autoload_register([new Autoloader(), 'autoload']);
 
 final class Autoloader
 {
-    /**
-     * @var string
-     */
-    private $path;
+    private string $path;
 
     public function __construct()
     {

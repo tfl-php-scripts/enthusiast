@@ -135,7 +135,7 @@ if( $action == 'add' ) {
       $desc = '';
       $comments = '';
       $approved = '0';
-      
+
       if( isset( $_REQUEST['catid'] ) )
          { $catid = $_REQUEST['catid']; }
       if( isset( $_REQUEST['url'] ) )
