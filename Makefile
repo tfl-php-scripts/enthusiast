@@ -26,8 +26,10 @@ codecept:
 
 rector:
 	docker exec -ti ${container} composer update
+	docker exec -ti ${container} composer require rector/rector
 	docker exec -ti ${container} php vendor/bin/rector process --dry-run --debug
 
 rector-update:
 	docker exec -ti ${container} composer update
+	docker exec -ti ${container} composer require rector/rector
 	docker exec -ti ${container} php vendor/bin/rector process --debug
