@@ -6,14 +6,17 @@ namespace RobotessNet;
 trait Singleton
 {
     /**
-     * @var self
+     * @var self|null
      */
     private static $instance;
 
     private function __construct()
     { /***/ }
 
-    public static function instance(): self
+    /**
+     * @return self
+     */
+    public static function instance()
     {
         if (empty(self::$instance)) {
             self::$instance = new self();
