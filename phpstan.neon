@@ -7,9 +7,11 @@ parameters:
 	level: 2
 	excludePaths:
 		analyse:
+			- public/enthusiast/config*.php
 			- public/enthusiast/Mail/
 			- public/enthusiast/PEAR.php
+			- public/sample*/config*.php
 			- public/sample*/config.php
-			- public/config.php
+			- public/config*.php
 	paths:
 		- public
