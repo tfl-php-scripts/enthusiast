@@ -1,3 +1,6 @@
+includes:
+	- phpstan-baseline.neon
+
 parameters:
 	bootstrapFiles:
 		- phpstan/constants.php
