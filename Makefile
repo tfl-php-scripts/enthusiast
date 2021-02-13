@@ -33,3 +33,11 @@ rector-update:
 	docker exec -ti ${container} composer update
 	docker exec -ti ${container} composer require rector/rector
 	docker exec -ti ${container} php vendor/bin/rector process --debug
+
+phpstan1:
+	docker exec -ti ${container} composer install
+	docker exec -ti ${container} php vendor/bin/phpstan analyse --memory-limit 1G --debug
+
+phpstan-baseline:
+	docker exec -ti ${container} composer install
+	docker exec -ti ${container} php vendor/bin/phpstan analyse --memory-limit 1G --debug --generate-baseline

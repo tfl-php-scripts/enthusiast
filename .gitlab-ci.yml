@@ -10,6 +10,18 @@ variables:
   MYSQL_USER: enth_docker
   MYSQL_PASSWORD: password
 
+static_analysis:
+  stage: static_analysis
+  script:
+    - apt-get update -yqq
+    - apt-get install -yqq git zip unzip
+    - curl -sS https://getcomposer.org/installer | php
+    - rm composer.lock
+    - rm composer.json
+    - php composer.phar require phpstan/phpstan
+    - php composer.phar install
+    - vendor/bin/phpstan analyse -c phpstan-gitlab.neon --error-format=gitlab --memory-limit 1G
+
 test:
   services:
     - mysql:5.7
@@ -58,5 +70,6 @@ artifacts_php72:
       - public
 
 stages:
+  - static_analysis
   - test
   - artifacts

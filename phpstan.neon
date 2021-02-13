@@ -1,0 +1,12 @@
+parameters:
+	bootstrapFiles:
+		- phpstan/constants.php
+	level: 2
+	excludePaths:
+		analyse:
+			- public/enthusiast/Mail/
+			- public/enthusiast/PEAR.php
+			- public/sample*/config.php
+			- public/config.php
+	paths:
+		- public

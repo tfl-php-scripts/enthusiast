@@ -53,6 +53,11 @@ final class Handler
 
         // check nonce field
         $nonce = explode(':', StringUtils::instance()->clean($postData['enth_nonce']));
+        if($nonce === false) {
+            echo "<p$errorstyle>ERROR: Please try again.</p>";
+            return false;
+        }
+
         $mdfived = substr($nonce[2], 0, (strlen($nonce[2]) - 3));
         $appended = substr($nonce[2], -3);
 

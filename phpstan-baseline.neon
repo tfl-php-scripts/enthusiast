@@ -1,0 +1,742 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Variable \\$errorMessage in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: public/enthusiast/Robotess/DeleteFromFl/Form.php
+
+		-
+			message: "#^Binary operation \"\\-\" between string and int\\|false results in an error\\.$#"
+			count: 1
+			path: public/enthusiast/Robotess/DeleteFromFl/Handler.php
+
+		-
+			message: "#^Binary operation \"\\-\" between string and int\\|false results in an error\\.$#"
+			count: 2
+			path: public/enthusiast/Robotess/JoinFl/Handler.php
+
+		-
+			message: "#^Variable \\$password might not be defined\\.$#"
+			count: 2
+			path: public/enthusiast/Robotess/JoinFl/Handler.php
+
+		-
+			message: "#^Variable \\$dir might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/affiliates.php
+
+		-
+			message: "#^Variable \\$total_cats might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$joined_approved might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$joined_pending might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$owned_current might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$owned_upcoming might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$owned_pending might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$affiliates_collective might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$owned_newest might not be defined\\.$#"
+			count: 5
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$joined_newest might not be defined\\.$#"
+			count: 3
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$collective_total_fans_approved might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$collective_total_fans_pending might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$collective_fans_growth_rate might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/dashboard.php
+
+		-
+			message: "#^Variable \\$total_cats might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$joined_approved might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$joined_pending might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$owned_current might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$owned_upcoming might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$owned_pending might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$affiliates_collective might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$owned_newest might not be defined\\.$#"
+			count: 5
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$joined_newest might not be defined\\.$#"
+			count: 3
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$collective_total_fans_approved might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$collective_total_fans_pending might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$collective_fans_growth_rate might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/index.php
+
+		-
+			message: "#^Variable \\$db_database might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_password might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_server might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_user might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_affiliates might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_link might not be defined\\.$#"
+			count: 18
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Cannot call method errorInfo\\(\\) on array\\|float\\|int\\|string\\|false\\.$#"
+			count: 18
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_category might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_emailtemplate might not be defined\\.$#"
+			count: 2
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_joined might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_owned might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_errorlog might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_settings might not be defined\\.$#"
+			count: 12
+			path: public/enthusiast/install.php
+
+		-
+			message: "#^Variable \\$db_database might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install_cats.php
+
+		-
+			message: "#^Variable \\$db_password might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install_cats.php
+
+		-
+			message: "#^Variable \\$db_server might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install_cats.php
+
+		-
+			message: "#^Variable \\$db_user might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install_cats.php
+
+		-
+			message: "#^Variable \\$db_category might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/install_cats.php
+
+		-
+			message: "#^Variable \\$dir might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/joined.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_database$#"
+			count: 10
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_password$#"
+			count: 10
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_server$#"
+			count: 10
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_user$#"
+			count: 10
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_settings$#"
+			count: 6
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^Cannot call method errorInfo\\(\\) on false\\.$#"
+			count: 3
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_affiliates$#"
+			count: 7
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_owned$#"
+			count: 8
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$id\\)\\: Unexpected token \"\\$id\", expected type at offset 14$#"
+			count: 5
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_emailtemplate$#"
+			count: 1
+			path: public/enthusiast/mod_affiliates.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_database$#"
+			count: 8
+			path: public/enthusiast/mod_categories.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_password$#"
+			count: 8
+			path: public/enthusiast/mod_categories.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_server$#"
+			count: 8
+			path: public/enthusiast/mod_categories.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_user$#"
+			count: 8
+			path: public/enthusiast/mod_categories.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_category$#"
+			count: 10
+			path: public/enthusiast/mod_categories.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_settings$#"
+			count: 1
+			path: public/enthusiast/mod_categories.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_database$#"
+			count: 8
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_password$#"
+			count: 8
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_server$#"
+			count: 8
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_user$#"
+			count: 8
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_emailtemplate$#"
+			count: 6
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^Cannot call method errorInfo\\(\\) on false\\.$#"
+			count: 3
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_owned$#"
+			count: 2
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_affiliates$#"
+			count: 2
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_settings$#"
+			count: 5
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^Undefined variable\\: \\$sendmail_path$#"
+			count: 1
+			path: public/enthusiast/mod_emails.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$page\\)\\: Unexpected token \"\\$page\", expected type at offset 14$#"
+			count: 1
+			path: public/enthusiast/mod_errorlogs.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(\\$text\\)\\: Unexpected token \"\\$text\", expected type at offset 30$#"
+			count: 1
+			path: public/enthusiast/mod_errorlogs.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_database$#"
+			count: 3
+			path: public/enthusiast/mod_errorlogs.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_server$#"
+			count: 3
+			path: public/enthusiast/mod_errorlogs.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_user$#"
+			count: 3
+			path: public/enthusiast/mod_errorlogs.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_password$#"
+			count: 3
+			path: public/enthusiast/mod_errorlogs.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_errorlog$#"
+			count: 3
+			path: public/enthusiast/mod_errorlogs.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_settings$#"
+			count: 1
+			path: public/enthusiast/mod_errorlogs.php
+
+		-
+			message: "#^Cannot call method errorInfo\\(\\) on false\\.$#"
+			count: 1
+			path: public/enthusiast/mod_errorlogs.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_database$#"
+			count: 10
+			path: public/enthusiast/mod_joined.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_password$#"
+			count: 10
+			path: public/enthusiast/mod_joined.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_server$#"
+			count: 10
+			path: public/enthusiast/mod_joined.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_user$#"
+			count: 10
+			path: public/enthusiast/mod_joined.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_joined$#"
+			count: 9
+			path: public/enthusiast/mod_joined.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_settings$#"
+			count: 4
+			path: public/enthusiast/mod_joined.php
+
+		-
+			message: "#^Cannot call method errorInfo\\(\\) on false\\.$#"
+			count: 6
+			path: public/enthusiast/mod_joined.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_category$#"
+			count: 1
+			path: public/enthusiast/mod_joined.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_database$#"
+			count: 11
+			path: public/enthusiast/mod_members.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_password$#"
+			count: 11
+			path: public/enthusiast/mod_members.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_server$#"
+			count: 11
+			path: public/enthusiast/mod_members.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_user$#"
+			count: 12
+			path: public/enthusiast/mod_members.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_owned$#"
+			count: 11
+			path: public/enthusiast/mod_members.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_settings$#"
+			count: 1
+			path: public/enthusiast/mod_members.php
+
+		-
+			message: "#^Cannot call method errorInfo\\(\\) on false\\.$#"
+			count: 4
+			path: public/enthusiast/mod_members.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_database$#"
+			count: 12
+			path: public/enthusiast/mod_owned.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_server$#"
+			count: 12
+			path: public/enthusiast/mod_owned.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_user$#"
+			count: 12
+			path: public/enthusiast/mod_owned.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_password$#"
+			count: 12
+			path: public/enthusiast/mod_owned.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_owned$#"
+			count: 29
+			path: public/enthusiast/mod_owned.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_settings$#"
+			count: 8
+			path: public/enthusiast/mod_owned.php
+
+		-
+			message: "#^Cannot call method errorInfo\\(\\) on false\\.$#"
+			count: 11
+			path: public/enthusiast/mod_owned.php
+
+		-
+			message: "#^Undefined variable\\: \\$file$#"
+			count: 1
+			path: public/enthusiast/mod_owned.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_category$#"
+			count: 1
+			path: public/enthusiast/mod_owned.php
+
+		-
+			message: "#^Variable \\$db_database might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/mod_robotess_errorhandler.php
+
+		-
+			message: "#^Variable \\$db_server might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/mod_robotess_errorhandler.php
+
+		-
+			message: "#^Variable \\$db_user might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/mod_robotess_errorhandler.php
+
+		-
+			message: "#^Variable \\$db_password might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/mod_robotess_errorhandler.php
+
+		-
+			message: "#^Variable \\$db_settings might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/mod_robotess_errorhandler.php
+
+		-
+			message: "#^Variable \\$db_errorlog might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/mod_robotess_errorhandler.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_settings$#"
+			count: 10
+			path: public/enthusiast/mod_settings.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_database$#"
+			count: 8
+			path: public/enthusiast/mod_settings.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_server$#"
+			count: 8
+			path: public/enthusiast/mod_settings.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_user$#"
+			count: 8
+			path: public/enthusiast/mod_settings.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_password$#"
+			count: 8
+			path: public/enthusiast/mod_settings.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_server$#"
+			count: 2
+			path: public/enthusiast/mod_setup.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_database$#"
+			count: 2
+			path: public/enthusiast/mod_setup.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_user$#"
+			count: 2
+			path: public/enthusiast/mod_setup.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_password$#"
+			count: 1
+			path: public/enthusiast/mod_setup.php
+
+		-
+			message: "#^Undefined variable\\: \\$db_owned$#"
+			count: 1
+			path: public/enthusiast/mod_setup.php
+
+		-
+			message: "#^Variable \\$db_database might not be defined\\.$#"
+			count: 4
+			path: public/enthusiast/show_collective_stats.php
+
+		-
+			message: "#^Variable \\$db_server might not be defined\\.$#"
+			count: 4
+			path: public/enthusiast/show_collective_stats.php
+
+		-
+			message: "#^Variable \\$db_password might not be defined\\.$#"
+			count: 4
+			path: public/enthusiast/show_collective_stats.php
+
+		-
+			message: "#^Variable \\$db_user might not be defined\\.$#"
+			count: 4
+			path: public/enthusiast/show_collective_stats.php
+
+		-
+			message: "#^Variable \\$db_owned might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/show_collective_stats.php
+
+		-
+			message: "#^Cannot call method errorInfo\\(\\) on false\\.$#"
+			count: 1
+			path: public/enthusiast/show_collective_stats.php
+
+		-
+			message: "#^Variable \\$db_joined might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/show_collective_stats.php
+
+		-
+			message: "#^Variable \\$today might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/show_collective_stats.php
+
+		-
+			message: "#^Variable \\$show_list in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: public/enthusiast/show_joined.php
+
+		-
+			message: "#^Variable \\$_GET in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 2
+			path: public/enthusiast/show_owned.php
+
+		-
+			message: "#^Variable \\$status might not be defined\\.$#"
+			count: 1
+			path: public/enthusiast/show_owned.php
+
+		-
+			message: "#^Binary operation \"\\-\" between string and int\\|false results in an error\\.$#"
+			count: 2
+			path: public/enthusiast/show_update.php
+
+		-
+			message: "#^Variable \\$total_cats might not be defined\\.$#"
+			count: 1
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$joined_approved might not be defined\\.$#"
+			count: 1
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$joined_pending might not be defined\\.$#"
+			count: 1
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$owned_current might not be defined\\.$#"
+			count: 2
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$owned_pending might not be defined\\.$#"
+			count: 1
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$owned_upcoming might not be defined\\.$#"
+			count: 1
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$affiliates_collective might not be defined\\.$#"
+			count: 1
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$owned_newest might not be defined\\.$#"
+			count: 5
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$joined_newest might not be defined\\.$#"
+			count: 3
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$collective_total_fans_approved might not be defined\\.$#"
+			count: 1
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$collective_total_fans_pending might not be defined\\.$#"
+			count: 1
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$collective_fans_growth_rate might not be defined\\.$#"
+			count: 2
+			path: public/samplecollective/index.php
+
+		-
+			message: "#^Variable \\$joined_growth_rate might not be defined\\.$#"
+			count: 1
+			path: public/samplecollective/index.php
+

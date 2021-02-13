@@ -64,12 +64,12 @@ function show_joined_category_list($dropdown = false, $intro = true)
             <p>
                 <?php
                 // show other possible $_GET values
-                if (isset($_GET)) {
-                    foreach ($_GET as $get => $value) {
-                        if ($get != 'cat') {
-                            echo '<input type="hidden" name="' . StringUtils::instance()->clean($get) .
-                                '" value="' . StringUtils::instance()->clean($value) . '" />' . "\r\n";
-                        }
+                foreach ($_GET as $get => $value) {
+                    if ($get != 'cat') {
+                        echo '<input type="hidden" name="' . StringUtils::instance()
+                                                                        ->clean($get) .
+                            '" value="' . StringUtils::instance()
+                                                     ->clean($value) . '" />' . "\r\n";
                     }
                 }
                 ?>
@@ -137,9 +137,12 @@ foreach ($joinedcats as $cat) { // also add parents now
     $ancestors = array_reverse(get_ancestors($cat));
     foreach ($ancestors as $a) {
         if (!in_array($a, $skipids)) {
-            $cats[] = ['catid' => $a, 'text' => get_category_name($a),
+            $cats[] = [
+                'catid'  => $a,
+                'text'   => get_category_name($a),
                 'parent' => get_category_parent($a),
-                'qty' => count(get_joined_by_category($a))];
+                'qty'    => count(get_joined_by_category($a)),
+            ];
             $skipids[] = $a;
         }
     }
@@ -153,7 +156,7 @@ foreach ($cats as $index => $cat) {
             // has parent, remove it from this list of root cats
             unset($cats[$index]);
         }
-    } else if ($cat['parent'] != '0' && $cat['parent'] != '') {
+    } elseif ($cat['parent'] != '0' && $cat['parent'] != '') {
         if ($cat['qty'] == 0) {
             unset($cats[$index]);
             continue;
@@ -175,28 +178,22 @@ usort($cats, 'category_array_compare');
 $pageinfo = pathinfo($_SERVER['PHP_SELF']);
 $page = $pageinfo['basename'];
 $connector = '?';
-if (isset($_GET)) {
-    foreach ($_GET as $get => $value) {
-        if ($get != 'cat') {
-            $page .= $connector . StringUtils::instance()->cleanNormalize($get) . '=' . StringUtils::instance()->clean($value);
-            $connector = '&amp;';
-        }
+foreach ($_GET as $get => $value) {
+    if ($get != 'cat') {
+        $page .= $connector . StringUtils::instance()
+                                         ->cleanNormalize($get) . '=' . StringUtils::instance()
+                                                                                   ->clean($value);
+        $connector = '&amp;';
     }
 }
 
 // start showing the list of categories
 if ((!isset($show_list) || !$show_list)) { // use dropdown
     show_joined_category_list(true);
-} else if ((isset($show_list) && $show_list) &&
-    (!isset($_GET['cat']) || $_GET['cat'] == '')) {
+} elseif ($show_list && (!isset($_GET['cat']) || $_GET['cat'] == '')) {
     show_joined_category_list();
 }
 
-// show listings
-/**
- * @param $getcat
- * @return string
- */
 function getCatNameById($getcat)
 {
     if ($ancestors = array_reverse(get_ancestors($getcat))) {
@@ -218,22 +215,27 @@ if (isset($_GET['cat']) && $_GET['cat'] != '') {
     // "where you are" text
     if ($_GET['cat'] == 'all' || $_GET['cat'] == 'pending') {
         echo '<p class="show_joined_where_you_are">Showing ' .
-            StringUtils::instance()->clean($_GET['cat']) . ' listings...</p>';
+            StringUtils::instance()
+                       ->clean($_GET['cat']) . ' listings...</p>';
     } else {
-        $text = getCatNameById(StringUtils::instance()->cleanNormalize($_GET['cat']));
+        $text = getCatNameById(StringUtils::instance()
+                                          ->cleanNormalize($_GET['cat']));
         echo '<p class="show_joined_where_you_are">Showing listings ' .
             'under the <i>' . str_replace('>', '&raquo;', $text) . '</i> category...</p>';
     }
 
     if (!isset($show_subcats_in_main_list) || !$show_subcats_in_main_list) {
         // we then have to show the children of this category, if there are
-        $children = get_enth_category_children(StringUtils::instance()->cleanNormalize($_GET['cat']));
+        $children = get_enth_category_children(StringUtils::instance()
+                                                          ->cleanNormalize($_GET['cat']));
         $cats = [];
         foreach ($children as $cat) {
-            $cats[] = ['catid' => $cat['catid'],
-                'text' => $cat['catname'],
+            $cats[] = [
+                'catid'  => $cat['catid'],
+                'text'   => $cat['catname'],
                 'parent' => get_category_parent($cat['catid']),
-                'qty' => count(get_joined_by_category($cat['catid']))];
+                'qty'    => count(get_joined_by_category($cat['catid'])),
+            ];
         }
         // check for empty categories!
         foreach ($cats as $index => $cat) {
@@ -245,7 +247,7 @@ if (isset($_GET['cat']) && $_GET['cat'] != '') {
         if (count($cats)) {
             if (!isset($show_list) || !$show_list) { // use dropdown
                 show_joined_category_list(true, false);
-            } else if (isset($show_list) && $show_list) {
+            } elseif (isset($show_list) && $show_list) {
                 show_joined_category_list(false, false);
             }
         }
@@ -267,7 +269,8 @@ if (isset($_GET['cat']) && $_GET['cat'] != '') {
         if ($_GET['cat'] == 'pending') {
             $ids = get_joined('pending');
         } else {
-            $ids = get_joined_by_category(StringUtils::instance()->clean($_GET['cat']));
+            $ids = get_joined_by_category(StringUtils::instance()
+                                                     ->clean($_GET['cat']));
         }
 
         foreach ($ids as $id) {
@@ -284,9 +287,7 @@ if (isset($ids) && count($ids) == 0) {
 }
 
 // show way to go back if using the list
-if ((isset($show_list) && $show_list) &&
-    (isset($_GET['cat']) && $_GET['cat'] != '') &&
-    (!isset($ids) || count($ids) != 0)) {
+if (isset($show_list, $_GET['cat']) && $show_list && $_GET['cat'] != '' && (!isset($ids) || count($ids) != 0)) {
     echo '<p class="show_joined_go_back">' .
         '<a href="javascript:history.back()">Go back?</a></p>';
 }

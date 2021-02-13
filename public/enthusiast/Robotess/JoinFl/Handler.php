@@ -238,7 +238,7 @@ final class Handler
                         $notify_message .= ucwords(str_replace('_', ' ', $field)) .
                             ': ' . $extraFieldsValues[$field] . "\r\n";
                     }
-                    $notify_message .= "Comments: $comments\r\n\r\nTo add this " .
+                    $notify_message .= "Comments: $this->comments\r\n\r\nTo add this " .
                         'member, go to ' . str_replace(get_setting(
                             'root_path_absolute'), get_setting('root_path_web'),
                             get_setting('installation_path')) .

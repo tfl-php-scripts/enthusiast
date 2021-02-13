@@ -21,6 +21,9 @@ services:
       - ./composer.lock:/app/composer.lock
       - ./codeception.yml:/app/codeception.yml
       - ./rector.php:/app/rector.php
+      - ./phpstan.neon:/app/phpstan.neon
+      - ./phpstan-baseline.neon:/app/phpstan-baseline.neon
+      - ./phpstan:/app/phpstan
       - ./tests:/app/tests
       - ./docker/samplefl300members:/app/public/samplefl300members:ro
       - ./docker/vhost.conf:/etc/apache2/sites-available/000-default.conf

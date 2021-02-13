@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /*****************************************************************************
  * Enthusiast: Listing Collective Management System
  * Copyright (c) by Angela Sabas http://scripts.indisguise.org/
@@ -25,11 +26,6 @@
  *****************************************************************************
  */
 
-/**
- * @param string $listing
- * @param string $start
- * @return array
- */
 function get_affiliates($listing = 'none', $start = 'none')
 {
     require 'config.php';
@@ -114,13 +110,6 @@ function get_affiliates($listing = 'none', $start = 'none')
     return $aff;
 }
 
-/**
- * @param $url
- * @param $title
- * @param $email
- * @param string $listing
- * @return string
- */
 function add_affiliate($url, $title, $email, $listing = 'collective')
 {
     require 'config.php';
