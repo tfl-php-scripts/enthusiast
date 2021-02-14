@@ -76,12 +76,13 @@ if (count($fields) > 0) {
     }
 }
 
-const DUPLICATE_ENTRY_SQL_ERROR_CODE = 1062;
+$formClass = $formClass ?? RobotessNet\JoinFl\Form::class;
+
 if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
     $handler = new Handler();
     $success = $handler->process($_POST, $errorstyle, $countriesValues, $info, $fields, $values, $listing);
     if (!$success && $handler->isShowForm()) {
-        $form = new Form();
+        $form = new $formClass();
         $form->print($info, $errorstyle, $countriesValues, $fields, $values, $handler->getMessages(), $handler->getEmail(), $handler->getName(), $handler->getUrl(), $handler->getCountry(), $handler->getComments(), $handler->getCountryId());
 
         return;
@@ -93,5 +94,5 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
 foreach ($fields as $ind => $val) {
     $fields[$ind] = stripslashes($val);
 }
-$form = new Form();
+$form = new $formClass();
 $form->print($info, $errorstyle, $countriesValues, $fields, $values);

@@ -31,6 +31,8 @@ use RobotessNet\StringUtils;
 
 final class Handler
 {
+    const DUPLICATE_ENTRY_SQL_ERROR_CODE = 1062;
+
     private bool $showForm = false;
     
     private string $email = '';
@@ -309,7 +311,7 @@ final class Handler
             }
 
             $errorInfo = $pdoStatement->errorInfo() ?? [];
-            if (isset($errorInfo[1]) && $errorInfo[1] === DUPLICATE_ENTRY_SQL_ERROR_CODE) {
+            if (isset($errorInfo[1]) && $errorInfo[1] === self::DUPLICATE_ENTRY_SQL_ERROR_CODE) {
                 $this->messages['form'] = 'An error occured while attempting to add ' .
                     'you to the pending members queue. This is because you are ' .
                     'possibly already a member (approved or unapproved) or ' .
