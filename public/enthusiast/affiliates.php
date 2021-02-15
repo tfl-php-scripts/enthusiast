@@ -23,6 +23,9 @@
  *
  * For more information please view the readme.txt file.
  ******************************************************************************/
+
+use RobotessNet\StringUtils;
+
 session_start();
 require_once('logincheck.inc.php');
 if (!isset($logged_in) || !$logged_in) {
@@ -74,7 +77,8 @@ if ($action == 'add' || $action == 'Add') {
 
                 // upload file if there is
                 if ($_FILES['image']['name'] != '') {
-                    $filename = $success . '_' . $_FILES['image']['name'];
+                    $filename = $success . '_' . StringUtils::instance()
+                                                            ->getHashForFilename($_FILES['image']['name']);
                     $dir = get_setting('affiliates_dir');
                     if ($listing != '' && $listing != 'collective') {
                         $info = get_listing_info($listing);
@@ -165,7 +169,8 @@ if ($action == 'add' || $action == 'Add') {
             $title = $_POST['title'];
         }
         if (isset($_POST['email'])) {
-            $email = $_POST['email'];
+            $email = StringUtils::instance()
+                                ->cleanNormalize($_POST['email']);
         }
         if (is_numeric($id)) {
             $info = get_listing_info($id);
@@ -351,7 +356,9 @@ if ($action == 'delete') {
         $aff = get_affiliate_info($_GET['id']);
         $dir = get_setting('affiliates_dir');
     }
-    @unlink($dir . $aff['imagefile']);
+    if (isset($aff['imagefile']) && $aff['imagefile'] !== '' && file_exists($dir . $aff['imagefile']) && !is_dir($dir . $aff['imagefile'])) {
+        unlink($dir . $aff['imagefile']);
+    }
 
     $success = delete_affiliate($_GET['id'], $listing);
     if ($success) {
@@ -385,7 +392,10 @@ if ($action == 'edit') {
                     $listing = get_listing_info($_REQUEST['listing']);
                     $dir = $listing['affiliatesdir'];
                 }
-                $image_deleted = @unlink($dir . $info['imagefile']);
+                $image_deleted = true;
+                if (isset($aff['imagefile']) && $aff['imagefile'] !== '' && file_exists($dir . $aff['imagefile']) && !is_dir($dir . $aff['imagefile'])) {
+                    $image_deleted = unlink($dir . $aff['imagefile']);
+                }
                 if ($image_deleted) {
                     $image_deleted = edit_affiliate($_POST['id'], $_POST['listing'],
                         'null');
@@ -403,10 +413,12 @@ if ($action == 'edit') {
                     $listing = get_listing_info($_REQUEST['listing']);
                     $dir = $listing['affiliatesdir'];
                 }
-                @unlink($dir . $info['imagefile']);
-                $filename = $_POST['id'] . '_' . $_FILES['image']['name'];
-                $uploaded = @move_uploaded_file($_FILES['image']['tmp_name'],
-                    $dir . $filename);
+                if (isset($aff['imagefile']) && $aff['imagefile'] !== '' && file_exists($dir . $aff['imagefile']) && !is_dir($dir . $aff['imagefile'])) {
+                    unlink($dir . $aff['imagefile']);
+                }
+                $filename = $_POST['id'] . '_' . StringUtils::instance()
+                                                            ->getHashForFilename($_FILES['image']['name']);
+                $uploaded = @move_uploaded_file($_FILES['image']['tmp_name'], $dir . $filename);
                 if (!$uploaded) {
                     // try chmodding the $dir to 755 and then reuploading
                     @chmod($dir, 0755);
