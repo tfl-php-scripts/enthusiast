@@ -25,6 +25,11 @@ declare(strict_types = 1);
 
 namespace RobotessNet;
 
+use function md5;
+use function strrpos;
+use function strtolower;
+use function substr;
+
 final class StringUtils
 {
     use Singleton;
@@ -53,6 +58,15 @@ final class StringUtils
         }
 
         return strtolower($this->clean($data));
+    }
+
+    public function getHashForFilename(?string $filename, int $size = 10): string
+    {
+        $hash = substr(md5((string)rand()), 0, $size);
+
+        $dotWithExtension = substr($filename, strrpos($filename, '.'));
+
+        return $hash.$dotWithExtension;
     }
 
     public function isEmailValid(?string $email): bool

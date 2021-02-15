@@ -1378,7 +1378,10 @@ function edit_owned($id, $fields)
                     $row = $result->fetch();
                     $dir = $row['value'];
 
-                    $success = @unlink($dir . $info['imagefile']);
+                    $success = true;
+                    if (isset($info['imagefile']) && $info['imagefile'] !== '' && file_exists($dir . $info['imagefile']) && !is_dir($dir . $info['imagefile'])) {
+                        $success = @unlink($dir . $info['imagefile']);
+                    } // delete image if present
                     if ($success) {
                         $changes[] = 'Image deleted.';
                         $query = "UPDATE `$db_owned` SET `imagefile` = NULL WHERE " .
@@ -1416,8 +1419,7 @@ function edit_owned($id, $fields)
 
                     // delete the old image file
                     $file = $info['imagefile'];
-                    if ($file && is_file($dir . $file) &&
-                        $file != $fields['imagefile']) {
+                    if ($file && is_file($dir . $file) && $file != $fields['imagefile']) {
                         @unlink($dir . $file);
                     }
 
@@ -1726,8 +1728,8 @@ function delete_owned($id)
     }
 
     // unlink image if present
-    if ($dir . $image) {
-        unlink($dir . $file);
+    if (isset($dir, $image) && $image !== '' && file_exists($dir . $image) && !is_dir($dir . $image)) {
+        unlink($dir . $image);
     }
 
     return true;
