@@ -34,7 +34,7 @@ final class App
 
     public static function getLinkWithOriginal(): string
     {
-        return self::getLink() . ' (<a href="http://scripts.indisguise.org" target="_blank">original version</a>)';
+        return self::getLink() . ' (originally by <a href="http://scripts.indisguise.org" target="_blank">Angela Sabas</a>)';
     }
 
     public static function getLink(): string

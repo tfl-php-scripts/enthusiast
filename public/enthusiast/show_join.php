@@ -26,7 +26,6 @@ declare(strict_types = 1);
  * For more information please view the readme.txt file.
  ******************************************************************************/
 
-use RobotessNet\JoinFl\Form;
 use RobotessNet\JoinFl\Handler;
 use RobotessNet\StringUtils;
 
@@ -76,14 +75,21 @@ if (count($fields) > 0) {
     }
 }
 
-$formClass = $formClass ?? RobotessNet\JoinFl\Form::class;
+if (isset($templatePath) && file_exists($templatePath)) {
+    $templateContent = file_get_contents($templatePath);
+} else {
+    $defaultJoinFormTemplatePath = __DIR__ . DIRECTORY_SEPARATOR . 'Robotess' . DIRECTORY_SEPARATOR . 'JoinFl' . DIRECTORY_SEPARATOR . 'default-template.txt';
+    $templateContent = file_get_contents($defaultJoinFormTemplatePath);
+}
 
 if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
     $handler = new Handler();
     $success = $handler->process($_POST, $errorstyle, $countriesValues, $info, $fields, $values, $listing);
     if (!$success && $handler->isShowForm()) {
-        $form = new $formClass();
-        $form->print($info, $errorstyle, $countriesValues, $fields, $values, $handler->getMessages(), $handler->getEmail(), $handler->getName(), $handler->getUrl(), $handler->getCountry(), $handler->getComments(), $handler->getCountryId());
+        echo RobotessNet\JoinFl\Form::create($templateContent)
+                               ->output($info, $errorstyle, $countriesValues, $fields, $values, $handler->getMessages(),
+                                   $handler->getEmail(), $handler->getName(), $handler->getUrl(),
+                                   $handler->getCountry(), $handler->getComments(), $handler->getCountryId());
 
         return;
     }
@@ -94,5 +100,5 @@ if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
 foreach ($fields as $ind => $val) {
     $fields[$ind] = stripslashes($val);
 }
-$form = new $formClass();
-$form->print($info, $errorstyle, $countriesValues, $fields, $values);
+echo RobotessNet\JoinFl\Form::create($templateContent)
+                       ->output($info, $errorstyle, $countriesValues, $fields, $values);

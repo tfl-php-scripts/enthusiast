@@ -28,11 +28,28 @@ namespace RobotessNet\JoinFl;
 use RobotessNet;
 use function explode;
 use function md5;
+use function ob_get_clean;
+use function ob_start;
+use function preg_replace_callback;
+use function str_replace;
+use function strtr;
 use function uniqid;
 
 final class Form
 {
-    public function print(
+    private string $template;
+
+    private function __construct(string $template)
+    {
+        $this->template = $template;
+    }
+
+    public static function create(string $template): self
+    {
+        return new self($template);
+    }
+
+    public function output(
         array $info,
         string $errorstyle,
         array $countriesValues,
@@ -45,132 +62,82 @@ final class Form
         ?string $country = null,
         ?string $comments = null,
         ?int $countryId = null
-    ): void {
+    ): string {
+
+        $output = $this->template;
 
         $cutup = explode('@', $info['email']);
-        if ($cutup === false) {
-            $email_js = $info['email'];
-        } else {
+        if ($cutup !== false) {
             $email_js = '<script type="text/javascript">' . "\r\n<!--\r\n" .
                 "jsemail = ( '$cutup[0]' + '@' + '$cutup[1]' ); \r\n" .
                 "document.write( '<a href=\"mailto:' + jsemail + '\">email me</' + " .
                 "'a>' );\r\n" . ' -->' . "\r\n" . '</script>';
+        } else {
+            $email_js = $info['email'];
         }
+        $output = str_replace('$$email_js$$', $email_js ?? '', $output);
 
-        // extra spam checking variable
-        $rand = md5(uniqid('', true));
+        $output = str_replace('$$messages_form$$', $messages['form'] ? "<p$errorstyle>{$messages['form']}</p>" : '',
+            $output);
 
-        ob_start();
-        ?>
-        <!-- Enthusiast <?= RobotessNet\App::getVersion() ?> Join Form -->
-        <p class="show_join_intro">Please use the form below for joining the
-            <?= $info['listingtype'] ?>. <b>Please hit the submit button only once.</b>
-            Your entry is fed instantly into the database, and your email address is
-            checked for duplicates. Passwords are encrypted into the database and will
-            not be seen by anyone else other than you. If left blank, a password will
-            be generated for you.</p>
+        $output = preg_replace_callback(
+            '|\$\$messages\[([a-z]+)]\$\$|',
+            static function ($matches) use ($messages, $errorstyle) {
+                $name = $matches[1];
 
-        <p class="show_join_intro_problems">If you encounter problems, please
-            feel free to <?= $email_js ?>.</p>
+                return $messages[$name] ? "<p$errorstyle>{$messages[$name]}</p>" : '';
+            },
+            $output
+        );
 
-        <p class="show_join_intro_required">The fields with asterisks (*) are
-            required fields.</p>
+        $output = preg_replace_callback(
+            '|\$\$info\[([a-z]+)]\$\$|',
+            static function ($matches) use ($info) {
+                $name = $matches[1];
 
-        <?php
-        if (isset($messages['form'])) {
-            echo "<p$errorstyle>{$messages['form']}</p>";
-        }
-        ?>
-        <form method="post" action="<?= $info['joinpage'] ?>"
-              class="show_join_form">
+                return $info[$name] ?? '';
+            },
+            $output
+        );
 
-            <p class="show_join_name">
-                <input type="hidden" name="enth_join" value="yes"/>
-                <input type="hidden" name="enth_nonce"
-                       value="<?= $rand ?>:<?= strtotime(date('r')) ?>:<?= md5($rand) . substr($rand, 2, 3) ?>"/>
-                <span style="display: block;" class="show_join_name_label">* Name: </span>
-                <?php
-                if (isset($messages['name'])) {
-                    echo "<span$errorstyle>{$messages['name']}</span>";
-                }
-                ?>
-                <input type="text" name="enth_name" value="<?= $name ?>" required
-                       class="show_join_name_field"/>
+        $output = preg_replace_callback('|\$\$credits\$\$|', static function () {
+            ob_start(); ?>
+            <p style="text-align: center;" class="show_join_credits">
+                <?php include ENTH_PATH . 'show_credits.php' ?>
             </p>
-
-            <p class="show_join_email">
-   <span style="display: block;" class="show_join_email_label">* Email
-   address: </span>
-                <?php
-                if (isset($messages['email'])) {
-                    echo "<span$errorstyle>{$messages['email']}</span>";
-                }
-                ?>
-                <input type="email" name="enth_email" value="<?= $email ?>" required
-                       class="show_join_email_field"/>
-            </p>
-
-            <p class="show_join_email_settings">
-   <span style="display: block;" class="show_join_email_settings_label">Show
-   email address on the list? </span>
-                <span style="display: block" class="show_join_email_settings_yes">
-   <input type="radio" name="enth_show_email" value="1"
-          class="show_join_email_settings_field" checked="checked"/>
-      <span class="show_join_email_settings_field_label">
-      Yes (SPAM-protected on the site)</span>
-   </span><span style="display: block" class="show_join_email_settings_no">
-   <input type="radio" name="enth_show_email" value="0"
-          class="show_join_email_settings_field"/>
-      <span class="show_join_email_settings_field_label">No</span>
-   </span>
-            </p>
-
             <?php
-            if ($info['country'] == 1) {
-                ?>
-                <p class="show_join_country">
-      <span style="display: block;" class="show_join_country_label">*
-      Country</span>
-                    <?php
-                    if (isset($messages['country'])) {
-                        echo "<span$errorstyle>{$messages['country']}</span>";
-                    }
-                    ?>
-                    <select name="enth_country" class="show_join_country_field" required>
-                        <?php
-                        foreach ($countriesValues as $key => $countryVal) {
-                            $selected = '';
-                            if ($country !== '' && $countryId === $key) {
-                                $selected = ' selected="selected"';
-                            }
-                            echo '<option value="' . $key . '"' . $selected . '>' . $countryVal . '</option>';
+            return ob_get_clean();
+        }, $output);
+
+        if ($info['country'] == 1) {
+            $output = strtr($output, ['$$country_block[start]$$' => '', '$$country_block[end]$$' => '']);
+
+            $output = preg_replace_callback('|\$\$countries_options\$\$|',
+                static function () use ($countriesValues, $country, $countryId) {
+                    ob_start();
+                    foreach ($countriesValues as $key => $countryVal) {
+                        $selected = '';
+                        if ($country !== '' && $countryId === $key) {
+                            $selected = ' selected="selected"';
                         }
-                        ?>
-                    </select>
-                </p>
-                <?php
-            }
-            ?>
-            <p class="show_join_password">
-   <span style="display: block;" class="show_join_password_label">Password
-   (to change your details; type twice):</span>
-                <?php
-                if (isset($messages['password'])) {
-                    echo "<span$errorstyle>{$messages['password']}</span>";
-                }
-                ?>
-                <input type="password" name="enth_password" class="show_join_password_field"/>
-                <input type="password" name="enth_vpassword" class="show_join_password_field2"/>
-            </p>
+                        echo '<option value="' . $key . '"' . $selected . '>' . $countryVal . '</option>';
+                    }
 
-            <p class="show_join_url">
-   <span style="display: block;" class="show_join_url_label">Website
-   URL:</span>
-                <input type="url" name="enth_url" value="<?= $url ?>"
-                       class="show_join_url_field"/>
-            </p>
-            <?php
-            if (count($fields) > 0 && !(file_exists('addform.inc.php'))) {
+                    return ob_get_clean();
+                }, $output);
+        } else {
+            $output = preg_replace('|\$\$country_block\[start]\$\$.*\$\$country_block\[end]\$\$|s', '', $output);
+        }
+
+        $output = preg_replace_callback('|\$\$extra_fields\$\$|', static function () use ($fields, $values) {
+            ob_start();
+            if (count($fields) === 0) {
+                return '';
+            }
+
+            if (file_exists('addform.inc.php')) {
+                require('addform.inc.php');
+            } else {
                 foreach ($fields as $field) {
                     ?>
                     <p class="show_join_<?= $field ?>">
@@ -181,36 +148,24 @@ final class Form
                     </p>
                     <?php
                 }
-            } elseif (count($fields) > 0 && file_exists('addform.inc.php')) {
-                require('addform.inc.php');
             }
-            ?>
-            <p class="show_join_comments">
-   <span style="display: block;" class="show_join_comments_label">
-   Comments: </span>
-                <textarea name="enth_comments" rows="3" cols="40"
-                          class="show_join_comments_field"><?= $comments ?></textarea>
-            </p>
 
-            <p class="show_join_submit">
-   <span style="display: block;" class="show_join_send_account_info">
-   <input type="checkbox" name="enth_send_account_info" value="yes"
-          checked="checked" class="enth_show_join_send_account_info_field"/>
-   <span class="show_join_send_account_info_label">
-   Yes, send me my account information!</span>
-   </span>
-                <input type="submit" value="Join the <?= $info['listingtype'] ?>"
-                       class="show_join_submit_button"/>
-                <input type="reset" value="Clear form" class="show_join_reset_button"/>
-            </p>
+            return ob_get_clean();
+        }, $output);
 
-        </form>
+        // extra spam checking variable
+        $rand = md5(uniqid('', true));
+        $nonce = '<input type="hidden" name="enth_join" value="yes"/>
+<input type="hidden" name="enth_nonce" value="' . $rand . ':' . strtotime(date('r')) . ':' . md5($rand) . substr($rand,
+                2, 3) . '"/>
+        <!-- Enthusiast ' . RobotessNet\App::getVersion() . ' Join Form -->';
 
-        <!--// do not remove the credit link please-->
-        <p style="text-align: center;" class="show_join_credits">
-            <?php include ENTH_PATH . 'show_credits.php' ?>
-        </p>
-        <?php
-        echo ob_get_clean();
+        $output = str_replace('$$nonce$$', $nonce ?? '', $output);
+        $output = str_replace('$$name$$', $name ?? '', $output);
+        $output = str_replace('$$email$$', $email ?? '', $output);
+        $output = str_replace('$$url$$', $url ?? '', $output);
+        $output = str_replace('$$comments$$', $comments ?? '', $output);
+
+        return $output;
     }
 }

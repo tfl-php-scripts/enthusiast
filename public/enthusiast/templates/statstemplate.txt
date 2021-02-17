@@ -1,4 +1,4 @@
-<blockquote>Script used: <a href="https://scripts.robotess.net" target="_blank" title="PHP Scripts collection">Enthusiast [Robotess Fork]</a><br />
+<blockquote>Script used: <a href="https://scripts.robotess.net" target="_blank" title="PHP Scripts collection">Enthusiast [Robotess Fork]</a> (originally by <a href="http://scripts.indisguise.org" target="_blank">Angela Sabas</a>)<br />
 Opened: $$stat_opened$$<br />
 Last updated: $$stat_updated$$<br />
 Member count: $$stat_approved$$, from $$stat_countries$$ countries<br />

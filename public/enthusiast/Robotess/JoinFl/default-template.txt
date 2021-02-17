@@ -1,0 +1,96 @@
+<p class="show_join_intro">Please use the form below for joining the
+    $$info[listingtype]$$. <b>Please hit the submit button only once.</b>
+    Your entry is fed instantly into the database, and your email address is
+    checked for duplicates. Passwords are encrypted into the database and will
+    not be seen by anyone else other than you. If left blank, a password will
+    be generated for you.</p>
+
+<p class="show_join_intro_problems">If you encounter problems, please
+    feel free to $$email_js$$.</p>
+
+<p class="show_join_intro_required">The fields with asterisks (*) are
+    required fields.</p>
+
+$$messages[form]$$
+<form method="post" action="$$info[joinpage]$$" class="show_join_form">
+    $$nonce$$
+
+    <p class="show_join_name">
+        <span style="display: block;" class="show_join_name_label">* Name: </span>
+        $$messages[name]$$
+        <input type="text" name="enth_name" value="$$name$$" required
+               class="show_join_name_field"/>
+    </p>
+
+    <p class="show_join_email">
+   <span style="display: block;" class="show_join_email_label">* Email
+   address: </span>
+        $$messages[email]$$
+        <input type="email" name="enth_email" value="$$email$$" required
+               class="show_join_email_field"/>
+    </p>
+
+    <p class="show_join_email_settings">
+   <span style="display: block;" class="show_join_email_settings_label">Show
+   email address on the list? </span>
+        <span style="display: block" class="show_join_email_settings_yes">
+   <input type="radio" name="enth_show_email" value="1"
+          class="show_join_email_settings_field" checked="checked"/>
+      <span class="show_join_email_settings_field_label">
+      Yes (SPAM-protected on the site)</span>
+   </span><span style="display: block" class="show_join_email_settings_no">
+   <input type="radio" name="enth_show_email" value="0"
+          class="show_join_email_settings_field"/>
+      <span class="show_join_email_settings_field_label">No</span>
+   </span>
+    </p>
+
+    $$country_block[start]$$
+    <p class="show_join_country">
+      <span style="display: block;" class="show_join_country_label">*
+      Country</span>
+        $$messages[country]$$
+        <select name="enth_country" class="show_join_country_field" required>
+            $$countries_options$$
+        </select>
+    </p>
+    $$country_block[end]$$
+
+    <p class="show_join_password">
+   <span style="display: block;" class="show_join_password_label">Password
+   (to change your details; type twice):</span>
+        $$messages[password]$$
+        <input type="password" name="enth_password" class="show_join_password_field"/>
+        <input type="password" name="enth_vpassword" class="show_join_password_field2"/>
+    </p>
+
+    <p class="show_join_url">
+   <span style="display: block;" class="show_join_url_label">Website
+   URL:</span>
+        <input type="url" name="enth_url" value="$$url$$"
+               class="show_join_url_field"/>
+    </p>
+    $$extra_fields$$
+    <p class="show_join_comments">
+   <span style="display: block;" class="show_join_comments_label">
+   Comments: </span>
+        <textarea name="enth_comments" rows="3" cols="40"
+                  class="show_join_comments_field">$$comments$$</textarea>
+    </p>
+
+    <p class="show_join_submit">
+   <span style="display: block;" class="show_join_send_account_info">
+   <input type="checkbox" name="enth_send_account_info" value="yes"
+          checked="checked" class="enth_show_join_send_account_info_field"/>
+   <span class="show_join_send_account_info_label">
+   Yes, send me my account information!</span>
+   </span>
+        <input type="submit" value="Join the $$info[listingtype]$$"
+               class="show_join_submit_button"/>
+        <input type="reset" value="Clear form" class="show_join_reset_button"/>
+    </p>
+
+</form>
+
+<!--// do not remove the credit link please-->
+$$credits$$
