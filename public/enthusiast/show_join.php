@@ -83,7 +83,7 @@ if (isset($templatePath) && file_exists($templatePath)) {
 }
 
 if (isset($_POST['enth_join']) && $_POST['enth_join'] == 'yes') {
-    $handler = new Handler();
+    $handler = Handler::create($fieldsDefaults ?? []);
     $success = $handler->process($_POST, $errorstyle, $countriesValues, $info, $fields, $values, $listing);
     if (!$success && $handler->isShowForm()) {
         echo RobotessNet\JoinFl\Form::create($templateContent)

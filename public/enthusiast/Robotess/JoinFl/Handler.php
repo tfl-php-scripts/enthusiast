@@ -28,10 +28,13 @@ namespace RobotessNet\JoinFl;
 use PDO;
 use PDOException;
 use RobotessNet\StringUtils;
+use function array_merge;
 
 final class Handler
 {
-    const DUPLICATE_ENTRY_SQL_ERROR_CODE = 1062;
+    private static int $DUPLICATE_ENTRY_SQL_ERROR_CODE = 1062;
+
+    private array $fieldsDefaults;
 
     private bool $showForm = false;
     
@@ -44,8 +47,18 @@ final class Handler
 
     private array $messages = [];
 
+    private function __construct(array $fieldsDefaults = [])
+    {
+        $this->fieldsDefaults = $fieldsDefaults;
+    }
+
+    public static function create(array $fieldsDefaults = []): self
+    {
+        return new self($fieldsDefaults);
+    }
+
     public function process(
-        array $postData,
+        array $sentData,
         string $errorstyle,
         array $countriesValues,
         array $listingInfo,
@@ -53,6 +66,9 @@ final class Handler
         array $extraFieldsValues,
         int $listing
     ): bool {
+
+        $newData = array_merge($sentData, $this->fieldsDefaults);
+
         // do some spam/bot checking first
         $goahead = false;
         // 1. check that user is submitting from browser
@@ -70,7 +86,7 @@ final class Handler
 
         // check nonce field
         $nonce = explode(':', StringUtils::instance()
-                                         ->clean($postData['enth_nonce']));
+                                         ->clean($newData['enth_nonce']));
         if ($nonce === false) {
             echo "<p$errorstyle>ERROR: Attempted circumventing of the form detected.</p>";
 
@@ -109,25 +125,25 @@ final class Handler
         }
 
         // go on
-        if ($postData['enth_name']) {
+        if ($newData['enth_name']) {
             $this->name = ucwords(StringUtils::instance()
-                                       ->clean($postData['enth_name']));
+                                       ->clean($newData['enth_name']));
         } else {
             $this->messages['name'] = 'You must enter your name.';
             $this->showForm = true;
         }
 
         $this->email = StringUtils::instance()
-                            ->cleanNormalize($postData['enth_email']);
+                            ->cleanNormalize($newData['enth_email']);
         if (!StringUtils::instance()
-                        ->isEmailValid($postData['enth_email'])) {
+                        ->isEmailValid($newData['enth_email'])) {
             $this->messages['email'] = 'You must enter a valid email address.';
             $this->showForm = true;
         }
 
-        if (isset($postData['enth_country']) && $postData['enth_country'] !== '') {
+        if (isset($newData['enth_country']) && $newData['enth_country'] !== '') {
             $this->countryId = (int)(StringUtils::instance()
-                                          ->cleanNormalize($postData['enth_country']));
+                                          ->cleanNormalize($newData['enth_country']));
             if (isset($countriesValues[$this->countryId])) {
                 $this->country = $countriesValues[$this->countryId];
             } else {
@@ -139,12 +155,12 @@ final class Handler
             $this->showForm = true;
         }
 
-        if ($postData['enth_password'] && $postData['enth_vpassword'] &&
-            $postData['enth_vpassword'] == $postData['enth_password']) {
+        if ($newData['enth_password'] && $newData['enth_vpassword'] &&
+            $newData['enth_vpassword'] == $newData['enth_password']) {
             // has password and validates
             $password = StringUtils::instance()
-                                   ->clean($postData['enth_password']);
-        } elseif ($postData['enth_password'] == '' && $postData['enth_vpassword'] == '') {
+                                   ->clean($newData['enth_password']);
+        } elseif ($newData['enth_password'] == '' && $newData['enth_vpassword'] == '') {
             // no password, must generate
             $password = '';
             $k = 0;
@@ -158,28 +174,28 @@ final class Handler
             $this->showForm = true;
         }
 
-        if (isset($postData['enth_url'])) {
-            $this->url = StringUtils::instance()->clean($postData['enth_url']);
+        if (isset($newData['enth_url'])) {
+            $this->url = StringUtils::instance()->clean($newData['enth_url']);
             if (preg_match('@^https?://@', $this->url) === false) {
                 $this->url = 'http://' . $this->url;
             }
         }
 
         foreach ($extraFields as $field) {
-            $extraFieldsValues[$field] = isset($postData["enth_$field"]) ? StringUtils::instance()
-                                                                                      ->clean($postData["enth_$field"]) : StringUtils::instance()
-                                                                                                                                     ->clean($postData[$field]);
+            $extraFieldsValues[$field] = isset($newData["enth_$field"]) ? StringUtils::instance()
+                                                                                     ->clean($newData["enth_$field"]) : StringUtils::instance()
+                                                                                                                                   ->clean($newData[$field]);
         }
 
-        if (isset($postData['enth_comments'])) {
-            $this->comments = StringUtils::instance()->clean($postData['enth_comments']);
+        if (isset($newData['enth_comments'])) {
+            $this->comments = StringUtils::instance()->clean($newData['enth_comments']);
         }
 
         if (count($this->messages) === 0) {
             $this->showForm = false;
-            $show_email = StringUtils::instance()->clean($postData['enth_show_email']);
-            $send_account_info = (isset($postData['enth_send_account_info']) &&
-                $postData['enth_send_account_info'] === 'yes');
+            $show_email = StringUtils::instance()->clean((string)$newData['enth_show_email']);
+            $send_account_info = (isset($newData['enth_send_account_info']) &&
+                $newData['enth_send_account_info'] === 'yes');
             $table = $listingInfo['dbtable'];
 
             // more spamform checking
@@ -311,7 +327,7 @@ final class Handler
             }
 
             $errorInfo = $pdoStatement->errorInfo() ?? [];
-            if (isset($errorInfo[1]) && $errorInfo[1] === self::DUPLICATE_ENTRY_SQL_ERROR_CODE) {
+            if (isset($errorInfo[1]) && $errorInfo[1] === self::$DUPLICATE_ENTRY_SQL_ERROR_CODE) {
                 $this->messages['form'] = 'An error occured while attempting to add ' .
                     'you to the pending members queue. This is because you are ' .
                     'possibly already a member (approved or unapproved) or ' .
