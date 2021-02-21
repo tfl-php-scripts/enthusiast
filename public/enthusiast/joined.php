@@ -24,6 +24,7 @@
  ******************************************************************************/
 
 use RobotessNet\PaginationUtils;
+use RobotessNet\StringUtils;
 
 session_start();
 require_once( 'logincheck.inc.php' );
@@ -87,7 +88,8 @@ if( $action == 'add' ) {
 
             // upload file if there is
             if( $_FILES['image']['name'] != '' ) {
-               $filename = $success . '_' . $_FILES['image']['name'];
+               $filename = $success . '_' . StringUtils::instance()
+                                                            ->getHashForFilename($_FILES['image']['name']);
                $dir = get_setting( 'joined_images_dir' );
                $upload_success =
                   @move_uploaded_file( $_FILES['image']['tmp_name'],
@@ -315,7 +317,9 @@ if( $action == 'add' ) {
 } else if( $action == 'delete' ) {
    $info = get_joined_info( $_GET['id'] );
    $dir = get_setting( 'joined_images_dir' );
-   @unlink( $dir . $info['imagefile'] ); // delete image if present
+   if (isset($info['imagefile']) && $info['imagefile'] !== '' && file_exists($dir . $info['imagefile']) && !is_dir($dir . $info['imagefile'])) {
+      unlink($dir . $info['imagefile']);
+   } // delete image if present
 
    $success = delete_joined( $_GET['id'] );
    if( $success )
@@ -340,14 +344,19 @@ if( $action == 'add' ) {
          if( $_POST['image_change'] == 'delete' ) {
             $info = get_joined_info( $_POST['id'] );
             $dir = get_setting( 'joined_images_dir' );
-            @unlink( $dir . $info['imagefile'] );
+            if (isset($info['imagefile']) && $info['imagefile'] !== '' && file_exists($dir . $info['imagefile']) && !is_dir($dir . $info['imagefile'])) {
+               unlink($dir . $info['imagefile']);
+            } // delete image if present
             $image_deleted = edit_joined( $_POST['id'], 'null' );
          } else if( $_POST['image_change'] == 'yes' &&
             $_FILES['image']['name'] ) {
             $info = get_joined_info( $_POST['id'] );
             $dir = get_setting( 'joined_images_dir' );
-            @unlink( $dir . $info['imagefile'] );
-            $filename = $_POST['id'] . '_' . $_FILES['image']['name'];
+            if (isset($info['imagefile']) && $info['imagefile'] !== '' && file_exists($dir . $info['imagefile']) && !is_dir($dir . $info['imagefile'])) {
+               unlink($dir . $info['imagefile']);
+            } // delete image if present
+            $filename = $_POST['id'] . '_' . StringUtils::instance()
+                                                            ->getHashForFilename($_FILES['image']['name']);
             $uploaded = @move_uploaded_file( $_FILES['image']['tmp_name'],
                $dir . $filename );
             if( !$uploaded ) {

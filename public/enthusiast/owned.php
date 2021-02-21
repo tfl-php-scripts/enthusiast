@@ -24,6 +24,7 @@
  ******************************************************************************/
 
 use RobotessNet\PaginationUtils;
+use RobotessNet\StringUtils;
 
 session_start();
 require_once('logincheck.inc.php');
@@ -153,7 +154,8 @@ if ($action == 'template') {
     if (isset($_POST['done'])) {
         if (isset($_POST['image_change'], $_FILES['image']['name']) && $_POST['image_change'] == 'yes' && $_FILES['image']['name'] != '') {
             $dir = get_setting('owned_images_dir');
-            $filename = $_FILES['image']['name'];
+            $filename = StringUtils::instance()
+                                   ->getHashForFilename($_FILES['image']['name']);
             $upload_success = @move_uploaded_file($_FILES['image']['tmp_name'],
                 $dir . $info['listingid'] . '_' . $filename);
             if (!$upload_success) {
