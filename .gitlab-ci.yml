@@ -11,6 +11,9 @@ variables:
   MYSQL_PASSWORD: password
 
 static_analysis:
+  except:
+    refs:
+      - artifacts
   stage: static_analysis
   script:
     - apt-get update -yqq
@@ -23,6 +26,9 @@ static_analysis:
     - vendor/bin/phpstan analyse -c phpstan-gitlab.neon --error-format=gitlab --memory-limit 1G
 
 test:
+  except:
+    refs:
+      - artifacts
   services:
     - mysql:5.7
   script:
@@ -55,21 +61,57 @@ artifacts_php72:
     refs:
       - master
       - develop
+      - artifacts
   script:
     - apt-get update -yqq
     - apt-get install -yqq git zip unzip
+    - zip -r php74-$CI_COMMIT_REF_NAME.zip public
     - curl -sS https://getcomposer.org/installer | php
     - rm composer.lock
     - rm composer.json
     - php composer.phar require rector/rector
     - php composer.phar install
     - vendor/bin/rector process --config rector-downgrade-72.php
+    - zip -r php72-php73-$CI_COMMIT_REF_NAME.zip public
   artifacts:
-    name: "enthusiast-php72-php-73-$CI_COMMIT_REF_NAME"
     paths:
-      - public
+      - php72-php73-$CI_COMMIT_REF_NAME.zip
+      - php74-$CI_COMMIT_REF_NAME.zip
+
+deploy_artifacts:
+  stage: deploy_artifacts
+  image: ubuntu
+  only:
+    refs:
+      - master
+      - develop
+      - artifacts
+  before_script:
+    - apt-get update -y && apt-get install -yqqf openssh-client git unzip sshpass rsync --fix-missing
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client git -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY_SCRIPTS_REPO" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $DOMAIN_SCRIPTS_REPO >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - git config --global user.email "gitlabci-$CI_PROJECT_NAME@robotess.net"
+    - git config --global user.name "Gitlab Runner ($CI_PROJECT_NAME)"
+  script:
+    - mkdir -p repo
+    - echo "Pulling external repo into build"
+    - ssh git@$DOMAIN_SCRIPTS_REPO
+    - git clone git@$DOMAIN_SCRIPTS_REPO:$URL_SCRIPTS_REPO repo
+    - mkdir -p repo/static/files/$CI_PROJECT_NAME
+    - cp php72-php73-$CI_COMMIT_REF_NAME.zip repo/static/files/$CI_PROJECT_NAME
+    - cp php74-$CI_COMMIT_REF_NAME.zip repo/static/files/$CI_PROJECT_NAME
+    - cd repo
+    - git add -f static/files/$CI_PROJECT_NAME/*.zip
+    - git commit -m "Uploaded artifacts from http://gitlab.com/$CI_PROJECT_PATH/commit/$CI_COMMIT_SHA" || echo "No changes, nothing to commit!"
+    - git push origin master
 
 stages:
   - static_analysis
   - test
   - artifacts
+  - deploy_artifacts
