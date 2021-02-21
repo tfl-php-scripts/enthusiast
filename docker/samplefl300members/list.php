@@ -6,9 +6,6 @@ require_once('header.php');
 
 <?php
 include 'config.php';
-
-//$hide_members_until_final = true;
-include ENTH_PATH . 'show_sort.php';
-include ENTH_PATH . 'show_members.php';
+include ENTH_PATH . 'show_sort_members_countries_list.php';
 
 require_once('footer.php');

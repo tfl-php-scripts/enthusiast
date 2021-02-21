@@ -716,6 +716,51 @@ function get_member_sorter($listing, $level = 1, $top = [])
 
 
 /*___________________________________________________________________________*/
+function getCountries(array $listingInfo)
+{
+    require 'config.php';
+
+    $table = $listingInfo['dbtable'];
+    $dbserver = $listingInfo['dbserver'];
+    $dbdatabase = $listingInfo['dbdatabase'];
+    $dbuser = $listingInfo['dbuser'];
+    $dbpassword = $listingInfo['dbpassword'];
+
+    try {
+        $db_link_list = new PDO('mysql:host=' . $dbserver . ';dbname=' . $dbdatabase . ';charset=utf8', $dbuser, $dbpassword);
+        $db_link_list->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        die(DATABASE_CONNECT_ERROR . $e->getMessage());
+    }
+
+    // get sorters
+    $query = "SELECT COUNT(`email`) AS `count`, `country` FROM `$table` WHERE " .
+        '`pending` = 0 GROUP BY `country` HAVING `count` > 0';
+    $query .= ' ORDER BY `country` ASC';
+    $result = $db_link_list->query($query);
+    if (!$result) {
+        log_error(__FILE__ . ':' . __LINE__,
+            'Error executing query: <i>' . $result->errorInfo()[2] .
+            '</i>; Query is: <code>' . $query . '</code>');
+        die(STANDARD_ERROR);
+    }
+
+    $countries = [];
+    $result->setFetchMode(PDO::FETCH_ASSOC);
+    $total = 0;
+    while ($row = $result->fetch()) {
+        $countries[$row['country']] = $row['count'];
+        $total += $row['count'];
+    }
+
+    $countries['0'] = $total;
+
+    $db_link_list = null;
+    $db_link = null;
+    return $countries;
+}
+
+/*___________________________________________________________________________*/
 function check_member_password($listing, $email, $attempt)
 {
     require 'config.php';
