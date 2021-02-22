@@ -90,6 +90,7 @@ artifacts:
     - php composer.phar require rector/rector
     - php composer.phar install
     - vendor/bin/rector process --config rector-downgrade-72.php
+    - mkdir -p php72-php73-$CI_COMMIT_REF_NAME
     - cp -r public/* php72-php73-$CI_COMMIT_REF_NAME
   artifacts:
     paths:
