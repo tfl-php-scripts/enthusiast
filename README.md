@@ -1,8 +1,8 @@
-# Enthusiast for PHP7 [Robotess Fork]
+# Enthusiast for PHP 7 [Robotess Fork]
 
-The main repository with issue tracking is at gitlab: https://gitlab.com/tfl-php-scripts/enthusiast
+The main repository with the issue tracking can be found on [gitlab](https://gitlab.com/tfl-php-scripts/enthusiast).
 
-An original author is [Angela Sabas](https://github.com/angelasabas/enthusiast), the other contributor is [Lysianthus](https://github.com/Lysianthus/enthusiast) / Original readme by Angela is [here](readme.txt).
+An original author is [Angela Sabas](https://github.com/angelasabas/enthusiast), the other contributor is [Lysianthus](https://github.com/Lysianthus/enthusiast) / Original readme by Angela is [here](https://gitlab.com/tfl-php-scripts/enthusiast/readme.txt).
 
 #### I would highly recommend not to use this script for new installations. Although some modifications were made, this script is still pretty old, not very secure, and does not have any tests, that's why please only update it if you have already installed it before.
 
@@ -10,14 +10,14 @@ This version requires at least PHP 7.2 and PDO_MySQL extensions (with MySQL = 5.
 
 | PHP version | Supported by Enthusiast | Link to download |
 |------------------------------------------|-------------------------|---------------------|
-| 7.2 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.2](https://gitlab.com/tfl-php-scripts/enthusiast/-/jobs/artifacts/master/download?job=artifacts_php72)|
-| 7.3 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.3](https://gitlab.com/tfl-php-scripts/enthusiast/-/jobs/artifacts/master/download?job=artifacts_php72)| 
-| 7.4 | :white_check_mark: |[an archive of the public folder of this repository for PHP 7.4](https://gitlab.com/tfl-php-scripts/enthusiast/-/archive/master/enthusiast-master.zip?path=public)|
-| 8.0 | :grey_question: |-|
+| 7.2 | + |[an archive of the public folder of this repository for PHP 7.2](https://scripts.robotess.net/files/enthusiast/php72-php73-master.zip)|
+| 7.3 | + |[an archive of the public folder of this repository for PHP 7.3](https://scripts.robotess.net/files/enthusiast/php72-php73-master.zip)| 
+| 7.4 | + |[an archive of the public folder of this repository for PHP 7.4](https://gitlab.com/tfl-php-scripts/enthusiast/-/archive/master/enthusiast-master.zip?path=public) ([mirror](https://scripts.robotess.net/files/enthusiast/php74-master.zip))|
+| 8.0 | ? |-|
 
 **If you have MySQL 8.0 or higher, proper script operation is not guaranteed. For now, I'm not planning to fully support MySQL 8.0.** 
 
-Changes are available in [changelog](CHANGELOG.md).
+Changes are available in [a changelog](https://gitlab.com/tfl-php-scripts/enthusiast/CHANGELOG.md).
 
 ## Upgrading instructions
 
@@ -33,10 +33,10 @@ If you are using Enthusiast 3.1.6 (old version by Angela) or Enthusiast [Robotes
 
 Please follow the instructions carefully. A lot of issues were caused by users having incorrect config files.
 
-That's it! Should you encounter any problems, please create an issue (here: https://gitlab.com/tfl-php-scripts/enthusiast/-/issues), and I will try and solve it if I can. You can also report an issue via contact form: http://contact.robotess.net?box=scripts&subject=Issue+with+Enthusiast Please note that I don't support fresh installations, only those that were upgraded from old version.
+That's it! Should you encounter any problems, please create an issue [here](https://gitlab.com/tfl-php-scripts/enthusiast/-/issues), and I will try and solve it if I can. You can also report an issue via [contact form](http://contact.robotess.net?box=scripts&subject=Issue+with+Enthusiast). Please note that I don't support fresh installations, only those that were upgraded from old version.
 
 ## Appreciations
 Thanks to everyone who report their issues in any way, and thanks to those who are beta-testers of the new versions:
 * [Nicki](https://fanlistings.nickifaulk.com/)
  
-If you're willing to be a beta-tester, just let me know via form: http://contact.robotess.net?box=scripts&subject=Beta-Testing+of+Enthusiast
+If you're willing to be a beta-tester, just let me know via [form](http://contact.robotess.net?box=scripts&subject=Beta-Testing+of+Enthusiast).
