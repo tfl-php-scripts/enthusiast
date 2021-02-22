@@ -17,7 +17,7 @@ This version requires at least PHP 7.2 and PDO_MySQL extensions (with MySQL = 5.
 
 **If you have MySQL 8.0 or higher, proper script operation is not guaranteed. For now, I'm not planning to fully support MySQL 8.0.** 
 
-Changes are available in [a changelog](https://gitlab.com/tfl-php-scripts/enthusiast/CHANGELOG.md).
+Changes are available in [a changelog](https://gitlab.com/tfl-php-scripts/enthusiast/-/blob/master/CHANGELOG.md).
 
 ## Upgrading instructions
 
