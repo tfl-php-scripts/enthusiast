@@ -28,7 +28,7 @@ static_analysis:
     - curl -sS https://getcomposer.org/installer | php
     - rm composer.lock
     - rm composer.json
-    - php composer.phar require phpstan/phpstan
+    - php composer.phar require phpstan/phpstan '0.12.81'
     - php composer.phar install
     - vendor/bin/phpstan analyse -c phpstan-gitlab.neon --error-format=gitlab --memory-limit 1G
 
@@ -86,7 +86,7 @@ artifacts:
     - curl -sS https://getcomposer.org/installer | php
     - rm composer.lock
     - rm composer.json
-    - php composer.phar require rector/rector
+    - php composer.phar require rector/rector '0.9.31'
     - php composer.phar install
     - vendor/bin/rector process --config rector-downgrade-72.php
     - mkdir -p php72-php73-$CI_COMMIT_REF_NAME
